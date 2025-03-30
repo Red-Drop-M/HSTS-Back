@@ -1,0 +1,59 @@
+# Build artifacts
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.swp
+*.sln.docstates
+
+# Logs
+*.log
+*.tlog
+
+# Visual Studio Code settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*.pdb
+*.pid
+*.gz
+*.zip
+
+# NuGet packages
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Rider and JetBrains IDEs
+.idea/
+*.iml
+
+# Generated files
+*.g.cs
+*.g.i.cs
+*.generated.cs
+*.AssemblyInfo.cs
+*.AssemblyAttributes.cs
+
+# Static web assets
+wwwroot/staticwebassets/
+staticwebassets.build.json
+staticwebassets.build.endpoints.json
+staticwebassets.development.json
+
+# Configuration files
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# Other
+.DS_Store
+Thumbs.db

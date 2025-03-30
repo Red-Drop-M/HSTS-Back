@@ -1,0 +1,19 @@
+@HSTS_Back_HostAddress = http://localhost:5008
+
+# Test the root route
+GET {{HSTS_Back_HostAddress}}/
+Accept: application/json
+
+###
+
+# Test the /test route
+GET {{HSTS_Back_HostAddress}}/test
+Accept: application/json
+
+###
+
+# Test the /weatherforecast route
+GET {{HSTS_Back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

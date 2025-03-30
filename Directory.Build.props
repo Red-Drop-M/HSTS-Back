@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- Set bin and obj folders to the root directory -->
+    <BaseOutputPath>$(MSBuildThisFileDirectory)bin/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>
