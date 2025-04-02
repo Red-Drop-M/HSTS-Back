@@ -1,69 +1,44 @@
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
+using Shared.Exceptions;
 
-public class ExceptionMiddleware
+namespace Presentation.Middlewares
 {
-    private readonly RequestDelegate _next;
-
-    public ExceptionMiddleware(RequestDelegate next)
+    public class ExceptionHandlerMiddleware
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
-            await _next(context);
+            _next = next;
+            _logger = logger;
         }
-        catch (Exception ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-    }
 
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        var response = context.Response;
-        response.ContentType = "application/json";
-
-        var errorResponse = exception switch
+        public async Task Invoke(HttpContext context)
         {
-            ArgumentException => new ErrorResponse
+            try
             {
-                StatusCode = (int)HttpStatusCode.BadRequest,
-                Message = exception.Message
-            },
-            NotFoundException => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.NotFound,
-                Message = exception.Message
-            },
-            _ => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = "An unexpected error occurred"
+                await _next(context);
             }
-        };
+            catch (BaseException ex) // Custom Exceptions
+            {
+                _logger.LogError(ex, "Handled exception");
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = ex.StatusCode;
 
-        response.StatusCode = errorResponse.StatusCode;
-        return response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+                var response = new { message = ex.Message, resource = ex.Resource, statusCode = ex.StatusCode };
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
+            catch (Exception ex) // Unhandled Exceptions
+            {
+                _logger.LogError(ex, "Unhandled exception");
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                var response = new { message = "Internal Server Error", statusCode = 500 };
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
+        }
     }
-}
-
-public class NotFoundException : Exception
-{
-    public NotFoundException(string message) : base(message) { }
-}
-
-public class ErrorResponse
-{
-    public int StatusCode { get; set; }
-    public string Message { get; set; }
 }
