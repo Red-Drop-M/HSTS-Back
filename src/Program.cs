@@ -1,19 +1,14 @@
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using HSTS_Back.Presentation.Middlewares;
-using System;
+using Infrastructure.Persistence;
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-Console.WriteLine($"Connection String: {connectionString}");
+    Console.WriteLine("Database connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 // Register MediatR
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
