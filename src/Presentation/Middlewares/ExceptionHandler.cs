@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Shared.Exceptions;
 
-namespace Presentation.Middlewares
+namespace HSTS_Back.Presentation.Middlewares
 {
     public class ExceptionHandlerMiddleware
     {

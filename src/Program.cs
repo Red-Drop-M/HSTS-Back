@@ -6,9 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
-
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using HSTS_Back.Presentation.Middlewares;
+using System;
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+Console.WriteLine($"Connection String: {connectionString}");
 // Register MediatR
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -32,7 +37,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>(); // Register the custom exception middleware
+app.UseMiddleware<ExceptionHandlerMiddleware>(); // Register the custom exception middleware
 
 app.UseSwagger();
 app.UseSwaggerUI();
