@@ -29,7 +29,8 @@ builder.Services.AddSwaggerGen(options =>
         Description = "An example API using MediatR, FluentValidation, and Swagger"
     });
 });
-
+// Register auto mapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>(); // Register the custom exception middleware
