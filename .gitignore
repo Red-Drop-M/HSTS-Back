@@ -49,10 +49,10 @@ staticwebassets.build.endpoints.json
 staticwebassets.development.json
 
 # Configuration files
-appsettings.Development.json
-appsettings.Local.json
-appsettings.Production.json
-appsettings.Staging.json
+src/appsettings.Development.json
+src/appsettings.Local.json
+src/appsettings.Production.json
+src/appsettings.Staging.json
 
 # Other
 .DS_Store

@@ -22,13 +22,10 @@ namespace Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            // Optionally, automatically apply all configurations from the assembly
+            // Apply all configurations from the assembly
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            // Example of configuring a unique index on the Email property of the User entity:
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+
         }
     }
 }
