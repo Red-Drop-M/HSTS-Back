@@ -53,6 +53,10 @@ src/appsettings.Development.json
 src/appsettings.Local.json
 src/appsettings.Production.json
 src/appsettings.Staging.json
+src/appsettings.json
+
+# Ignore Properties folder
+Properties/
 
 # Other
 .DS_Store
