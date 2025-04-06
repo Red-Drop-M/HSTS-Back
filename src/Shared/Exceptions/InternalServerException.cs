@@ -4,7 +4,7 @@ namespace Shared.Exceptions
 {
     public class InternalServerException : BaseException
     {
-        public InternalServerException(string resource) 
+        public InternalServerException(string resource, string v) 
             : base("Internal Server Error", resource, 500) { }
     }
 }

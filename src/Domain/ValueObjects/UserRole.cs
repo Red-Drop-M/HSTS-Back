@@ -13,7 +13,7 @@ namespace Domain.ValueObjects
         {
             if(role != "Admin" && role != "User")
             {
-                throw new InternalServerException("Invalid role");
+                throw new InternalServerException("Invalid role", "UserRole");
             }
             return new UserRole(role);
         }
