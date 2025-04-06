@@ -55,8 +55,9 @@ src/appsettings.Production.json
 src/appsettings.Staging.json
 src/appsettings.json
 
-# Ignore Properties folder
+# Ignore Properties folder and launchSettings.json
 Properties/
+Properties/launchSettings.json
 
 # Other
 .DS_Store
