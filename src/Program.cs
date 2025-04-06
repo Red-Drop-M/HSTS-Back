@@ -4,53 +4,45 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using HSTS_Back.Presentation.Middlewares;
 using Infrastructure.Persistence;
+using FastEndpoints;
+using FastEndpoints.Swagger;
+using Presentation.Controllers;
 var builder = WebApplication.CreateBuilder(args);
 
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    Console.WriteLine("Database connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
-// Register MediatR
+Console.WriteLine("Database connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+
+// FastEndpoints + Swagger
+builder.Services.AddFastEndpoints();
+builder.Services.SwaggerDocument(o =>
+{
+    o.DocumentSettings = s =>
+    {
+        s.Title = "HSTS API";
+        s.Version = "v1";
+        s.Description = "API for HSTS project";
+    };
+});
+
+// MediatR
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-// Register FluentValidation
+// FluentValidation
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-// Add Controllers
-builder.Services.AddControllers();
-
-// Register Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "My API",
-        Version = "v1",
-        Description = "An example API using MediatR, FluentValidation, and Swagger"
-    });
-});
-// Register auto mapper
+// AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>(); // Register the custom exception middleware
+// Middleware
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Use FastEndpoints + Swagger
 
-app.UseAuthorization();
-app.MapControllers();
+app.UseFastEndpoints();
+app.UseSwaggerGen(); // FastEndpoints Swagger
 
 app.Run();
-
-// HSTS-Back configuration
-var hstsBackConfig = new
-{
-    commandName = "Project",
-    dotnetRunMessages = true,
-    applicationUrl = "http://localhost:5000;https://localhost:5001",
-    environmentVariables = new
-    {
-        ASPNETCORE_ENVIRONMENT = "Development"
-    }
-};
