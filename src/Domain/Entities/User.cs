@@ -4,16 +4,26 @@ namespace Domain.Entities
 {
     public class User
     {
-        public Guid Id { get;private set; }
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public UserRole Role { get; set; } = UserRole.User(); 
-        public DateTime DateOfBirth { get; set; }
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
-        protected User() { } // EF Core requires a parameterless constructor
-        public User(string name, string email, string password, UserRole role, DateTime dateOfBirth, string phoneNumber, string address)
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = string.Empty;
+        public string Email { get; private set; } = string.Empty;
+        public string Password { get; private set; } = string.Empty;
+        public UserRole Role { get; private set; } = UserRole.User(); // Default value
+        public DateTime DateOfBirth { get; private set; }
+        public string PhoneNumber { get; private set; } = string.Empty;
+        public string Address { get; private set; } = string.Empty;
+
+        // EF Core requires a parameterless constructor
+        private User() { }
+
+        public User(
+            string name,
+            string email,
+            string password,
+            UserRole role,
+            DateTime dateOfBirth,
+            string phoneNumber,
+            string address)
         {
             Name = name;
             Email = email;

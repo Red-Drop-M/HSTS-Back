@@ -9,41 +9,41 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Request> builder)
         {
-            builder.HasKey(r => r.Id); // Primary Key
+            builder.HasKey(r => r.Id);
 
-            // Configure foreign key relationship between Request and Donor
             builder.HasOne(r => r.Donor)
-                .WithMany() // Donor can have many requests
+                .WithMany()
                 .HasForeignKey(r => r.DonnorId)
-                .OnDelete(DeleteBehavior.SetNull); // When Donor is deleted, set foreign key to null
+                .OnDelete(DeleteBehavior.SetNull);
 
-            // Configure foreign key relationship between Request and Service
             builder.HasOne(r => r.Service)
-                .WithMany() // Service can have many requests
+                .WithMany()
                 .HasForeignKey(r => r.ServiceId)
-                .OnDelete(DeleteBehavior.SetNull); // When Service is deleted, set foreign key to null
+                .OnDelete(DeleteBehavior.SetNull);
 
-            // Configure the Priority property with a default value and map it to the Value property
             builder.Property(r => r.Priority)
-                .HasConversion(p => p.Value, p => Priority.Convert(p)) // Convert between string and Priority
-                .HasDefaultValue(Priority.Standard().Value); // Default value for Priority
+                .IsRequired()
+                .HasConversion(
+                    p => p.Value,  // Convert Priority object to string
+                    p => Priority.Convert(p));
 
-            // Configure the BloodBagType property with a default value and map it to the Value property
             builder.Property(r => r.BloodBagType)
-                .HasConversion(b => b.Value, b => BloodBagType.Convert(b)) // Convert between string and BloodBagType
-                .HasDefaultValue(BloodBagType.Blood().Value); // Default value for BloodBagType
+                .IsRequired()
+                .HasConversion(
+                    b => b.Value,  // Convert BloodBagType object to string
+                    b => BloodBagType.Convert(b));
 
-            // Configure the RequestDate property with a default value
             builder.Property(r => r.RequestDate)
-                .HasDefaultValue(DateOnly.FromDateTime(DateTime.Now));
+                .IsRequired();
 
-            // Configure the Status property with a default value
             builder.Property(r => r.Status)
-                .HasDefaultValue(RequestStatus.Pending());
+                .IsRequired()
+                .HasConversion(
+                    s => s.Value,  // Convert RequestStatus object to string
+                    s => RequestStatus.Convert(s));
 
-            // Configure other properties, if needed
             builder.Property(r => r.MoreDetails)
-                .HasMaxLength(500); // Example: set max length for MoreDetails if needed
+                .HasMaxLength(500);
         }
     }
 }

@@ -35,13 +35,12 @@ namespace Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(50);
 
-            // Configure Role
+            // Configure Role (ValueObject) with conversion
             builder.Property(u => u.Role)
                 .HasConversion(
                     r => r.Role, // Convert UserRole to string for storage
-                    r =>  UserRole.Convert(r) // Convert string from DB back to UserRole
+                    r => UserRole.Convert(r) // Convert string from DB back to UserRole
                 )
-                .HasDefaultValue("User") // Set default value for Role
                 .IsRequired();
 
             // Configure DateOfBirth

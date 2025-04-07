@@ -13,9 +13,11 @@ namespace Infrastructure.Persistence
 
         // Define DbSets for each entity. These correspond to tables in the database.
         public DbSet<User> Users { get; set; }
-        public DbSet<Donner> Orders { get; set; }
-        public DbSet<BloodSac> OrderItems { get; set; }
-        public DbSet<Request> Products { get; set; }
+        public DbSet<Donor> Donors { get; set; } // Renamed to reflect entity name
+        public DbSet<BloodBag> BloodBags { get; set; } // Renamed to reflect entity name
+        public DbSet<GlobalStock> GlobalStocks { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Request> Requests { get; set; } // Renamed to reflect entity name
 
         // Override OnModelCreating to configure your entity mappings using the Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,8 +26,6 @@ namespace Infrastructure.Persistence
 
             // Apply all configurations from the assembly
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-
-
         }
     }
 }

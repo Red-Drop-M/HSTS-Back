@@ -59,6 +59,9 @@ src/appsettings.json
 Properties/
 Properties/launchSettings.json
 
+# Ignore Migrations folder
+src/Infrastructure/Persistence/Migrations/
+
 # Other
 .DS_Store
 Thumbs.db

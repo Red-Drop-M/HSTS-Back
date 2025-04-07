@@ -4,28 +4,23 @@ namespace Domain.Entities
 {
     public class BloodBag
     {
-        // Primary Key
         public Guid Id { get; private set; }
-
-        // Value Objects
         public BloodType BloodType { get; private set; } = BloodType.APositive();
-        public DateOnly AcquiredDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
         public BloodBagType BloodBagType { get; private set; } = BloodBagType.Blood();
-        public DateTime ExpirationDonorDate { get; private set; }
         public BloodBagStatus Status { get; private set; } = BloodBagStatus.Ready();
+        public DateOnly AcquiredDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime ExpirationDonorDate { get; private set; }
 
-        // Foreign Keys
-        public Guid DonorId { get; private set; }
+        // Foreign keys
+        public Guid? DonorId { get; private set; }
         public Guid? RequestId { get; private set; }
 
-        // Navigation Properties
-        public Donor Donor { get; private set; } = null!;
+        // Navigation properties
+        public Donor? Donor { get; private set; }
         public Request? Request { get; private set; }
 
-        // Required by EF Core
         private BloodBag() { }
 
-        // Optional constructor for manual creation
         public BloodBag(
             BloodType bloodType,
             BloodBagType bloodBagType,
@@ -41,7 +36,5 @@ namespace Domain.Entities
             AcquiredDate = DateOnly.FromDateTime(DateTime.Now);
             Status = BloodBagStatus.Ready();
         }
-
-        // You can add methods like SetStatus(), AssignRequest(), etc. later.
     }
 }
