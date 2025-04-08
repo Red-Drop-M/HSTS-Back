@@ -15,11 +15,11 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<GlobalStock?> GetByIdAsync(Guid id)
-        {
-            return await _context.GlobalStocks
-                .FirstOrDefaultAsync(gs => gs.Id == id);
-        }
+        public async Task<GlobalStock?> GetByKeyAsync(BloodType bloodGroup, BloodBagType bloodBagType)
+    {
+        return await _context.GlobalStocks
+            .FirstOrDefaultAsync(gs => gs.BloodGroup == bloodGroup && gs.BloodBagType == bloodBagType);
+    }
 
         public async Task<GlobalStock?> GetByBloodBagTypeAsync(BloodBagType bloodBagType)
         {

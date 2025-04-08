@@ -7,7 +7,7 @@ namespace Domain.Repositories
        
         Task<Request?> GetByIdAsync(Guid id);
         Task<Request?> GetByServiceIdAsync(Guid serviceId);
-        Task<Request?> GetByStatusAsync(RequestStatus status);
+        Task<List<Request>> GetByStatusAsync(RequestStatus status);
         Task AddAsync(Request request);
         Task UpdateAsync(Request request);
         Task DeleteAsync(Guid id);

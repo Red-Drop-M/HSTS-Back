@@ -64,9 +64,7 @@ namespace Infrastructure.Repositories
         public async Task<List<BloodBag?>> GetByDonorIdAsync(Guid donorId)
         {
             return await _context.BloodBags
-                .Where(b => b.DonorId == donorId)
-                .Cast<BloodBag?>()
-                .ToListAsync();
+                .FirstOrDefaultAsync(b => b.DonorId == donorId);
         }
 
         public async Task<BloodBag?> GetByRequestIdAsync(Guid requestId)

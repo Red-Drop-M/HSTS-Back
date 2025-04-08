@@ -27,11 +27,13 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(r => r.ServiceId == serviceId);
         }
 
-        public async Task<Request?> GetByStatusAsync(RequestStatus status)
-        {
-            return await _context.Requests
-                .FirstOrDefaultAsync(r => r.Status == status);
-        }
+        public async Task<List<Request>> GetByStatusAsync(RequestStatus status)
+{
+    return await _context.Requests
+        .Where(r => r.Status == status)
+        .ToListAsync();
+}
+
 
         public async Task AddAsync(Request request)
         {
