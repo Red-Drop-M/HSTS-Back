@@ -9,5 +9,6 @@ namespace Domain.Repositories
         Task AddAsync(Service service);
         Task UpdateAsync(Service service);
         Task DeleteAsync(Guid id);
+        Task<List<Service?>> GetServicesAsync();
     }
 }

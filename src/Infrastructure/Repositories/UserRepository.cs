@@ -2,8 +2,8 @@ using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure;
 using Infrastructure.Persistence;
+
 namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
@@ -57,11 +57,6 @@ namespace Infrastructure.Repositories
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
             }
-        }
-        public async Task<User?> GetByIdAsync(Guid id)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
         }
         public async Task<List<User?>> GetUsersAsync()
         {
