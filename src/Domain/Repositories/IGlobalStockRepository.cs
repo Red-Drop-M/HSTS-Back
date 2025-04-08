@@ -4,7 +4,7 @@ namespace Domain.Repositories
 {
     public interface IGlobalStockRepository
     {
-        Task<GlobalStock?> GetByIdAsync(Guid id);
+        Task<GlobalStock?> GetByKeyAsync(BloodType bloodGroup, BloodBagType bloodBagType)
         Task<GlobalStock?> GetByBloodBagTypeAsync(BloodBagType bloodBagType);
         Task<GlobalStock?> GetByBloodGroupAsync(BloodType bloodGroup);
         Task AddAsync(GlobalStock globalStock);

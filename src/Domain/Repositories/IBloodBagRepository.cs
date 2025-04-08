@@ -10,7 +10,7 @@ namespace Domain.Repositories
         Task<List<BloodBag?>> GetByExpiryDateAsync(DateOnly expiryDate);
         Task<List<BloodBag?>>GetByDonationDateAsync(DateOnly donationDate);
         Task<List<BloodBag?>> GetByStatusAsync(BloodBagStatus status);
-        Task<List<BloodBag?>> GetByDonorIdAsync(Guid DonorId);
+        Task<BloodBag?> GetByDonorIdAsync(Guid DonorId);
         Task<BloodBag?> GetByRequestIdAsync(Guid requestId);
         Task AddAsync(BloodBag bloodBag);
         Task UpdateAsync(BloodBag bloodBag);
