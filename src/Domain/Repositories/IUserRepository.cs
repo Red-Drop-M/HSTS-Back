@@ -8,8 +8,8 @@ namespace Domain.Repositories
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByPhoneNumberAsync(string phoneNumber);
         Task<User?> GetByAddressAsync(string address);
-        Task<User?> GetByNINAsync(string nin);
         Task<User?> GetByNameAsync(string name);
+        Task<List<User?>> GetUsersAsync();
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid id);
