@@ -65,3 +65,4 @@ src/Infrastructure/Persistence/Migrations/
 # Other
 .DS_Store
 Thumbs.db
+appsettings.json
