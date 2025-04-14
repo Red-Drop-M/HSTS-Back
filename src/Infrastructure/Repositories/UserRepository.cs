@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<User?> GetUserAsync(Guid id)
+        public async Task<User?> GetByIdAsync(Guid id)
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Id == id);
@@ -51,7 +51,7 @@ namespace Infrastructure.Repositories
         }
         public async Task DeleteAsync(Guid id)
         {
-            var user = await GetUserAsync(id);
+            var user = await GetByIdAsync(id);
             if (user != null)
             {
                 _context.Users.Remove(user);

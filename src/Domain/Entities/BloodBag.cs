@@ -9,7 +9,7 @@ namespace Domain.Entities
         public BloodBagType BloodBagType { get; private set; } = BloodBagType.Blood();
         public BloodBagStatus Status { get; private set; } = BloodBagStatus.Ready();
         public DateOnly AcquiredDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
-        public DateTime ExpirationDonorDate { get; private set; }
+        public DateOnly ExpirationDate { get; private set; }
 
         // Foreign keys
         public Guid? DonorId { get; private set; }
@@ -24,13 +24,13 @@ namespace Domain.Entities
         public BloodBag(
             BloodType bloodType,
             BloodBagType bloodBagType,
-            DateTime expirationDonorDate,
+            DateOnly expirationDonorDate,
             Guid donorId,
             Guid? requestId = null)
         {
             BloodType = bloodType;
             BloodBagType = bloodBagType;
-            ExpirationDonorDate = expirationDonorDate;
+            ExpirationDate = expirationDonorDate;
             DonorId = donorId;
             RequestId = requestId;
             AcquiredDate = DateOnly.FromDateTime(DateTime.Now);

@@ -15,7 +15,7 @@ namespace Domain.Entities
 
         // Foreign keys
         public Guid? ServiceId { get; private set; }
-        public Guid? DonnorId { get; private set; }
+        public Guid? DonorId { get; private set; }
 
         // Navigation properties
         public Service? Service { get; private set; }
@@ -39,7 +39,7 @@ namespace Domain.Entities
             MoreDetails = moreDetails;
             RequiredQty = requiredQty;
             ServiceId = serviceId;
-            DonnorId = donnorId;
+            DonorId = donnorId;
             Status = RequestStatus.Pending();
             RequestDate = DateOnly.FromDateTime(DateTime.Now);
         }

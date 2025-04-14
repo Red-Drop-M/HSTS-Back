@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
         public async Task<List<BloodBag?>> GetByBloodGroupAsync(BloodType bloodGroup)
         {
             return await _context.BloodBags
-                .Where(b => b.BloodGroup == bloodGroup)
+                .Where(b => b.BloodType == bloodGroup)
                 .Cast<BloodBag?>()
                 .ToListAsync();
         }
@@ -40,7 +40,7 @@ namespace Infrastructure.Repositories
         public async Task<List<BloodBag?>> GetByExpiryDateAsync(DateOnly expiryDate)
         {
             return await _context.BloodBags
-                .Where(b => b.ExpiryDate == expiryDate)
+                .Where(b => b.ExpirationDate == expiryDate)
                 .Cast<BloodBag?>()
                 .ToListAsync();
         }
@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories
         public async Task<List<BloodBag?>> GetByDonationDateAsync(DateOnly donationDate)
         {
             return await _context.BloodBags
-                .Where(b => b.DonationDate == donationDate)
+                .Where(b => b.AcquiredDate == donationDate)
                 .Cast<BloodBag?>()
                 .ToListAsync();
         }
@@ -64,7 +64,9 @@ namespace Infrastructure.Repositories
         public async Task<List<BloodBag?>> GetByDonorIdAsync(Guid donorId)
         {
             return await _context.BloodBags
-                .FirstOrDefaultAsync(b => b.DonorId == donorId);
+                .Where(b => b.DonorId == donorId)
+                .Cast<BloodBag?>()
+                .ToListAsync();
         }
 
         public async Task<BloodBag?> GetByRequestIdAsync(Guid requestId)
