@@ -1,7 +1,10 @@
 using MediatR;
 using Application.Common.Models;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Domain.Repositories;
+using Application.Features.DonorManagement.Queries;
+
+
 
 namespace Application.Features.DonorManagement.Handlers
 {
@@ -17,7 +20,8 @@ namespace Application.Features.DonorManagement.Handlers
         public async Task<Result<List<Donor?>>> Handle(GetAllDonorsQuery request, CancellationToken cancellationToken)
         {
             var donors = await _donorRepository.GetAllAsync();
-            return Result<List<Donor?>>.Success(donors);
+            var nullableDonors = donors.Cast<Donor?>().ToList();
+            return Result<List<Donor?>>.Success(nullableDonors);
         }
     }
 } 

@@ -1,5 +1,7 @@
 using Domain.Repositories;
 using MediatR;
+using Application.Common.Models;
+using Application.Features.ServiceManagement.Commands;
 
 namespace Application.Features.ServiceManagement.Handler
 {
@@ -15,14 +17,14 @@ namespace Application.Features.ServiceManagement.Handler
         public async Task<Result<bool>> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
         {
             var service = await _repository.GetByIdAsync(request.Id);
-            if (service == null) return Result.Failure<bool>("Service not found");
+            if (service == null) return Result<bool>.Failure("Service not found");
 
             typeof(Domain.Entities.Service)
                 .GetProperty("Name")!
                 .SetValue(service, request.Name);
 
             await _repository.UpdateAsync(service);
-            return Result.Success(true);
+            return Result<bool>.Success(true);
         }
     }
 }

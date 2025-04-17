@@ -1,6 +1,8 @@
 using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
+using Application.Common.Models;
+using Application.Features.ServiceManagement.Commands;
 
 namespace Application.Features.ServiceManagement.Handler
 {
@@ -17,7 +19,7 @@ namespace Application.Features.ServiceManagement.Handler
         {   
             var service = new Service(request.Name);
             await _repository.AddAsync(service);
-            return Result.Success(service.Id);
+            return Result<Guid>.Success(service.Id);
         }
     }
 }

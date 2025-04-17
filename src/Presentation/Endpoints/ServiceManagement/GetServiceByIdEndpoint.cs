@@ -1,5 +1,7 @@
 using FastEndpoints;
-using Application.Features.ServiceManagement.Command;
+using MediatR;
+using Application.Features.ServiceManagement.Queries;
+using Domain.Entities;
 using Application.Common.Models;
 
 public class GetServiceByIdEndpoint : Endpoint<GetServiceByIdQuery, Result<Service?>>
@@ -16,10 +18,9 @@ public class GetServiceByIdEndpoint : Endpoint<GetServiceByIdQuery, Result<Servi
         Get("/services/{id}");
         AllowAnonymous();
     }
-    public override async Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(GetServiceByIdQuery req, CancellationToken ct)
     {
-        var id = Route<Guid>("id");
-        var service = await _sender.Send(new GetServiceByIdQuery(id), ct);
+        var service = await _sender.Send(req, ct);
         if (service is null)
             await SendNotFoundAsync(ct);
         else

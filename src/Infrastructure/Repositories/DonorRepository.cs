@@ -4,6 +4,7 @@ using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistence;
 
+
 namespace Infrastructure.Repositories
 {
     public class DonorRepository : IDonorRepository
@@ -19,6 +20,11 @@ namespace Infrastructure.Repositories
         {
             return await _context.Donors
                 .FirstOrDefaultAsync(d => d.Id == id);
+        }
+
+        public async Task<List<Donor>> GetAllAsync() {
+            return await _context.Donors
+                .ToListAsync();
         }
 
         public async Task<Donor?> GetByEmailAsync(string email)

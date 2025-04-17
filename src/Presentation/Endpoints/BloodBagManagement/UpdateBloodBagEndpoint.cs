@@ -1,6 +1,7 @@
 using FastEndpoints;
 using Application.Features.BloodBagManagement.Commands;
 using Application.Common.Models;
+using MediatR;
 
 namespace Presentation.Endpoints.BloodBagManagement
 {

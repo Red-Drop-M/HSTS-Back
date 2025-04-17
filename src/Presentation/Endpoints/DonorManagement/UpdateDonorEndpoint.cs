@@ -1,6 +1,7 @@
 using FastEndpoints;
 using Application.Features.DonorManagement.Commands;
 using Application.Common.Models;
+using MediatR;
 
 namespace Presentation.Endpoints.DonorManagement
 {

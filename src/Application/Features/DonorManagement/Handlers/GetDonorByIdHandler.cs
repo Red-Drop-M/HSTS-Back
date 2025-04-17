@@ -1,7 +1,8 @@
 using MediatR;
 using Application.Common.Models;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Domain.Repositories;
+using Application.Features.DonorManagement.Queries;
 
 namespace Application.Features.DonorManagement.Handlers
 {

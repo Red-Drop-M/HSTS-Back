@@ -2,6 +2,7 @@ using Domain.Repositories;
 using MediatR;
 using Domain.Entities;
 using Application.Common.Models;
+using Application.Features.ServiceManagement.Queries;
 
 
 namespace Application.Features.ServiceManagement.Handler
@@ -18,7 +19,7 @@ namespace Application.Features.ServiceManagement.Handler
         public async Task<Result<Service?>> Handle(GetServiceByIdQuery request, CancellationToken cancellationToken)
         {
             var service = await _repository.GetByIdAsync(request.Id);
-            return Result.Success(service);
+            return Result<Service?>.Success(service);
         }
     }
 }

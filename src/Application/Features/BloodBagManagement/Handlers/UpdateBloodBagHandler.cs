@@ -1,7 +1,9 @@
 using MediatR;
 using Application.Common.Models;
-using Domain.Entities;
-using Infrastructure.Repositories;
+using Application.Features.BloodBagManagement.Commands;
+using Domain.Repositories;
+using Domain.ValueObjects;
+
 
 namespace Application.Features.BloodBagManagement.Handlers
 {
@@ -16,18 +18,32 @@ namespace Application.Features.BloodBagManagement.Handlers
 
         public async Task<Result<bool>> Handle(UpdateBloodBagCommand request, CancellationToken cancellationToken)
         {
-            var bloodBag = await _bloodBagRepository.GetByIdAsync(request.Id);
-            if (bloodBag == null)
-            {
-                return Result<bool>.Failure("Blood bag not found.");
-            }
+            
+    try
+    {
+        var bloodBag = await _bloodBagRepository.GetByIdAsync(request.Id);
+        if (bloodBag == null)
+        {
+            return Result<bool>.Failure("Blood bag not found.");
+        }
 
-            bloodBag.BloodType = request.BloodType;
-            bloodBag.Quantity = request.Quantity;
-            // Update other properties as needed
 
-            await _bloodBagRepository.UpdateAsync(bloodBag);
-            return Result<bool>.Success(true);
+        bloodBag.Update(
+            bloodType: request.BloodType,
+            bloodBagType: request.BloodBagType,
+            expirationDate: request.ExpirationDonorDate,
+            donorId: request.DonorId,
+            requestId: request.RequestId
+        );
+
+        await _bloodBagRepository.UpdateAsync(bloodBag);
+        return Result<bool>.Success(true);
+    }
+    catch (Exception ex)
+    {
+        return Result<bool>.Failure($"Error updating blood bag: {ex.Message}");
+    }
         }
     }
-} 
+}
+

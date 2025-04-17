@@ -1,7 +1,7 @@
 using MediatR;
 using Application.Common.Models;
-using Domain.Entities;
-using Infrastructure.Repositories;
+using Domain.Repositories;
+using Application.Features.DonorManagement.Commands;
 
 namespace Application.Features.DonorManagement.Handlers
 {
@@ -16,18 +16,35 @@ namespace Application.Features.DonorManagement.Handlers
 
         public async Task<Result<bool>> Handle(UpdateDonorCommand request, CancellationToken cancellationToken)
         {
-            var donor = await _donorRepository.GetByIdAsync(request.Id);
-            if (donor == null)
-            {
-                return Result<bool>.Failure("Donor not found.");
-            }
+            
+    try
+    {
+        var donor = await _donorRepository.GetByIdAsync(request.Id);
+        if (donor == null)
+        {
+            return Result<bool>.Failure("Donor not found.");
+        }
 
-            donor.Name = request.Name;
-            donor.BloodType = request.BloodType;
-            // Update other properties as needed
+        // Use the Update method instead of direct property assignment
+        donor.Update(
+            request.Name,
+            request.Email,
+            request.DateOfBirth,
+            request.BloodType,
+            request.NIN,
+            request.PhoneNumber,
+            request.Address,
+            request.LastDonationDate
+        );
 
-            await _donorRepository.UpdateAsync(donor);
-            return Result<bool>.Success(true);
+        await _donorRepository.UpdateAsync(donor);
+        return Result<bool>.Success(true);
+    }
+    catch (Exception ex)
+    {
+        // Log error
+        return Result<bool>.Failure($"Error updating donor: {ex.Message}");
+    }
         }
     }
 } 

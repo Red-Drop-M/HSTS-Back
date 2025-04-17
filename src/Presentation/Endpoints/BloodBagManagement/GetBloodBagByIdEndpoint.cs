@@ -2,6 +2,7 @@ using FastEndpoints;
 using Application.Features.BloodBagManagement.Queries;
 using Application.Common.Models;
 using Domain.Entities;
+using MediatR;
 
 namespace Presentation.Endpoints.BloodBagManagement
 {
@@ -22,8 +23,15 @@ namespace Presentation.Endpoints.BloodBagManagement
 
         public override async Task HandleAsync(GetBloodBagByIdQuery req, CancellationToken ct)
         {
+            
             var result = await _sender.Send(req, ct);
-            await SendOkAsync(result, ct);
+            if (result == null)
+            {
+                await SendNotFoundAsync(ct);
+            }else
+            {
+                await SendOkAsync(result, ct);
+            }
         }
     }
 } 

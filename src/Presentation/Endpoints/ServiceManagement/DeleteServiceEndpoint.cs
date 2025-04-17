@@ -1,6 +1,6 @@
 using FastEndpoints;
-using Application.Features.ServiceManagement.Command;
-using Application.Common.Models;
+using MediatR;
+using Application.Features.ServiceManagement.Commands;
 
 public class DeleteServiceEndpoint : EndpointWithoutRequest
 {

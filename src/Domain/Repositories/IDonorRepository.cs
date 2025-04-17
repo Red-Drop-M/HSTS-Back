@@ -5,6 +5,7 @@ namespace Domain.Repositories
     public interface IDonorRepository
     {
         Task<Donor?> GetByIdAsync(Guid id);
+        Task<List<Donor>> GetAllAsync();
         Task<Donor?> GetByEmailAsync(string email);
         Task<Donor?> GetByPhoneNumberAsync(string phoneNumber);
         Task<Donor?> GetByAddressAsync(string address);

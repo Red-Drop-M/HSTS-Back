@@ -2,6 +2,7 @@ using FastEndpoints;
 using Application.Features.BloodBagManagement.Queries;
 using Application.Common.Models;
 using Domain.Entities;
+using MediatR;
 
 namespace Presentation.Endpoints.BloodBagManagement
 {

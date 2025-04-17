@@ -1,12 +1,17 @@
 using MediatR;
 using Application.Common.Models;
+using Domain.ValueObjects;
 
 namespace Application.Features.BloodBagManagement.Commands
 {
     public class CreateBloodBagCommand : IRequest<Result<Guid>>
     {
-        public string BloodType { get; set; }
-        public int Quantity { get; set; }
-        // Add other properties as needed
+        public BloodType BloodType { get; set; } = BloodType.APositive();
+        public BloodBagType BloodBagType { get; set; } = BloodBagType.Blood();
+        public DateOnly ExpirationDonorDate { get; set; }
+        public Guid DonorId { get; set; }
+        public Guid? RequestId { get; set; } 
+
+
     }
 } 

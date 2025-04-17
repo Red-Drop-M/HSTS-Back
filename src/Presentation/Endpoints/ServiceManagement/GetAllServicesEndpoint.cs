@@ -1,8 +1,9 @@
 using FastEndpoints;
-using Application.Features.ServiceManagement.Command;
-using Application.Common.Models;
+using MediatR;
+using Application.Features.ServiceManagement.Queries;
+using Domain.Entities;
 
-public class GetAllServicesEndpoint : EndpointWithoutRequest<List<ServiceResponse>>
+public class GetAllServicesEndpoint : EndpointWithoutRequest<List<Service?>>
 {
     private readonly ISender _sender;
 
@@ -19,7 +20,7 @@ public class GetAllServicesEndpoint : EndpointWithoutRequest<List<ServiceRespons
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var services = await _sender.Send(new GetAllServicesQuery(), ct);
-        await SendOkAsync(services, ct);
+        var result = await _sender.Send(new GetAllServicesQuery(), ct);
+        await SendOkAsync(result.Value, ct);
     }
 }

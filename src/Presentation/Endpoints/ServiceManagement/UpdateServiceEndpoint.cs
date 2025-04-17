@@ -1,5 +1,6 @@
 using FastEndpoints;
-using Application.Features.ServiceManagement.Command;
+using MediatR;
+using Application.Features.ServiceManagement.Commands;
 using Application.Common.Models;
 
 public class UpdateServiceEndpoint : Endpoint<UpdateServiceCommand>

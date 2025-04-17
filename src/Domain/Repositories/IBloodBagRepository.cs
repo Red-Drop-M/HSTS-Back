@@ -5,6 +5,7 @@ namespace Domain.Repositories
     public interface IBloodBagRepository
     {
         Task<BloodBag?> GetByIdAsync(Guid id);
+        Task<List<BloodBag?>> GetAllAsync();
         Task<List<BloodBag?>> GetByBloodGroupAsync(BloodType bloodGroup);
         Task<List<BloodBag?>> GetByBloodBagTypeAsync(BloodBagType bloodBagType);
         Task<List<BloodBag?>> GetByExpiryDateAsync(DateOnly expiryDate);

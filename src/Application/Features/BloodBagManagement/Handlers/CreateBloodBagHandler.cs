@@ -1,7 +1,8 @@
 using MediatR;
 using Application.Common.Models;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Application.Features.BloodBagManagement.Commands;
+using Domain.Repositories;
 
 namespace Application.Features.BloodBagManagement.Handlers
 {
@@ -16,15 +17,26 @@ namespace Application.Features.BloodBagManagement.Handlers
 
         public async Task<Result<Guid>> Handle(CreateBloodBagCommand request, CancellationToken cancellationToken)
         {
-            var bloodBag = new BloodBag
-            {
-                BloodType = request.BloodType,
-                Quantity = request.Quantity,
-                // Initialize other properties as needed
-            };
+            try {
+                var bloodBag = new BloodBag
+            (
+                bloodType : request.BloodType,
+                bloodBagType : request.BloodBagType,
+                expirationDonorDate : request.ExpirationDonorDate,
+                donorId : request.DonorId
+            );
 
             await _bloodBagRepository.AddAsync(bloodBag);
             return Result<Guid>.Success(bloodBag.Id);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return Result<Guid>.Failure($"Error creating blood bag: {ex.Message}");
+            }
+
+            
+            }
+            
         }
     }
-} 

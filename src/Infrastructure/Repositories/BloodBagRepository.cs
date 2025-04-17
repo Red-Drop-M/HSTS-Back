@@ -21,6 +21,13 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
+        public async Task<List<BloodBag?>> GetAllAsync()
+        {
+            return await _context.BloodBags
+                .Cast<BloodBag?>()
+                .ToListAsync();
+        }
+
         public async Task<List<BloodBag?>> GetByBloodGroupAsync(BloodType bloodGroup)
         {
             return await _context.BloodBags

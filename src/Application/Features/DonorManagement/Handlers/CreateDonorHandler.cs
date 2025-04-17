@@ -1,7 +1,8 @@
 using MediatR;
 using Application.Common.Models;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Domain.Repositories;
+using Application.Features.DonorManagement.Commands;
 
 namespace Application.Features.DonorManagement.Handlers
 {
@@ -16,15 +17,27 @@ namespace Application.Features.DonorManagement.Handlers
 
         public async Task<Result<Guid>> Handle(CreateDonorCommand request, CancellationToken cancellationToken)
         {
-            var donor = new Donor
+            try
             {
-                Name = request.Name,
-                BloodType = request.BloodType,
-                // Initialize other properties as needed
-            };
+        var donor = new Donor(
+            name: request.Name,
+            email: request.Email,
+            dateOfBirth: request.DateOfBirth,
+            bloodType: request.BloodType,
+            nin: request.NIN,
+            phoneNumber: request.PhoneNumber,
+            address: request.Address,
+            lastDonationDate: request.LastDonationDate
+        );
 
-            await _donorRepository.AddAsync(donor);
-            return Result<Guid>.Success(donor.Id);
+        await _donorRepository.AddAsync(donor);
+        return Result<Guid>.Success(donor.Id);
+            }
+        catch (Exception ex)
+            {
+        // Log the error
+        return Result<Guid>.Failure($"Error creating donor: {ex.Message}");
+            }
         }
     }
 } 

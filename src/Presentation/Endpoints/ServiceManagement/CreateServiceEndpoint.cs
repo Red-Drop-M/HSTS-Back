@@ -1,5 +1,6 @@
 using FastEndpoints;
-using Application.Features.ServiceManagement.Command;
+using Application.Features.ServiceManagement.Commands;
+using MediatR;
 using Application.Common.Models;
 
 public class CreateServiceEndpoint : Endpoint<CreateServiceCommand, Result<Guid>>

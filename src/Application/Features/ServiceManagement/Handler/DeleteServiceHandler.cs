@@ -1,7 +1,9 @@
 using Domain.Repositories;
 using MediatR;
 using Application.Common.Models;
+using Application.Features.ServiceManagement.Commands;
 namespace Application.Features.ServiceManagement.Handler
+
 {
     public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, Result<bool>>
     {
@@ -15,10 +17,10 @@ namespace Application.Features.ServiceManagement.Handler
         public async Task<Result<bool>> Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
         {
             var service = await _repository.GetByIdAsync(request.Id);
-            if (service == null) return Result.Failure<bool>("Service not found");
+            if (service == null) return Result<bool>.Failure("Service not found");
 
             await _repository.DeleteAsync(request.Id);
-            return Result.Success(true);
+            return Result<bool>.Success(true);
         }
     }
 }

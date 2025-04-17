@@ -1,6 +1,7 @@
 using MediatR;
 using Application.Common.Models;
-using Infrastructure.Repositories;
+using Domain.Repositories;
+using Application.Features.BloodBagManagement.Commands;
 
 namespace Application.Features.BloodBagManagement.Handlers
 {
@@ -21,7 +22,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                 return Result<bool>.Failure("Blood bag not found.");
             }
 
-            await _bloodBagRepository.DeleteAsync(bloodBag);
+            await _bloodBagRepository.DeleteAsync(bloodBag.Id);
             return Result<bool>.Success(true);
         }
     }

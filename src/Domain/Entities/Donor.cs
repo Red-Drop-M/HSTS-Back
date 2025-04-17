@@ -20,8 +20,6 @@ namespace Domain.Entities
         // Navigation Property (One-to-Many with BloodBags)
         public ICollection<BloodBag> BloodBags { get; private set; } = new List<BloodBag>();
 
-        // EF Core requires a parameterless constructor
-        private Donor() { }
 
         // Optional constructor to create a donor (without setting Id)
         public Donor(
@@ -43,5 +41,27 @@ namespace Domain.Entities
             Address = address;
             LastDonationDate = lastDonationDate;
         }
+        // EF Core requires a parameterless constructor
+        private Donor() { }
+
+        public void Update(
+    string name,
+    string email, 
+    DateOnly dateOfBirth,
+    BloodType bloodType,
+    string nin,
+    string phoneNumber,
+    string address,
+    DateOnly lastDonationDate)
+{
+    Name = name;
+    Email = email;
+    DateOfBirth = dateOfBirth;
+    BloodType = bloodType;
+    NIN = nin;
+    PhoneNumber = phoneNumber;
+    Address = address;
+    LastDonationDate = lastDonationDate;
+}
     }
 }

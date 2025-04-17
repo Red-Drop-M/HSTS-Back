@@ -1,6 +1,7 @@
 using MediatR;
 using Application.Common.Models;
-using Infrastructure.Repositories;
+using Application.Features.DonorManagement.Commands;
+using Domain.Repositories;
 
 namespace Application.Features.DonorManagement.Handlers
 {
@@ -21,7 +22,7 @@ namespace Application.Features.DonorManagement.Handlers
                 return Result<bool>.Failure("Donor not found.");
             }
 
-            await _donorRepository.DeleteAsync(donor);
+            await _donorRepository.DeleteAsync(donor.Id);
             return Result<bool>.Success(true);
         }
     }
