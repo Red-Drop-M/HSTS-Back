@@ -48,13 +48,13 @@ namespace Infrastructure.Repositories
         public async Task<Donor?> GetByNameAsync(string name)
         {
             return await _context.Donors
-                .FirstOrDefaultAsync(d => d.FullName == name);
+                .FirstOrDefaultAsync(d => d.Name == name);
         }
 
         public async Task<List<Donor>> GetByBloodGroupAsync(BloodType bloodGroup)
         {
             return await _context.Donors
-                .Where(d => d.BloodGroup == bloodGroup)
+                .Where(d => d.BloodType == bloodGroup)
                 .ToListAsync();
         }
 

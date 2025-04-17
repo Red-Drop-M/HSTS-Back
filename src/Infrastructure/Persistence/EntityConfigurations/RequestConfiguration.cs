@@ -13,7 +13,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(r => r.Donor)
                 .WithMany()
-                .HasForeignKey(r => r.DonnorId)
+                .HasForeignKey(r => r.DonorId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(r => r.Service)

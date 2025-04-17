@@ -42,8 +42,8 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("DonorId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("ExpirationDonorDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("ExpirationDate")
+                        .HasColumnType("date");
 
                     b.Property<Guid?>("RequestId")
                         .HasColumnType("uuid");
@@ -148,7 +148,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("DonnorId")
+                    b.Property<Guid?>("DonorId")
                         .HasColumnType("uuid");
 
                     b.Property<DateOnly?>("DueDate")
@@ -177,7 +177,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DonnorId");
+                    b.HasIndex("DonorId");
 
                     b.HasIndex("ServiceId");
 
@@ -272,7 +272,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
                         .WithMany()
-                        .HasForeignKey("DonnorId")
+                        .HasForeignKey("DonorId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Domain.Entities.Service", "Service")

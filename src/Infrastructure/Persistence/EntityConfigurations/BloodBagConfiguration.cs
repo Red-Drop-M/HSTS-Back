@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
             builder.Property(b => b.AcquiredDate)
                 .IsRequired();
 
-            builder.Property(b => b.ExpirationDonorDate)
+            builder.Property(b => b.ExpirationDate)
                 .IsRequired();
         }
     }
