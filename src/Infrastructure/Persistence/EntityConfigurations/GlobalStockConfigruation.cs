@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasConversion(
                     bt => bt.Value,
-                    value => BloodType.Convert(value));
+                    value => BloodType.FromString(value));
 
             // BloodBagType conversion (stored as string)
             builder.Property(gs => gs.BloodBagType)

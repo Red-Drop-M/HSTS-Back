@@ -17,7 +17,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -26,7 +26,8 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateOnly>("AcquiredDate")
                         .HasColumnType("date");
@@ -65,7 +66,8 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -139,12 +141,17 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<int>("AquiredQty")
                         .HasColumnType("integer");
 
                     b.Property<string>("BloodBagType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BloodGroup")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -188,7 +195,8 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -271,12 +279,12 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
-                        .WithMany()
+                        .WithMany("Requests")
                         .HasForeignKey("DonorId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Domain.Entities.Service", "Service")
-                        .WithMany()
+                        .WithMany("Requests")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -288,11 +296,18 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Donor", b =>
                 {
                     b.Navigation("BloodBags");
+
+                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.Navigation("BloodSacs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618
         }

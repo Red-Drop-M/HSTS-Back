@@ -3,7 +3,8 @@ using Domain.ValueObjects;
 namespace Domain.Repositories
 {
     public interface IBloodBagRepository
-    {
+    {   
+        
         Task<BloodBag?> GetByIdAsync(Guid id);
         Task<List<BloodBag?>> GetByBloodGroupAsync(BloodType bloodGroup);
         Task<List<BloodBag?>> GetByBloodBagTypeAsync(BloodBagType bloodBagType);

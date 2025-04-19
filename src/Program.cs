@@ -7,6 +7,7 @@ using Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Presentation.Controllers;
+using Infrastructure.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 Console.WriteLine("Database connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // FastEndpoints + Swagger
+builder.Services.AddInfrastructureServices();
 builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument(o =>
 {

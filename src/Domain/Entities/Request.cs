@@ -1,9 +1,11 @@
 using Domain.ValueObjects;
+
 namespace Domain.Entities
 {
     public class Request
     {
         public Guid Id { get; private set; }
+        public BloodType BloodGroup { get; private set; } = BloodType.APositive();
         public Priority Priority { get; private set; } = Priority.Standard();
         public BloodBagType BloodBagType { get; private set; } = BloodBagType.Blood();
         public DateOnly RequestDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -24,6 +26,7 @@ namespace Domain.Entities
 
         private Request() { }
 
+        // Existing constructor
         public Request(
             Priority priority,
             BloodBagType bloodBagType,
@@ -31,7 +34,7 @@ namespace Domain.Entities
             string? moreDetails,
             int requiredQty,
             Guid? serviceId = null,
-            Guid? donnorId = null)
+            Guid? donorId = null)
         {
             Priority = priority;
             BloodBagType = bloodBagType;
@@ -39,9 +42,34 @@ namespace Domain.Entities
             MoreDetails = moreDetails;
             RequiredQty = requiredQty;
             ServiceId = serviceId;
-            DonorId = donnorId;
+            DonorId = donorId;
             Status = RequestStatus.Pending();
             RequestDate = DateOnly.FromDateTime(DateTime.Now);
+        }
+
+        // New constructor with all attributes except Id
+        public Request(
+            Priority priority,
+            BloodBagType bloodBagType,
+            DateOnly requestDate,
+            DateOnly? dueDate,
+            RequestStatus status,
+            string? moreDetails,
+            int requiredQty,
+            int aquiredQty,
+            Guid? serviceId,
+            Guid? donorId)
+        {
+            Priority = priority;
+            BloodBagType = bloodBagType;
+            RequestDate = requestDate;
+            DueDate = dueDate;
+            Status = status;
+            MoreDetails = moreDetails;
+            RequiredQty = requiredQty;
+            AquiredQty = aquiredQty;
+            ServiceId = serviceId;
+            DonorId = donorId;
         }
     }
 }

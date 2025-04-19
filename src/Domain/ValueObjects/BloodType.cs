@@ -1,3 +1,5 @@
+using Shared.Exceptions;
+
 namespace Domain.ValueObjects
 {
     public class BloodType
@@ -18,7 +20,7 @@ namespace Domain.ValueObjects
         public static BloodType ONegative() => new BloodType("O-");
         public static BloodType OPositive() => new BloodType("O+");
 
-        public static BloodType Convert(string value) => value.ToUpperInvariant() switch
+        public static BloodType FromString(string value) => value.ToUpperInvariant() switch
         {
             "A-" => ANegative(),
             "A+" => APositive(),
@@ -28,7 +30,7 @@ namespace Domain.ValueObjects
             "AB+" => ABPositive(),
             "O-" => ONegative(),
             "O+" => OPositive(),
-            _ => throw new ArgumentException("Invalid BloodType", nameof(value))
+            _ => throw new ValidationException("Invalid BloodType", "BloodType")
         };
 
         public override bool Equals(object? obj)
@@ -39,22 +41,9 @@ namespace Domain.ValueObjects
             }
             return false;
         }
-        public static string convert(string value)
-        {
-            return value.ToUpperInvariant() switch
-            {
-                "A-" => ANegative().ToString(),
-                "A+" => APositive().ToString(),
-                "B-" => BNegative().ToString(),
-                "B+" => BPositive().ToString(),
-                "AB-" => ABNegative().ToString(),
-                "AB+" => ABPositive().ToString(),
-                "O-" => ONegative().ToString(),
-                "O+" => OPositive().ToString(),
-                _ => throw new ArgumentException("Invalid BloodType")
-            };
-        }
+
         public override int GetHashCode() => Value.ToLowerInvariant().GetHashCode();
+
         public override string ToString() => Value;
     }
 }

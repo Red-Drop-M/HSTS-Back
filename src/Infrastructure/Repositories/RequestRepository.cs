@@ -28,17 +28,17 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<List<Request>> GetByStatusAsync(RequestStatus status)
-{
-    return await _context.Requests
-        .Where(r => r.Status == status)
-        .ToListAsync();
-}
+        {
+            return await _context.Requests
+                .Where(r => r.Status == status)
+                .ToListAsync();
+        }
 
-
-        public async Task AddAsync(Request request)
+        public async Task<Request> AddAsync(Request request)
         {
             await _context.Requests.AddAsync(request);
             await _context.SaveChangesAsync();
+            return request; // Return the added Request object
         }
 
         public async Task UpdateAsync(Request request)

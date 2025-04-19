@@ -1,3 +1,5 @@
+using Shared.Exceptions;
+
 namespace Domain.ValueObjects
 {
     public class Priority
@@ -18,7 +20,7 @@ namespace Domain.ValueObjects
             "critical" => Critical(),
             "low" => Low(),
             "standard" => Standard(),
-            _ => throw new ArgumentException("Invalid Priority", nameof(value))
+            _ => throw new ValidationException("Invalid Priority", "Priority")
         };
 
         public override bool Equals(object? obj)

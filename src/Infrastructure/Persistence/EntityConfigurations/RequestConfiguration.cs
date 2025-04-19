@@ -9,18 +9,24 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Request> builder)
         {
+            // Primary Key
             builder.HasKey(r => r.Id);
+            builder.Property(r => r.Id)
+                .HasDefaultValueSql("gen_random_uuid()"); // Use this for PostgreSQL
 
+
+            // Foreign Keys
             builder.HasOne(r => r.Donor)
-                .WithMany()
+                .WithMany(d => d.Requests) // Assuming Donor has a collection of Requests
                 .HasForeignKey(r => r.DonorId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(r => r.Service)
-                .WithMany()
+                .WithMany(s => s.Requests) // Assuming Service has a collection of Requests
                 .HasForeignKey(r => r.ServiceId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            // Property configurations
             builder.Property(r => r.Priority)
                 .IsRequired()
                 .HasConversion(
@@ -44,6 +50,18 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(r => r.MoreDetails)
                 .HasMaxLength(500);
+
+            builder.Property(r => r.BloodGroup)
+                .IsRequired()
+                .HasConversion(
+                    b => b.Value,  // Convert BloodGroup object to string
+                    b => BloodType.FromString(b));
+
+            builder.Property(r => r.AquiredQty)
+                .IsRequired(); // Ensuring AquiredQty is required
+
+            builder.Property(r => r.DueDate)
+                .IsRequired(false); // Ensuring DueDate can be null
         }
     }
 }

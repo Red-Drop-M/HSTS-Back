@@ -8,7 +8,7 @@ namespace Domain.Repositories
         Task<Request?> GetByIdAsync(Guid id);
         Task<Request?> GetByServiceIdAsync(Guid serviceId);
         Task<List<Request>> GetByStatusAsync(RequestStatus status);
-        Task AddAsync(Request request);
+        Task<Request> AddAsync(Request request);
         Task UpdateAsync(Request request);
         Task DeleteAsync(Guid id);
         Task <List<Request>> GetByBloodBagTypeAsync(BloodBagType bloodBagType);

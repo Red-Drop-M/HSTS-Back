@@ -10,6 +10,9 @@ namespace Infrastructure.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<BloodBag> builder)
         {
             builder.HasKey(b => b.Id);
+            builder.Property(b => b.Id)
+                .HasDefaultValueSql("gen_random_uuid()"); // Use this for PostgreSQL
+
 
             builder.HasOne(b => b.Donor)
                 .WithMany(d => d.BloodBags)
@@ -23,7 +26,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(b => b.BloodType)
                 .IsRequired()
-                .HasConversion(bt => bt.Value, val => BloodType.Convert(val));
+                .HasConversion(bt => bt.Value, val => BloodType.FromString(val));
 
             builder.Property(b => b.BloodBagType)
                 .IsRequired()
