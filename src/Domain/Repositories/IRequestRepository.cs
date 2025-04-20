@@ -17,5 +17,7 @@ namespace Domain.Repositories
         Task<List<Request>> GetByDueDateAsync(DateOnly dueDate);
         Task<List<Request>> GetAllAsync();
         Task<List<Request>> GetByDonorIdAsync(Guid donorId);
+        Task<(List<Request> Requests, int Total)> GetAllAsync(int page, int pageSize, RequestFilter filter);
+
     }
 }

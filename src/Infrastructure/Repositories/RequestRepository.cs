@@ -97,5 +97,38 @@ namespace Infrastructure.Repositories
                 .Where(r => r.DonorId == donorId)
                 .ToListAsync();
         }
+        public async Task<(List<Request>, int)> GetAllAsync(int page, int pageSize, RequestFilter filter)
+        {
+            var query = _context.Requests.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Priority))
+
+            query = query.Where(r => r.Priority.Value == filter.Priority);
+
+            if (!string.IsNullOrEmpty(filter.BloodBagType))
+            query = query.Where(r => r.BloodBagType.Value == filter.BloodBagType);
+            if(!string.IsNullOrEmpty(filter.BloodGroup))
+            query = query.Where(r => r.BloodGroup.Value == filter.BloodGroup);
+            if (filter.RequestDate != null)
+            query = query.Where(r => r.RequestDate == DateOnly.Parse(filter.RequestDate));
+            if (filter.DueDate != null)
+            query = query.Where(r => r.DueDate == DateOnly.Parse(filter.DueDate));
+            if (filter.DonorId != null)
+            query = query.Where(r => r.DonorId == Guid.Parse(filter.DonorId));
+            if (filter.ServiceId != null)
+            query = query.Where(r => r.ServiceId == Guid.Parse(filter.ServiceId));
+            if (!string.IsNullOrEmpty(filter.Status))
+            query = query.Where(r => r.Status.Value == filter.Status);
+
+            var total = await query.CountAsync();
+
+            var requests = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (requests, total);
+        }
+
     }
 }
