@@ -4,7 +4,7 @@ using Application.DTOs;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
-namespace Presnentation.Endpoints.BloodRequests
+namespace Presentation.Endpoints.BloodRequests
 {
     public class DeleteRequest : Endpoint<DeleteRequestRequest, DeleteRequestResponse>
     {

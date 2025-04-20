@@ -71,5 +71,14 @@ namespace Domain.Entities
             ServiceId = serviceId;
             DonorId = donorId;
         }
+        public void UpdateDetails(BloodBagType? bloodBagType, Priority? priority, DateOnly? dueDate, string? moreDetails, int? requiredQty)
+        {
+            if (bloodBagType is not null) BloodBagType = bloodBagType;
+            if (priority is not null) Priority = priority;
+            if (dueDate is not null) DueDate = dueDate;
+            if (moreDetails is not null) MoreDetails = moreDetails;
+            if (requiredQty is not null) RequiredQty = requiredQty.Value;
+        }
+
     }
 }
