@@ -1,5 +1,6 @@
 using MediatR;
 using Domain.ValueObjects;
+using Application.DTOs;
 
 namespace Application.Features.BloodRequests.Commands
 {

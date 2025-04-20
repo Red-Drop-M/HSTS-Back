@@ -3,7 +3,7 @@ using Domain.ValueObjects;
 
 
 
-namespace Application.Features.BloodRequests
+namespace Application.DTOs
 {
     public class RequestDto
     {

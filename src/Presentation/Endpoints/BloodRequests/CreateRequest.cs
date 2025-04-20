@@ -5,6 +5,7 @@ using Domain.ValueObjects;
 using Application.Features.BloodRequests.Commands;
 using Shared.Exceptions;
 using System;
+using Application.DTOs;
 using Application.Features.BloodRequests;
 namespace Presentation.Endpoints.BloodRequests
 {
@@ -24,7 +25,7 @@ namespace Presentation.Endpoints.BloodRequests
             Post("/bloodrequests");
             AllowAnonymous();
             Description(x => x
-                .Produces<CreateRequestResponse>(StatusCodes.Status200OK)
+                .Produces<CreateRequestResponse>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError));

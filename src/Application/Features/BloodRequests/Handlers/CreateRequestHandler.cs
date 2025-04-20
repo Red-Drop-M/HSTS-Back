@@ -4,6 +4,7 @@ using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Application.Features.BloodRequests;
+using Application.DTOs;
 using System;
 using Application.Features.BloodRequests.Commands;
 namespace Application.Features.BloodRequests.Handlers
