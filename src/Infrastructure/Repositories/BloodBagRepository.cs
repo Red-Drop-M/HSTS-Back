@@ -96,5 +96,77 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<(List<BloodBag>, int)> GetAllAsync(int page, int pageSize, BloodBagFilter filter)
+        {
+            var query = _context.BloodBags.AsQueryable();
+
+            if (filter.BloodType != null)
+            query = query.Where(b => b.BloodType == filter.BloodType);
+
+            if (filter.BloodBagType != null)
+            query = query.Where(b => b.BloodBagType == filter.BloodBagType);
+
+            if (filter.ExpirationDate != null)
+            query = query.Where(b => filter.ExpirationDate.HasValue && b.ExpirationDate == DateOnly.FromDateTime(filter.ExpirationDate.Value));
+
+            if (filter.AcquiredDate != null)
+            query = query.Where(b => b.AcquiredDate == filter.AcquiredDate);
+
+            if (filter.Status != null)
+            query = query.Where(b => b.Status == filter.Status);
+
+            if (filter.DonorId != null)
+            query = query.Where(b => b.DonorId == filter.DonorId);
+
+            if (filter.RequestId != null)
+            query = query.Where(b => b.RequestId == filter.RequestId);
+
+            var total = await query.CountAsync();
+
+            var bloodBags = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (bloodBags, total);
+        }
+
+
+        /*
+        public async Task<(List<Request>, int)> GetAllAsync(int page, int pageSize, RequestFilter filter)
+        {
+            var query = _context.Requests.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Priority))
+
+            query = query.Where(r => r.Priority.Value == filter.Priority);
+
+            if (!string.IsNullOrEmpty(filter.BloodBagType))
+            query = query.Where(r => r.BloodBagType.Value == filter.BloodBagType);
+            if(!string.IsNullOrEmpty(filter.BloodGroup))
+            query = query.Where(r => r.BloodGroup.Value == filter.BloodGroup);
+            if (filter.RequestDate != null)
+            query = query.Where(r => r.RequestDate == DateOnly.Parse(filter.RequestDate));
+            if (filter.DueDate != null)
+            query = query.Where(r => r.DueDate == DateOnly.Parse(filter.DueDate));
+            if (filter.DonorId != null)
+            query = query.Where(r => r.DonorId == Guid.Parse(filter.DonorId));
+            if (filter.ServiceId != null)
+            query = query.Where(r => r.ServiceId == Guid.Parse(filter.ServiceId));
+            if (!string.IsNullOrEmpty(filter.Status))
+            query = query.Where(r => r.Status.Value == filter.Status);
+
+            var total = await query.CountAsync();
+
+            var requests = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (requests, total);
+        }
+        */
+
     }
 }

@@ -86,5 +86,48 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+         public async Task<List<Donor>> GetAllAsync()
+        {
+            return await _context.Donors
+                .ToListAsync();
+        }
+
+        public async Task<(List<Donor>, int)> GetAllAsync(int page, int pageSize, DonorFilter filter)
+        {
+            var query = _context.Donors.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            query = query.Where(d => d.Name.Contains(filter.Name));
+
+            if (!string.IsNullOrEmpty(filter.Email))
+            query = query.Where(d => d.Email.Contains(filter.Email));
+
+            if (!string.IsNullOrEmpty(filter.PhoneNumber))
+            query = query.Where(d => d.PhoneNumber.Contains(filter.PhoneNumber));
+
+            if (!string.IsNullOrEmpty(filter.Address))
+            query = query.Where(d => d.Address.Contains(filter.Address));
+
+            if (!string.IsNullOrEmpty(filter.NIN))
+            query = query.Where(d => d.NIN.Contains(filter.NIN));
+
+            if (filter.BloodType != null)
+            query = query.Where(d => d.BloodType == filter.BloodType);
+
+            if (filter.LastDonationDate != null)
+            query = query.Where(d => d.LastDonationDate == filter.LastDonationDate);
+
+            var total = await query.CountAsync();
+
+            var donors = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (donors, total);
+        }
+
+       
     }
 }

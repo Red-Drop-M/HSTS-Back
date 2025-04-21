@@ -36,5 +36,29 @@ namespace Domain.Entities
             AcquiredDate = DateOnly.FromDateTime(DateTime.Now);
             Status = BloodBagStatus.Ready();
         }
+
+        public void UpdateDetails(
+            BloodType? bloodType = null,
+            BloodBagType? bloodBagType = null,
+            DateOnly? expirationDate = null,
+            Guid? donorId = null,
+            Guid? requestId = null)
+        {
+            if (bloodType is not null) BloodType = bloodType;
+            if (bloodBagType is not null) BloodBagType = bloodBagType;
+            if (expirationDate is not null) ExpirationDate = expirationDate.Value;
+            if (donorId is not null) DonorId = donorId;
+            if (requestId is not null) RequestId = requestId;
+        }
+
+        public void UpdateStatus(BloodBagStatus status)
+        {
+            Status = status;
+        }
+        public void UpdateStatus(BloodBagStatus status, DateOnly expirationDate)
+        {
+            Status = status;
+            ExpirationDate = expirationDate;
+        }
     }
 }

@@ -42,5 +42,25 @@ namespace Domain.Entities
             Address = address;
             LastDonationDate = lastDonationDate;
         }
+
+        public void UpdateDetails(
+            string name,
+            DateOnly BirthDate,
+            string email,
+            string phoneNumber,
+            string address,
+            string nin,
+            BloodType bloodType,
+            DateOnly lastDonationDate)
+        {
+            Name = name;
+            DateOfBirth = BirthDate;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            Address = address;
+            NIN = nin;
+            BloodType = bloodType;
+            LastDonationDate = lastDonationDate;
+        }
     }
 }

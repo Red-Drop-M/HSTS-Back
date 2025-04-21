@@ -16,5 +16,10 @@ namespace Domain.Repositories
         Task AddAsync(BloodBag bloodBag);
         Task UpdateAsync(BloodBag bloodBag);
         Task DeleteAsync(Guid id);
+
+        Task<(List<BloodBag> BloodBags, int Total)> GetAllAsync(int page, int pageSize, BloodBagFilter filter);
+
+        // Task<(List<Request> Requests, int Total)> GetAllAsync(int page, int pageSize, RequestFilter filter);
+
     }
 }
