@@ -28,6 +28,7 @@ namespace Domain.Entities
 
         // Existing constructor
         public Request(
+            BloodType bloodGroup,
             Priority priority,
             BloodBagType bloodBagType,
             DateOnly? dueDate,
@@ -49,6 +50,7 @@ namespace Domain.Entities
 
         // New constructor with all attributes except Id
         public Request(
+            BloodType bloodGroup,
             Priority priority,
             BloodBagType bloodBagType,
             DateOnly requestDate,
