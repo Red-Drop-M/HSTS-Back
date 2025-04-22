@@ -1,10 +1,11 @@
 using MediatR;
 using Domain.ValueObjects;
 using Application.DTOs;
+using Shared.Exceptions;
 
 namespace Application.Features.DonorManagement.Commands
 {
-    public class CreateDonorCommand : IRequest<DonorDTO>
+    public class CreateDonorCommand : IRequest<(DonorDTO? donor, BaseException? err)>
     {
         //public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;

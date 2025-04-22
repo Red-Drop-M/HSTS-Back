@@ -25,6 +25,7 @@ namespace Application.Features.BloodRequests.Handlers
            try
            {
              var newRequest = new Request(
+                request.BloodGroup,
                 request.Priority,
                 request.BloodBagType,
                 request.RequestDate,

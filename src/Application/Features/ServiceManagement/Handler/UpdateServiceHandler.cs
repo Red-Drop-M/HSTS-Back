@@ -8,7 +8,7 @@ using Domain.ValueObjects;
 
 namespace Application.Features.ServiceManagement.Handler
 {
-  
+ 
     public class UpdateServiceHandler : IRequest<(ServiceDTO? service, BaseException? err)>
     {
         private readonly IServiceRepository _serviceRepository;

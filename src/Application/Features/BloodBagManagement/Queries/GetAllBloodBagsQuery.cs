@@ -5,15 +5,6 @@ using Application.DTOs;
 
 namespace Application.Features.BloodBagManagement.Queries
 {
-    /*public record GetAllBloodBagsQuery(
-        int Page,
-        int PageSize,
-        string? BloodType,
-        string? BloodBagType,
-        string? ExpirationDate,
-        string? DonorId,
-        string? RequestId) : IRequest<(List<BloodBagDTO>? BloodBags, int total, BaseException? err)>;
-*/
         public class GetAllBloodBagsQuery : IRequest<(List<BloodBagDTO>? BloodBags, int total, BaseException? err)>
     {
         public BloodType? BloodType { get; set; }

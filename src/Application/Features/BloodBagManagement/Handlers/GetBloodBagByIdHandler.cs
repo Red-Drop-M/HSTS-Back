@@ -1,10 +1,7 @@
 using MediatR;
 using Application.DTOs;
 using Shared.Exceptions;
-using Domain.ValueObjects;
-using Domain.Entities;
 using Domain.Repositories;
-using Microsoft.Extensions.Logging;
 using Application.Features.BloodBagManagement.Queries;
 
 
@@ -37,6 +34,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                     BloodType = bloodBag.BloodType,
                     BloodBagType = bloodBag.BloodBagType,
                     ExpirationDate = bloodBag.ExpirationDate,
+                    AcquiredDate = bloodBag.AcquiredDate,
                     DonorId = bloodBag.DonorId ?? Guid.Empty,
                     RequestId = bloodBag.RequestId
                 };

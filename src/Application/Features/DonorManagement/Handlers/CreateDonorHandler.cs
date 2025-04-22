@@ -3,10 +3,11 @@ using Application.DTOs;
 using Domain.Entities;
 using Domain.Repositories;
 using Application.Features.DonorManagement.Commands;
+using Shared.Exceptions;
 
 namespace Application.Features.DonorManagement.Handlers
 {
-    public class CreateDonorHandler : IRequestHandler<CreateDonorCommand, DonorDTO>
+   public class CreateDonorHandler : IRequestHandler<CreateDonorCommand, (DonorDTO? donor, BaseException? err)>
     {
         private readonly IDonorRepository _donorRepository;
         private readonly ILogger<CreateDonorHandler> _logger;
@@ -17,7 +18,7 @@ namespace Application.Features.DonorManagement.Handlers
             _logger = logger;
         }
 
-        public async Task<DonorDTO> Handle(CreateDonorCommand Donor , CancellationToken cancellationToken)
+        public async Task<(DonorDTO? donor, BaseException? err)> Handle(CreateDonorCommand Donor, CancellationToken cancellationToken)
         {
             try
             {
@@ -32,7 +33,7 @@ namespace Application.Features.DonorManagement.Handlers
                     Donor.DateOfBirth);
 
                 await _donorRepository.AddAsync(newDonor);
-                return new DonorDTO
+                return (new DonorDTO
                 {
                     Id = newDonor.Id,
                     Name = newDonor.Name,
@@ -43,13 +44,13 @@ namespace Application.Features.DonorManagement.Handlers
                     NIN = newDonor.NIN,
                     PhoneNumber = newDonor.PhoneNumber,
                     DateOfBirth = newDonor.DateOfBirth
-                };
+                },null);
             }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error creating donor");
-                    throw;
-                }
+            catch (BaseException ex)
+            {
+                _logger.LogError(ex, "Error creating donor");
+                return (null,ex);
+            }
 
         }
     }

@@ -8,16 +8,6 @@ namespace Application.Features.ServiceManagement.Commands
     {
         public Guid Id { get; set; }
         public string Name { get; } = string.Empty;
-
-        public UpdateServiceCommand(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-        public UpdateServiceCommand(string name)
-        {
-            Name = name;
-        }
     }
         
 

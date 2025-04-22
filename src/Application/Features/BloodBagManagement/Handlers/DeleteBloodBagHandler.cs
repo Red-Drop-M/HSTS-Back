@@ -36,7 +36,9 @@ namespace Application.Features.BloodBagManagement.Handlers
                     BloodType = bloodBag.BloodType,
                     BloodBagType = bloodBag.BloodBagType,
                     ExpirationDate = bloodBag.ExpirationDate,
-                    DonorId = bloodBag.DonorId ?? throw new InvalidOperationException("DonorId cannot be null")
+                    AcquiredDate = bloodBag.AcquiredDate,
+                    DonorId = bloodBag.DonorId ?? throw new InvalidOperationException("DonorId cannot be null"),
+                    RequestId = bloodBag.RequestId
                 };
 
                 return (bloodBagDto, null);

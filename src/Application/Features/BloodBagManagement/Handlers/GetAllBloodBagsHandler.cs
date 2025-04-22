@@ -1,5 +1,4 @@
 using Application.DTOs;
-using Domain.Entities;
 using Domain.ValueObjects;
 using MediatR;
 using Domain.Repositories;
@@ -48,6 +47,7 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
                 BloodType = b.BloodType,
                 BloodBagType = b.BloodBagType,
                 ExpirationDate = b.ExpirationDate,
+                AcquiredDate = b.AcquiredDate,
                 DonorId = b.DonorId ?? Guid.Empty,
                 RequestId = b.RequestId
             }).ToList();
