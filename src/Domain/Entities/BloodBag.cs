@@ -10,7 +10,6 @@ namespace Domain.Entities
         public BloodBagStatus Status { get; private set; } = BloodBagStatus.Ready();
         public DateOnly AcquiredDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly ExpirationDate { get; private set; }
-
         // Foreign keys
         public Guid? DonorId { get; private set; }
         public Guid? RequestId { get; private set; }

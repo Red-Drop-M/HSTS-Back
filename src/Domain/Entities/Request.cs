@@ -16,13 +16,14 @@ namespace Domain.Entities
         public int AquiredQty { get; private set; } = 0;
 
         // Foreign keys
-        public Guid? ServiceId { get; private set; }
+        public Guid? ServiceId { get; private set;}
         public Guid? DonorId { get; private set; }
 
         // Navigation properties
         public Service? Service { get; private set; }
         public Donor? Donor { get; private set; }
         public ICollection<BloodBag> BloodSacs { get; private set; } = new List<BloodBag>();
+        public ICollection<DonorPledge> Pledges { get; private set; } = new List<DonorPledge>();
 
         private Request() { }
 
@@ -81,6 +82,5 @@ namespace Domain.Entities
             if (moreDetails is not null) MoreDetails = moreDetails;
             if (requiredQty is not null) RequiredQty = requiredQty.Value;
         }
-
     }
 }

@@ -109,6 +109,28 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                     b.ToTable("Donors");
                 });
 
+            modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
+                {
+                    b.Property<Guid>("DonorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("PledgeDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DonorId", "RequestId");
+
+                    b.HasIndex("RequestId");
+
+                    b.ToTable("Pledges");
+                });
+
             modelBuilder.Entity("Domain.Entities.GlobalStock", b =>
                 {
                     b.Property<string>("BloodType")
@@ -276,6 +298,25 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                     b.Navigation("Request");
                 });
 
+            modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
+                {
+                    b.HasOne("Domain.Entities.Donor", "Donor")
+                        .WithMany()
+                        .HasForeignKey("DonorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Request", "Request")
+                        .WithMany("Pledges")
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Donor");
+
+                    b.Navigation("Request");
+                });
+
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
@@ -303,6 +344,8 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.Navigation("BloodSacs");
+
+                    b.Navigation("Pledges");
                 });
 
             modelBuilder.Entity("Domain.Entities.Service", b =>

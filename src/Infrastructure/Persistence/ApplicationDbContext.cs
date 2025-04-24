@@ -17,7 +17,8 @@ namespace Infrastructure.Persistence
         public DbSet<BloodBag> BloodBags { get; set; } // Renamed to reflect entity name
         public DbSet<GlobalStock> GlobalStocks { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<Request> Requests { get; set; } // Renamed to reflect entity name
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<DonorPledge> Pledges {get ; set ;} // Renamed to reflect entity name
 
         // Override OnModelCreating to configure your entity mappings using the Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
