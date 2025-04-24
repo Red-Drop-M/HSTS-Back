@@ -13,7 +13,6 @@ namespace Application.Features.BloodBagManagement.Commands
         public BloodBagStatus? Status { get; }
         public DateOnly? ExpirationDate { get; } 
         public DateOnly? AcquiredDate { get; } = DateOnly.FromDateTime(DateTime.Now);
-        public Guid? DonorId { get; } 
         public Guid? RequestId { get; } 
 
         public UpdateBloodBagCommand(
@@ -23,7 +22,6 @@ namespace Application.Features.BloodBagManagement.Commands
             BloodBagStatus? status = null,
             DateOnly? expirationDate = null,
             DateOnly? acquiredDate = null,
-            Guid? donorId = default,
             Guid? requestId = null)
         {
             Id = id;
@@ -32,7 +30,6 @@ namespace Application.Features.BloodBagManagement.Commands
             Status = status;
             ExpirationDate = expirationDate;
             AcquiredDate = acquiredDate;
-            DonorId = donorId;
             RequestId = requestId;
         }
     }

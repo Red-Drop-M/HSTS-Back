@@ -36,8 +36,7 @@ namespace Presentation.Endpoints.BloodBag
                 req.BloodType, 
                 req.Status, 
                 req.ExpirationDate, 
-                req.AcquiredDate, 
-                req.DonorId, 
+                req.AcquiredDate,
                 req.RequestId);
             var (result, err) = await _mediator.Send(command, ct);
             if (err != null)
