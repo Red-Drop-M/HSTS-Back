@@ -31,7 +31,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                     throw new NotFoundException("No blood bag found with the provided ID", "Updating blood bag");
                 }
 
-                bloodBag.UpdateDetails(command.BloodType, command.BloodBagType, command.ExpirationDate,command.AcquiredDate, command.DonorId, command.RequestId);
+                bloodBag.UpdateDetails(command.BloodBagType,command.BloodType,  command.ExpirationDate,command.AcquiredDate, command.DonorId, command.RequestId);
                 await _bloodBagRepository.UpdateAsync(bloodBag);
 
                 _logger.LogInformation("Blood bag updated successfully");
@@ -43,6 +43,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                     BloodBagType = bloodBag.BloodBagType,
                     ExpirationDate = bloodBag.ExpirationDate,
                     AcquiredDate = bloodBag.AcquiredDate,
+                    Status = bloodBag.Status,
                     DonorId = bloodBag.DonorId ?? Guid.Empty,
                     RequestId = bloodBag.RequestId
                 };

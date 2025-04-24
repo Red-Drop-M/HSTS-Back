@@ -31,8 +31,9 @@ namespace Application.Features.BloodBagManagement.Handlers
                 var bloodBagDto = new BloodBagDTO
                 {
                     Id = bloodBag.Id,
-                    BloodType = bloodBag.BloodType,
                     BloodBagType = bloodBag.BloodBagType,
+                    BloodType = bloodBag.BloodType,
+                    Status = bloodBag.Status,
                     ExpirationDate = bloodBag.ExpirationDate,
                     AcquiredDate = bloodBag.AcquiredDate,
                     DonorId = bloodBag.DonorId ?? Guid.Empty,

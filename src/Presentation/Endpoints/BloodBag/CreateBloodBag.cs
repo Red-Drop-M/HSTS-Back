@@ -5,7 +5,7 @@ using Application.Features.BloodBagManagement.Commands;
 using Shared.Exceptions;
 using Application.DTOs;
 
-namespace Presentation.Endpoints.BloodRequests
+namespace Presentation.Endpoints.BloodBag
 {
     public class CreateBloodBag : Endpoint<CreateBloodBagRequest, CreateBloodBagResponse>
     {

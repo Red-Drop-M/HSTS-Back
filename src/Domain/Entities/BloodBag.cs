@@ -5,8 +5,8 @@ namespace Domain.Entities
     public class BloodBag
     {
         public Guid Id { get; private set; }
-        public BloodType BloodType { get; private set; } = BloodType.APositive();
         public BloodBagType BloodBagType { get; private set; } = BloodBagType.Blood();
+        public BloodType BloodType { get; private set; } = BloodType.APositive();
         public BloodBagStatus Status { get; private set; } = BloodBagStatus.Ready();
         public DateOnly? ExpirationDate { get; private set; }
         public DateOnly? AcquiredDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -22,32 +22,33 @@ namespace Domain.Entities
         private BloodBag() { }
 
         public BloodBag(
-            BloodType bloodType,
             BloodBagType bloodBagType,
+            BloodType bloodType,
+            BloodBagStatus status,
             DateOnly? expirationDonorDate,
             DateOnly? acquiredDate,
             Guid donorId,
             Guid? requestId = null)
         {
-            BloodType = bloodType;
             BloodBagType = bloodBagType;
+            BloodType = bloodType;
+            Status = status;
             ExpirationDate = expirationDonorDate;
             AcquiredDate = acquiredDate ?? DateOnly.FromDateTime(DateTime.Now);
             DonorId = donorId;
             RequestId = requestId;
-            Status = BloodBagStatus.Ready();
         }
 
         public void UpdateDetails(
-            BloodType? bloodType = null,
             BloodBagType? bloodBagType = null,
+            BloodType? bloodType = null,
             DateOnly? expirationDate = null,
             DateOnly? acquiredDate = null,
             Guid? donorId = null,
             Guid? requestId = null)
         {
-            if (bloodType is not null) BloodType = bloodType;
             if (bloodBagType is not null) BloodBagType = bloodBagType;
+            if (bloodType is not null) BloodType = bloodType;
             if (expirationDate is not null) ExpirationDate = expirationDate.Value;
             if (acquiredDate is not null) AcquiredDate = acquiredDate.Value;
             if (donorId is not null) DonorId = donorId;

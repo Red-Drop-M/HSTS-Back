@@ -11,7 +11,6 @@ namespace Domain.Repositories
         Task<List<BloodBag?>> GetByExpiryDateAsync(DateOnly expiryDate);
 
         Task<List<BloodBag?>> GetByAcquiredDateAsync(DateOnly acquiredDate);
-        Task<List<BloodBag?>>GetByDonationDateAsync(DateOnly donationDate);
         Task<List<BloodBag?>> GetByStatusAsync(BloodBagStatus status);
         Task <List<BloodBag?>> GetByDonorIdAsync(Guid DonorId);
         Task<BloodBag?> GetByRequestIdAsync(Guid requestId);
@@ -20,8 +19,6 @@ namespace Domain.Repositories
         Task DeleteAsync(Guid id);
 
         Task<(List<BloodBag> BloodBags, int Total)> GetAllAsync(int page, int pageSize, BloodBagFilter filter);
-
-        // Task<(List<Request> Requests, int Total)> GetAllAsync(int page, int pageSize, RequestFilter filter);
 
     }
 }

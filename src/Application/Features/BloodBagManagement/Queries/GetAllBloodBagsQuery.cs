@@ -5,37 +5,15 @@ using Application.DTOs;
 
 namespace Application.Features.BloodBagManagement.Queries
 {
-        public class GetAllBloodBagsQuery : IRequest<(List<BloodBagDTO>? BloodBags, int total, BaseException? err)>
-    {
-        public BloodType? BloodType { get; set; }
-        public BloodBagType? BloodBagType { get; set; }
-        public DateTime? ExpirationDate { get; set; }
-        public DateOnly? AcquiredDate { get; set; }
-        public BloodBagStatus? Status { get; set; }
-        public Guid? DonorId { get; set; }
-        public Guid? RequestId { get; set; }
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-    }
+    public record GetAllBloodBagsQuery(
+        int PageNumber,
+        int PageSize,
+        BloodBagType? BloodBagType,
+        BloodType? BloodType,
+        BloodBagStatus? Status,
+        DateOnly? ExpirationDate,
+        DateOnly? AcquiredDate,
+        Guid? DonorId,
+        Guid? RequestId) 
+        : IRequest<(List<BloodBagDTO>? bloodBags, int? total, BaseException? err)>;
 } 
-
-
-/*
-using MediatR;
-using Application.DTOs;
-using Shared.Exceptions;
-
-namespace Application.Features.BloodBagManagement.Queries
-{
-    public class GetAllBloodBagsQuery : IRequest<(List<BloodBagDTO>? BloodBags, int total, BaseException? err)>
-    {
-        public string? BloodType { get; set; }
-        public string? BloodBagType { get; set; }
-        public DateTime? ExpirationDate { get; set; }
-        public Guid? DonorId { get; set; }
-        public Guid? RequestId { get; set; }
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-    }
-}
-*/

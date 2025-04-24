@@ -25,16 +25,16 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
         {
             var filter = new BloodBagFilter
             {
-                BloodType = BloodBag.BloodType,
                 BloodBagType = BloodBag.BloodBagType,
+                BloodType = BloodBag.BloodType,
+                Status = BloodBag.Status,
                 ExpirationDate = BloodBag.ExpirationDate,
                 AcquiredDate = BloodBag.AcquiredDate,
-                Status = BloodBag.Status,
                 DonorId = BloodBag.DonorId,
                 RequestId = BloodBag.RequestId
             };
 
-            var (bloodBags, total) = await _bloodBagRepository.GetAllAsync(BloodBag.Page, BloodBag.PageSize, filter);
+            var (bloodBags, total) = await _bloodBagRepository.GetAllAsync(BloodBag.PageNumber, BloodBag.PageSize, filter);
             if (bloodBags == null || !bloodBags.Any())
             {
                 _logger.LogWarning("No blood bags found");

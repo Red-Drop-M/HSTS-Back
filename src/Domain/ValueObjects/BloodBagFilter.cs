@@ -4,7 +4,7 @@ namespace Domain.ValueObjects
     {
         public BloodType? BloodType { get; set; }
         public BloodBagType? BloodBagType { get; set; }
-        public DateTime? ExpirationDate { get; set; }
+        public DateOnly? ExpirationDate { get; set; }
         public DateOnly? AcquiredDate { get; set; }
         public BloodBagStatus? Status { get; set; }
         public Guid? DonorId { get; set; }

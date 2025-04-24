@@ -45,10 +45,10 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<BloodBag?>> GetByDonationDateAsync(DateOnly donationDate)
+        public async Task<List<BloodBag?>> GetByAcquiredDateAsync(DateOnly acquiredDate)
         {
             return await _context.BloodBags
-                .Where(b => b.AcquiredDate == donationDate)
+                .Where(b => b.AcquiredDate == acquiredDate)
                 .Cast<BloodBag?>()
                 .ToListAsync();
         }

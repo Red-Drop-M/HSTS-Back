@@ -23,8 +23,9 @@ namespace Application.Features.BloodBagManagement.Handlers
             try
             {
                 var newBloodBag = new BloodBag(
-                    bloodBag.BloodType,
                     bloodBag.BloodBagType,
+                    bloodBag.BloodType,
+                    bloodBag.Status,
                     bloodBag.ExpirationDate,
                     bloodBag.AcquiredDate,
                     bloodBag.DonorId,
@@ -34,11 +35,13 @@ namespace Application.Features.BloodBagManagement.Handlers
                 return (new BloodBagDTO
                 {
                     Id = newBloodBag.Id,
-                    BloodType = newBloodBag.BloodType,
                     BloodBagType = newBloodBag.BloodBagType,
+                    BloodType = newBloodBag.BloodType,
+                    Status = newBloodBag.Status,
                     ExpirationDate = newBloodBag.ExpirationDate,
                     AcquiredDate = newBloodBag.AcquiredDate,
-                    DonorId = newBloodBag.DonorId ?? throw new InvalidOperationException("DonorId cannot be null")
+                    DonorId = newBloodBag.DonorId ?? throw new InvalidOperationException("DonorId cannot be null"),
+                    RequestId = newBloodBag.RequestId
                 },null);
             }
             catch (BaseException ex)

@@ -7,8 +7,9 @@ namespace Application.Features.BloodBagManagement.Commands
 {
     public class CreateBloodBagCommand : IRequest<(BloodBagDTO? bloodBag, BaseException? err)>
     {
-        public BloodType BloodType { get; }  
         public BloodBagType BloodBagType { get;  } 
+        public BloodType BloodType { get; }  
+        public BloodBagStatus Status { get; } = BloodBagStatus.Ready();
         public DateOnly? ExpirationDate { get;  }
         public DateOnly? AcquiredDate { get;  } = DateOnly.FromDateTime(DateTime.Now);
         public Guid DonorId { get;  }
@@ -16,8 +17,9 @@ namespace Application.Features.BloodBagManagement.Commands
 
         public CreateBloodBagCommand(BloodType bloodType, BloodBagType bloodBagType, DateOnly? expirationDate,DateOnly? acquiredDate, Guid donorId, Guid? requestId)  
         {
-            BloodType = bloodType;
             BloodBagType = bloodBagType;
+            BloodType = bloodType;
+            Status = BloodBagStatus.Ready();
             ExpirationDate = expirationDate;
             AcquiredDate = acquiredDate ?? DateOnly.FromDateTime(DateTime.Now);
             DonorId = donorId;
