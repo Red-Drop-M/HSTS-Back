@@ -1,0 +1,10 @@
+namespace Domain.Events
+{
+    public class DonorPledgeEvent
+    {
+        public Guid DonorId { get; set; }
+        public Guid RequestId { get; set; }
+        public DateTime PledgedAt { get; set; }
+        public string Status { get; set; } = "Pending";
+    }
+}

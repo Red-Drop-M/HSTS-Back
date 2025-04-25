@@ -5,11 +5,11 @@ using Infrastructure.Persistence;
 using Domain.Repositories;
 namespace Infrastructure.Repositories
 {
-    public class DonorPledgeRepository : IDonorPledgeRepository
+    public class PledgeRepository : IPledgeRepository
 {
         private readonly ApplicationDbContext _context;
 
-        public DonorPledgeRepository(ApplicationDbContext context)
+        public PledgeRepository(ApplicationDbContext context)
         {
             _context = context;
         }
