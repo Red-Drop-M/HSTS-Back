@@ -49,7 +49,7 @@ namespace Presentation.Endpoints.BloodRequests
 
         public override void Configure()
         {
-            Get("/blood-requests");
+            Get("/bloodrequests");
             AllowAnonymous();
             Description(x => x
                 .WithName("GetBloodRequests")

@@ -18,7 +18,6 @@ namespace Application.Features.BloodBagManagement.Commands
         public UpdateBloodBagCommand(
             Guid id,
             BloodBagType? bloodBagType = null,
-            BloodType? bloodType = null,
             BloodBagStatus? status = null,
             DateOnly? expirationDate = null,
             DateOnly? acquiredDate = null,
@@ -26,7 +25,6 @@ namespace Application.Features.BloodBagManagement.Commands
         {
             Id = id;
             BloodBagType = bloodBagType;
-            BloodType = bloodType;
             Status = status;
             ExpirationDate = expirationDate;
             AcquiredDate = acquiredDate;

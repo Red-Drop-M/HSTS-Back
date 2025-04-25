@@ -33,7 +33,6 @@ namespace Presentation.Endpoints.BloodBag
             var command = new UpdateBloodBagCommand(
                 req.Id, 
                 req.BloodBagType, 
-                req.BloodType, 
                 req.Status, 
                 req.ExpirationDate, 
                 req.AcquiredDate,
@@ -53,11 +52,9 @@ namespace Presentation.Endpoints.BloodBag
     {
         public required Guid Id { get; set; }
         public BloodBagType? BloodBagType { get; set; }
-        public BloodType? BloodType { get; set; }
         public DateOnly? ExpirationDate { get; set; }
         public DateOnly? AcquiredDate { get; set; }
         public BloodBagStatus? Status { get; set; }
-        public Guid? DonorId { get; set; }
         public Guid? RequestId { get; set; }
     }
     public class UpdateBloodBagResponse

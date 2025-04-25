@@ -14,10 +14,6 @@ namespace Presentation.Endpoints.BloodBag.Validators
                 .Must(id => Guid.TryParse(id.ToString(), out _))
                 .WithMessage("Invalid Id.");
 
-            RuleFor(x => x.BloodType)
-                .Must(x => x != null)
-                .WithMessage("Invalid BloodType.");
-
             RuleFor(x => x.BloodBagType)
                 .Must(x => x != null)
                 .WithMessage("Invalid BloodBagType.");
@@ -31,11 +27,6 @@ namespace Presentation.Endpoints.BloodBag.Validators
                 .NotEmpty().WithMessage("AquieredDate is required.")
                 .Must(x => DateOnly.TryParse(x.ToString(), out _))
                 .WithMessage("Invalid AquieredDate.");
-
-            RuleFor(x => x.DonorId)
-                .NotEmpty().WithMessage("DonorId is required.")
-                .Must(id => Guid.TryParse(id.ToString(), out _))
-                .WithMessage("Invalid DonorId.");
 
             RuleFor(x => x.RequestId)
                 .NotEmpty().WithMessage("RequestId is required.")
