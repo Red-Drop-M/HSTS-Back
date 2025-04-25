@@ -8,7 +8,7 @@ using Application.Features.BloodBagManagement.Queries;
 namespace Application.Features.BloodBagManagement.Handlers
 {
 
-public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (List<BloodBagDTO>? BloodBags, int total, BaseException? err)>
+public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (List<BloodBagDTO>? BloodBags, int? total, BaseException? err)>
 {
     private readonly IBloodBagRepository _bloodBagRepository;
     private readonly ILogger<GetAllBloodBagsHandler> _logger;
@@ -19,7 +19,7 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
         _logger = logger;
     }
 
-    public async Task<(List<BloodBagDTO>? BloodBags, int total, BaseException? err)> Handle(GetAllBloodBagsQuery BloodBag, CancellationToken cancellationToken)
+    public async Task<(List<BloodBagDTO>? BloodBags, int? total, BaseException? err)> Handle(GetAllBloodBagsQuery BloodBag, CancellationToken cancellationToken)
     {
         try
         {
