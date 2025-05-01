@@ -6,9 +6,8 @@ using HSTS_Back.Presentation.Middlewares;
 using Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using Presentation.Controllers;
 using Infrastructure.DependencyInjection;
-using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
@@ -18,7 +17,7 @@ Console.WriteLine("Database connection string: " + builder.Configuration.GetConn
 
 // FastEndpoints + Swagger
 builder.Services.AddInfrastructureServices();
-builder.Services.AddFastEndpoints();
+builder.Services.AddFastEndpoints(o => o.IncludeAbstractValidators = true);
 builder.Services.SwaggerDocument(o =>
 {
     o.DocumentSettings = s =>
@@ -37,6 +36,7 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 

@@ -7,13 +7,25 @@ Accept: application/json
 ###
 
 # Test the /test route
-GET {{HSTS_Back_HostAddress}}/test
+GET {{HSTS_Back_HostAddress}}/services
 Accept: application/json
 
 ###
 
-# Test the /weatherforecast route
-GET {{HSTS_Back_HostAddress}}/weatherforecast/
+# add service
+POST {{HSTS_Back_HostAddress}}/services
 Accept: application/json
+Content-Type: application/json
+{
+    "name":""
+}
+###
 
+# add service
+POST {{HSTS_Back_HostAddress}}/services
+Accept: application/json
+Content-Type: application/json
+{
+    "name":"aabbccddee"
+}
 ###
