@@ -1,4 +1,4 @@
-namespace Infrastructure.ExternalServices.Kafka
+/* namespace Infrastructure.ExternalServices.Kafka
 {
     public class KafkaProducer : IDisposable
     {
@@ -19,4 +19,4 @@ namespace Infrastructure.ExternalServices.Kafka
         }
         public void Dispose() => _producer?.Dispose();
     }
-}
+} */

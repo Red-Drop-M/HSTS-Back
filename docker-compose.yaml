@@ -1,0 +1,15 @@
+services:
+  hcts-back:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"  # Expose port 5000
+    environment:
+      - KAFKA_BROKER=kafka-broker:9092  # Connect via container name
+    networks:
+      - shared-kafka-net  # Same network as Kafka
+
+networks:
+  shared-kafka-net:
+    name: 'kafka-net'
+    external: true  # Reuse Kafka's network
