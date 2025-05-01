@@ -41,7 +41,7 @@ namespace Domain.ValueObjects
                 "blood" => Blood().ToString(),
                 "plaquette" => Plaquette().ToString(),
                 "plasma" => Plasma().ToString(),
-                _ => throw new InternalServerException("Invalid BloodBagType", "BLood BagT ype")
+                _ => throw new InternalServerException("Invalid BloodBagType", "BLood BagType")
             };
 
         }

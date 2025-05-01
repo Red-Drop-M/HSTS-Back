@@ -9,6 +9,6 @@ namespace Domain.ValueObjects
         public string? DonorId { get; set; }
         public string? ServiceId { get; set; }
         public string? Status { get; set; }
-        public string? BloodGroup { get; set; }
+        public string? BloodType { get; set; }
     }
 }

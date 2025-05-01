@@ -44,7 +44,7 @@ namespace Presentation.Endpoints.BloodBag
 
                 var result = await _mediator.Send(command, ct);
 
-                if (result.bloodBag == null)
+                if (result.bloodBag == null || result.err == null)
                 {
                     _logger.LogError("CreateBloodBagHandler returned null");
                     throw new InvalidOperationException("CreateBloodBagHandler returned null: CreateBloodBag");

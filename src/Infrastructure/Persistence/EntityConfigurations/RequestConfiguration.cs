@@ -12,9 +12,9 @@ namespace Infrastructure.Persistence.Configurations
             // Primary Key
             builder.HasKey(r => r.Id);
             builder.Property(r => r.Id)
-                .HasDefaultValueSql("gen_random_uuid()"); // Use this for PostgreSQL
-
-
+                .HasDefaultValueSql("gen_random_uuid()")
+                .ValueGeneratedOnAdd(); // Use this for PostgreSQL
+                
             // Foreign Keys
             builder.HasOne(r => r.Donor)
                 .WithMany(d => d.Requests) // Assuming Donor has a collection of Requests
@@ -51,7 +51,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(r => r.MoreDetails)
                 .HasMaxLength(500);
 
-            builder.Property(r => r.BloodGroup)
+            builder.Property(r => r.BloodType)
                 .IsRequired()
                 .HasConversion(
                     b => b.Value,  // Convert BloodGroup object to string

@@ -30,9 +30,9 @@ namespace Domain.ValueObjects
             "AB+" => ABPositive(),
             "O-" => ONegative(),
             "O+" => OPositive(),
-            _ => throw new ValidationException("Invalid BloodType", "BloodType")
+            _ => throw new ArgumentException("Invalid BloodType", nameof(value))
         };
-
+        
         public override bool Equals(object? obj)
         {
             if (obj is BloodType other)
@@ -45,5 +45,21 @@ namespace Domain.ValueObjects
         public override int GetHashCode() => Value.ToLowerInvariant().GetHashCode();
 
         public override string ToString() => Value;
+
+        public static string ToString(string value)
+        {
+            return value.ToUpperInvariant() switch
+            {
+                "A-" => ANegative().ToString(),
+                "A+" => APositive().ToString(),
+                "B-" => BNegative().ToString(),
+                "B+" => BPositive().ToString(),
+                "AB-" => ABNegative().ToString(),
+                "AB+" => ABPositive().ToString(),
+                "O-" => ONegative().ToString(),
+                "O+" => OPositive().ToString(),
+                _ => throw new InternalServerException("Invalid BloodType", "BloodType")
+            };
+        }
     }
 }

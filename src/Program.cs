@@ -8,6 +8,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Presentation.Controllers;
 using Infrastructure.DependencyInjection;
+using Application.Features.DonorManagement.Commands;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
@@ -18,6 +19,8 @@ Console.WriteLine("Database connection string: " + builder.Configuration.GetConn
 // FastEndpoints + Swagger
 builder.Services.AddInfrastructureServices();
 builder.Services.AddFastEndpoints();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 builder.Services.SwaggerDocument(o =>
 {
     o.DocumentSettings = s =>

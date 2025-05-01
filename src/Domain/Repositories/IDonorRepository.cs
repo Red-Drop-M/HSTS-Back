@@ -16,6 +16,6 @@ namespace Domain.Repositories
         Task UpdateAsync(Donor donor);
         Task DeleteAsync(Guid id);
 
-        Task<(List<Donor> Donors, int Total)> GetAllAsync(int page, int pageSize, DonorFilter filter);
+        Task<(List<Donor> Donors, int Total)> GetAllAsync(int page, int pageSize);
     }
 }

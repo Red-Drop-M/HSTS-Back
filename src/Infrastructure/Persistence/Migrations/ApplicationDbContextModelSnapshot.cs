@@ -86,7 +86,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateOnly>("LastDonationDate")
+                    b.Property<DateOnly?>("LastDonationDate")
                         .HasColumnType("date");
 
                     b.Property<string>("NIN")
@@ -173,7 +173,7 @@ namespace HSTS_Back.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("BloodGroup")
+                    b.Property<string>("BloodType")
                         .IsRequired()
                         .HasColumnType("text");
 

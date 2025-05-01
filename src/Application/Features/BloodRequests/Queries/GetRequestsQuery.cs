@@ -14,6 +14,6 @@ namespace Application.Features.BloodRequests.Queries
         string? DonorId ,
         string? ServiceId ,
         string? Status ,
-        string? BloodGroup)
+        string? BloodType)
    : IRequest<(List<RequestDto>? requests,int? total, BaseException? err)>;
 }

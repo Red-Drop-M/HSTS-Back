@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Infrastructure.Persistence;
 
 namespace Infrastructure.Persistence
 {
@@ -10,8 +9,7 @@ namespace Infrastructure.Persistence
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            // Replace with your actual connection string
-            var connectionString = "Host=localhost;Port=5432;Database=HSTS;Username=postgres;Password=walidozich;";
+            var connectionString = "Host=localhost;Port=5432;Database=HSTStest;Username=postgres;Password=walidozich;";
             optionsBuilder.UseNpgsql(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);

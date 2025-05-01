@@ -33,13 +33,13 @@ namespace Application.Features.DonorManagement.Handlers
 
                 donor.UpdateDetails(
                     Donor.Name,
-                    Donor.BirthDate,
                     Donor.Email,
-                    Donor.PhoneNumber,
+                    Donor.BloodType,
+                    Donor.LastDonationDate,
                     Donor.Address,
                     Donor.NIN,
-                    Donor.BloodType,
-                    Donor.LastDonationDate
+                    Donor.PhoneNumber,
+                    Donor.BirthDate
                 );
                 await _donorRepository.UpdateAsync(donor);
                 _logger.LogInformation("Donor with ID {DonorId} updated successfully", Donor.Id);

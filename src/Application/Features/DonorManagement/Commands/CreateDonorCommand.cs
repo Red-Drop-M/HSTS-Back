@@ -5,36 +5,36 @@ using Shared.Exceptions;
 
 namespace Application.Features.DonorManagement.Commands
 {
-    public class CreateDonorCommand : IRequest<(DonorDTO? donor, BaseException? err)>
+    public class CreateDonorCommand : IRequest<(DonorDTO? donor, Exception? err)>
     {
         //public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public BloodType BloodType { get; set; } = BloodType.APositive();
-        public DateOnly LastDonationDate { get; set; } 
-        public string Address { get; set; } = string.Empty;
-        public string NIN { get; set; } = string.Empty; 
-        public string PhoneNumber { get; set; } = string.Empty;
-        public DateOnly DateOfBirth { get; set; }
+        public string Name { get;  }
+        public string Email { get;  }
+        public BloodType BloodType { get;  } 
+        public DateOnly? LastDonationDate { get;  } 
+        public string Address { get;  }
+        public string NIN { get;  } 
+        public string PhoneNumber { get;  }
+        public DateOnly DateOfBirth { get;  }
 
         public CreateDonorCommand(
             string name,
             string email,
+            DateOnly dateOfBirth,
             BloodType bloodType,
-            DateOnly? lastDonationDate = null,
-            string? address = null,
-            string? nin  = null, // National ID Number
-            string? phoneNumber = null,
-            DateOnly? dateOfBirth = null)
+            string address ,
+            string nin  , 
+            string phoneNumber,
+            DateOnly? lastDonationDate = null )
         {
             Name = name;
             Email = email;
-            BloodType = bloodType ?? BloodType.APositive(); // Default to A+ if not provided
-            LastDonationDate = lastDonationDate ?? DateOnly.FromDateTime(DateTime.Now); // Default to current date
-            Address = address ?? string.Empty;
-            NIN = nin ?? string.Empty; // National ID Number
-            PhoneNumber = phoneNumber ?? string.Empty;
-            DateOfBirth = dateOfBirth ?? DateOnly.FromDateTime(DateTime.Now); // Default to current date
+            BloodType = bloodType ; // Default to A+ if not provided
+            LastDonationDate = lastDonationDate ; // Default to current date
+            Address = address;
+            NIN = nin ; 
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth ; 
         }
     }
 

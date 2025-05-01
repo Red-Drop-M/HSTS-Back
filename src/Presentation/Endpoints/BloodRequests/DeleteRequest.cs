@@ -2,8 +2,6 @@ using FastEndpoints;
 using Application.Features.BloodRequests.Commands;
 using Application.DTOs;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Shared.Exceptions;
 namespace Presentation.Endpoints.BloodRequests
 {
     public class DeleteRequest : Endpoint<DeleteRequestRequest, DeleteRequestResponse>
@@ -29,7 +27,6 @@ namespace Presentation.Endpoints.BloodRequests
         }
         public override async Task HandleAsync(DeleteRequestRequest req, CancellationToken ct)
         {
-      
                 var command = new DeleteRequestCommand(req.Id);
                 var (result,err) = await _mediator.Send(command, ct);
                 if (err != null)

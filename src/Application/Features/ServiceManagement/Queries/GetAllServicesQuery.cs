@@ -6,8 +6,6 @@ namespace Application.Features.ServiceManagement.Queries
 {
         public record GetAllServicesQuery(
             int Page,
-            int PageSize,
-            string? Name,
-            string? Description) : IRequest<(List<ServiceDTO>? services, int? total, BaseException? err)>;
+            int PageSize) : IRequest<(List<ServiceDTO>? services, BaseException? err)>;
     
 }

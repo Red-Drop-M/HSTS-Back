@@ -7,26 +7,27 @@ using Shared.Exceptions;
 
 namespace Application.Features.DonorManagement.Handlers
 {
-   public class CreateDonorHandler : IRequestHandler<CreateDonorCommand, (DonorDTO? donor, BaseException? err)>
+   public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, (DonorDTO? donor, Exception? err)>
     {
         private readonly IDonorRepository _donorRepository;
-        private readonly ILogger<CreateDonorHandler> _logger;
+        private readonly ILogger<CreateDonorCommandHandler> _logger;
 
-        CreateDonorHandler(IDonorRepository donorRepository, ILogger<CreateDonorHandler> logger)
+        public CreateDonorCommandHandler(IDonorRepository donorRepository, ILogger<CreateDonorCommandHandler> logger)
         {
             _donorRepository = donorRepository;
             _logger = logger;
         }
 
-        public async Task<(DonorDTO? donor, BaseException? err)> Handle(CreateDonorCommand Donor, CancellationToken cancellationToken)
+        public async Task<(DonorDTO? donor, Exception? err)> Handle(CreateDonorCommand Donor, CancellationToken cancellationToken)
         {
             try
             {
+                _logger.LogInformation("Creating donor with name: {Name}", Donor.Name);
                 var newDonor = new Donor(
                     Donor.Name,
                     Donor.Email,
-                    Donor.LastDonationDate,
                     Donor.BloodType,
+                    Donor.LastDonationDate,
                     Donor.Address,
                     Donor.NIN,
                     Donor.PhoneNumber,

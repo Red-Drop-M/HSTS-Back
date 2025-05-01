@@ -6,10 +6,10 @@ public class CreateBloodRequestValidator:Validator<CreateRequestRequest>
 {
     public CreateBloodRequestValidator()
     {
-        RuleFor(x=>x.BloodGroup)
+        RuleFor(x=>x.BloodType)
             .NotEmpty()
-            .WithMessage("Blood group is required.")
-            .Must(bloodGroup => BloodType.FromString(bloodGroup) != null)
+            .WithMessage("Blood Type is required.")
+            .Must(bloodType => BloodType.FromString(bloodType) != null)
             .WithMessage("Invalid blood group.");
         RuleFor(x => x.BloodBagType)
             .NotEmpty()
@@ -31,11 +31,6 @@ public class CreateBloodRequestValidator:Validator<CreateRequestRequest>
             .WithMessage("Due date is required.")
             .GreaterThanOrEqualTo(x => x.RequestDate)
             .WithMessage("Due date must be greater than or equal to request date.");
-        RuleFor(x => x.Quantity)
-            .NotEmpty()
-            .WithMessage("Quantity is required.")
-            .GreaterThan(0)
-            .WithMessage("Quantity must be greater than 0.");
         RuleFor(x => x.ServiceId)
             .Must(serviceId => serviceId == null || Guid.TryParse(serviceId.ToString(), out _))
             .WithMessage("Invalid Service ID.");

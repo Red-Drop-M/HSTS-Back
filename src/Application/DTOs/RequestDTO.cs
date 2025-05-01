@@ -9,7 +9,7 @@ namespace Application.DTOs
     {
         public Guid Id { get; set; }
         public Priority Priority { get; set; } = Priority.Standard();
-        public BloodType BloodGroup { get; set; } = BloodType.APositive();
+        public BloodType BloodType { get; set; } = BloodType.APositive();
         public BloodBagType BloodBagType { get; set; } = BloodBagType.Blood();
         public DateOnly RequestDate { get; set; }
         public DateOnly? DueDate { get; set; }

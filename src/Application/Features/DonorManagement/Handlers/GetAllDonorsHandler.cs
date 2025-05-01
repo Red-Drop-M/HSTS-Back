@@ -24,20 +24,9 @@ namespace Application.Features.DonorManagement.Handlers
         {
             try
             {
-                var filter = new DonorFilter
-                {
-                    Name = Donor.Name,
-                    BloodType = Donor.BloodType,
-                    Email = Donor.Email,
-                    LastDonationDate = Donor.LastDonationDate,
-                    Address = Donor.Address,
-                    NIN = Donor.NIN,
-                    PhoneNumber = Donor.PhoneNumber,
-                    BirthDate = Donor.BirthDate
-                };
 
-                var (donors, total) = await _donorRepository.GetAllAsync(Donor.Page, Donor.PageSize, filter);
-                if (donors == null || !donors.Any())
+                var (donors, total) = await _donorRepository.GetAllAsync(Donor.Page, Donor.PageSize);
+                if (donors == null)
                 {
                     _logger.LogWarning("No donors found");
                     return (null, null, new NotFoundException("No donors found", "Fetching donors"));

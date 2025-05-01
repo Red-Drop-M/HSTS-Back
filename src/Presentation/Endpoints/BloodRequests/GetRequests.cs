@@ -1,12 +1,8 @@
 using FastEndpoints;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Application.DTOs;
 using Application.Features.BloodRequests.Queries;
 using Shared.Exceptions;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Presentation.Endpoints.BloodRequests
 {
@@ -22,7 +18,7 @@ namespace Presentation.Endpoints.BloodRequests
         public string? DonorId { get; set; }
         public string? ServiceId { get; set; }
         public string? Status { get; set; }
-        public string? BloodGroup { get; set; }
+        public string? BloodType { get; set; }
     }
 
     // 2) The shaped response model
@@ -71,7 +67,7 @@ namespace Presentation.Endpoints.BloodRequests
                 req.DonorId,
                 req.ServiceId,
                 req.Status,
-                req.BloodGroup
+                req.BloodType
             );
 
             // 5) Send through MediatR

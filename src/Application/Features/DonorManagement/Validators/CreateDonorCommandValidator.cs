@@ -25,8 +25,9 @@ namespace Application.Features.DonorManagement.Validators
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty().WithMessage("Date of birth is required.")
-                .Must(date => date.ToDateTime(TimeOnly.MinValue) < DateTime.Now)
+                .Must(date => date < DateOnly.FromDateTime(DateTime.Now))
                 .WithMessage("Date of birth must be in the past.");
+
         }
 
         private bool BeAValidBloodType(string bloodType)

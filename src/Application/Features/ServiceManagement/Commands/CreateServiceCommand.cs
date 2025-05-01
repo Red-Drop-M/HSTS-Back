@@ -7,5 +7,10 @@ namespace Application.Features.ServiceManagement.Commands
     public class CreateServiceCommand : IRequest<(ServiceDTO? service, BaseException? err)> 
     {
         public string Name { get; }  
+
+        public CreateServiceCommand(string name)
+        {
+            Name = name;
+        }
     }
 }

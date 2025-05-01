@@ -11,7 +11,8 @@ namespace Infrastructure.Persistence.EntityConfigurations
         {
             builder.HasKey(d => d.Id);
             builder.Property(d => d.Id)
-                .HasDefaultValueSql("gen_random_uuid()"); // Use this for PostgreSQL
+                .HasDefaultValueSql("gen_random_uuid()")
+                .ValueGeneratedOnAdd(); // Use this for PostgreSQL
 
 
             // Donor -> BloodBags (1:N)
@@ -51,7 +52,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
 
             // Last Donation Date
             builder.Property(d => d.LastDonationDate)
-                .IsRequired();
+                .IsRequired(false); // Nullable 
 
             // BloodType (ValueObject) with conversion
             builder.Property(d => d.BloodType)

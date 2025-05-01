@@ -9,7 +9,7 @@ using Shared.Exceptions;
 
 namespace Application.Features.ServiceManagement.Handler
 {
-    public class GetAllServicesHandler : IRequestHandler<GetAllServicesQuery, (List<ServiceDTO>? services, int? total, BaseException? err)>
+    public class GetAllServicesHandler : IRequestHandler<GetAllServicesQuery, (List<ServiceDTO>? services,  BaseException? err)>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly ILogger<GetAllServicesHandler> _logger;
@@ -20,32 +20,28 @@ namespace Application.Features.ServiceManagement.Handler
             _logger = logger;
         }
 
-        public async Task<(List<ServiceDTO>? services, int? total, BaseException? err)> Handle(GetAllServicesQuery Service, CancellationToken cancellationToken)
+        public async Task<(List<ServiceDTO>? services, BaseException? err)> Handle(GetAllServicesQuery Service, CancellationToken cancellationToken)
         {
             try
             {
-                var filter = new ServiceFilter
-                {
-                    Name = Service.Name
-                };
 
-                var (services, total) = await _serviceRepository.GetAllAsync(Service.Page, Service.PageSize, filter);
+                var services = await _serviceRepository.GetServicesAsync();
                 if (services == null || services.Count == 0)
                 {
                     _logger.LogWarning("No services found");
-                    return (null, null, new NotFoundException("No services found", "Fetching services"));
+                    return (null,  new NotFoundException("No services found", "Fetching services"));
                 }
                 var serviceDtos = services.Select(s => new ServiceDTO
                 {
                     Id = s.Id,
                     Name = s.Name
                 }).ToList();
-                return (serviceDtos, total, null);
+                return (serviceDtos, null);
             }
             catch (BaseException ex)
             {
                 _logger.LogError(ex, "Error fetching services");
-                return (null, null, ex);
+                return (null,  ex);
             }
         }
     }

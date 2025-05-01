@@ -1,12 +1,9 @@
-using Microsoft.Extensions.Logging;
 using MediatR;
 using FastEndpoints;
 using Domain.ValueObjects;
 using Application.Features.BloodRequests.Commands;
 using Shared.Exceptions;
-using System;
 using Application.DTOs;
-using Application.Features.BloodRequests;
 namespace Presentation.Endpoints.BloodRequests
 {
     public class CreateRequest : Endpoint<CreateRequestRequest, CreateRequestResponse>
@@ -36,15 +33,14 @@ namespace Presentation.Endpoints.BloodRequests
             try
             {
                 var command = new CreateRequestCommand(
-                    BloodType.FromString(req.BloodGroup), // Convert string to BloodType
-                    BloodBagType.Convert(req.BloodBagType), // Convert string to BloodBagType
-                    Priority.Convert(req.Priority), // Convert string to Priority
-                    req.DueDate, // Convert string to DateOnly
+                    BloodType.FromString(req.BloodType),
+                    BloodBagType.Convert(req.BloodBagType), 
+                    Priority.Convert(req.Priority), 
+                    req.DueDate, 
                     req.MoreDetails,
                     req.ServiceId,
-                    req.Quantity,
                     req.DonorId,
-                    RequestStatus.Convert(req.RequestStatus ?? "pending"), // Convert string to RequestStatus
+                    RequestStatus.Convert(req.RequestStatus ?? "pending"), 
                     req.RequestDate,
                     req.AquiredQty,
                     req.RequiredQty
@@ -77,13 +73,12 @@ namespace Presentation.Endpoints.BloodRequests
 
     public class CreateRequestRequest 
     {
-        public required string BloodGroup { get; set; }
+        public required string BloodType { get; set; }
         public required string BloodBagType { get; set; }
         public required string Priority { get; set; }
         public required DateOnly? DueDate { get; set; }
         public  string? MoreDetails { get; set; }
         public  Guid? ServiceId { get; set; }
-        public required int Quantity { get; set; }
         public  Guid? DonorId { get; set; }
         public required string? RequestStatus { get; set; }
         public required DateOnly? RequestDate { get; set; }
