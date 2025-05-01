@@ -65,3 +65,4 @@ src/Infrastructure/Persistence/Migrations/
 # Other
 .DS_Store
 Thumbs.db
+.vs/HSTS-Back/FileContentIndex/9764857a-040c-42f4-ba67-196fa41215db.vsidx
