@@ -34,7 +34,7 @@ namespace Application.Features.BloodRequests.Handlers
                     DonorId = request.DonorId,
                     ServiceId = request.ServiceId,
                     Status = request.Status,
-                    BloodGroup = request.BloodGroup
+                    BloodType = request.BloodType
                 };
 
                 var (requests,total) = await _bloodRequestRepository.GetAllAsync(request.Page,request.PageSize,filter);
@@ -50,7 +50,7 @@ namespace Application.Features.BloodRequests.Handlers
                     ServiceId = r.ServiceId,
                     Priority = r.Priority,
                     Status = r.Status,
-                    BloodGroup = r.BloodGroup,
+                    BloodType = r.BloodType,
                     BloodBagType = r.BloodBagType,
                     RequestDate = r.RequestDate,
                     DueDate = r.DueDate,

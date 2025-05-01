@@ -56,10 +56,10 @@ namespace Presentation.Endpoints.BloodRequests.Validators
                 .When(x => !string.IsNullOrEmpty(x.Status))
                 .WithMessage("Status is invalid.");
 
-            RuleFor(x => x.BloodGroup)
+            RuleFor(x => x.BloodType)
                 .Must(BeAValidBloodGroup)
-                .When(x => !string.IsNullOrEmpty(x.BloodGroup))
-                .WithMessage("BloodGroup is invalid.");
+                .When(x => !string.IsNullOrEmpty(x.BloodType))
+                .WithMessage("BloodType is invalid.");
         }
 
         private bool BeAValidDate(string? date)

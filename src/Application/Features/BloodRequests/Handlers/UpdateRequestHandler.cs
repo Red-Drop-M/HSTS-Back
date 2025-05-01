@@ -19,8 +19,8 @@ namespace Application.Features.BloodRequests.Handlers
         }
         public async Task<(RequestDto? request,BaseException? err)> Handle(UpdateRequestCommand command,CancellationToken ct)
         {
-           try
-           {
+            try
+            {
                 var request = await _requestRepository.GetByIdAsync(command.Id);
                 if(request ==null)
                 {
@@ -34,7 +34,7 @@ namespace Application.Features.BloodRequests.Handlers
                     {
                         Id = request.Id,
                         Priority = request.Priority,
-                        BloodGroup = request.BloodGroup,
+                        BloodType = request.BloodType,
                         BloodBagType = request.BloodBagType,
                         RequestDate = request.RequestDate,
                         DueDate = request.DueDate,
@@ -47,7 +47,7 @@ namespace Application.Features.BloodRequests.Handlers
                     };
                 return(requestDto,null);
 
-           }catch(BaseException ex)
+            }catch(BaseException ex)
             {
                 _logger.LogError("error while updating request");
                 return (null,ex);

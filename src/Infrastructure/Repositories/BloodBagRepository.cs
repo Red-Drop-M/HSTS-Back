@@ -45,10 +45,10 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<BloodBag?>> GetByDonationDateAsync(DateOnly donationDate)
+        public async Task<List<BloodBag?>> GetByAcquiredDateAsync(DateOnly acquiredDate)
         {
             return await _context.BloodBags
-                .Where(b => b.AcquiredDate == donationDate)
+                .Where(b => b.AcquiredDate == acquiredDate)
                 .Cast<BloodBag?>()
                 .ToListAsync();
         }
@@ -95,6 +95,41 @@ namespace Infrastructure.Repositories
                 _context.BloodBags.Remove(bloodBag);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<(List<BloodBag>, int)> GetAllAsync(int page, int pageSize, BloodBagFilter filter)
+        {
+            var query = _context.BloodBags.AsQueryable();
+
+            if (filter.BloodType != null)
+            query = query.Where(b => b.BloodType == filter.BloodType);
+
+            if (filter.BloodBagType != null)
+            query = query.Where(b => b.BloodBagType == filter.BloodBagType);
+
+            if (filter.ExpirationDate != null)
+            query = query.Where(b => filter.ExpirationDate.HasValue && b.ExpirationDate == filter.ExpirationDate.Value);
+
+            if (filter.AcquiredDate != null)
+            query = query.Where(b => b.AcquiredDate == filter.AcquiredDate);
+
+            if (filter.Status != null)
+            query = query.Where(b => b.Status == filter.Status);
+
+            if (filter.DonorId != null)
+            query = query.Where(b => b.DonorId == filter.DonorId);
+
+            if (filter.RequestId != null)
+            query = query.Where(b => b.RequestId == filter.RequestId);
+
+            var total = await query.CountAsync();
+
+            var bloodBags = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (bloodBags, total);
         }
     }
 }

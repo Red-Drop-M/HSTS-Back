@@ -10,13 +10,13 @@ namespace Domain.Entities
         // Donor Info
         public string Name { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
-        public DateOnly DateOfBirth { get; private set; }
         public BloodType BloodType { get; private set; } = BloodType.APositive();
+        public DateOnly? LastDonationDate { get; private set; }
+
+        public DateOnly? DateOfBirth { get; private set; }
         public string NIN { get; private set; } = string.Empty; // National ID Number
         public string PhoneNumber { get; private set; } = string.Empty;
         public string Address { get; private set; } = string.Empty;
-        public DateOnly LastDonationDate { get; private set; }
-
         // Navigation Property (One-to-Many with BloodBags)
         public ICollection<BloodBag> BloodBags { get; private set; } = new List<BloodBag>();
         public ICollection<Request> Requests { get; private set; } = new List<Request>();
@@ -26,12 +26,12 @@ namespace Domain.Entities
         public Donor(
             string name,
             string email,
-            DateOnly dateOfBirth,
             BloodType bloodType,
+            DateOnly? lastDonationDate,
+            string address,
             string nin,
             string phoneNumber,
-            string address,
-            DateOnly lastDonationDate)
+            DateOnly dateOfBirth)
         {
             Name = name;
             Email = email;
@@ -41,6 +41,26 @@ namespace Domain.Entities
             PhoneNumber = phoneNumber;
             Address = address;
             LastDonationDate = lastDonationDate;
+        }
+
+        public void UpdateDetails(
+            string? name,
+            string? email,
+            BloodType? bloodType,
+            DateOnly? lastDonationDate,
+            string? address,
+            string? nin,
+            string? phoneNumber,
+            DateOnly? BirthDate)
+        {
+            Name = (name ==null )? Name : name;
+            Email =(email==null )? Email : email;
+            BloodType = (bloodType == null) ? BloodType : bloodType;
+            LastDonationDate = ( lastDonationDate == null) ? LastDonationDate : lastDonationDate;
+            Address = (address==null )? Address : address;
+            NIN = (nin==null )? NIN : nin;
+            PhoneNumber = (phoneNumber== null) ? PhoneNumber : phoneNumber;
+            DateOfBirth = (BirthDate==null )? DateOfBirth : BirthDate;
         }
     }
 }

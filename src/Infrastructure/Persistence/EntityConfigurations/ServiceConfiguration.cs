@@ -12,7 +12,8 @@ namespace Infrastructure.Persistence.EntityConfigurations
 
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Id)
-                .HasDefaultValueSql("gen_random_uuid()"); // Use this for PostgreSQL
+                .HasDefaultValueSql("gen_random_uuid()")
+                .ValueGeneratedOnAdd(); // Use this for PostgreSQL
 
 
             builder.Property(s => s.Name)

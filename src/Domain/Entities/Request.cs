@@ -5,7 +5,7 @@ namespace Domain.Entities
     public class Request
     {
         public Guid Id { get; private set; }
-        public BloodType BloodGroup { get; private set; } = BloodType.APositive();
+        public BloodType BloodType { get; private set; } = BloodType.APositive();
         public Priority Priority { get; private set; } = Priority.Standard();
         public BloodBagType BloodBagType { get; private set; } = BloodBagType.Blood();
         public DateOnly RequestDate { get; private set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -29,7 +29,7 @@ namespace Domain.Entities
 
         // Existing constructor
         public Request(
-            BloodType bloodGroup,
+            BloodType bloodType,
             Priority priority,
             BloodBagType bloodBagType,
             DateOnly? dueDate,
@@ -38,6 +38,7 @@ namespace Domain.Entities
             Guid? serviceId = null,
             Guid? donorId = null)
         {
+            BloodType = bloodType;
             Priority = priority;
             BloodBagType = bloodBagType;
             DueDate = dueDate;
@@ -51,7 +52,7 @@ namespace Domain.Entities
 
         // New constructor with all attributes except Id
         public Request(
-            BloodType bloodGroup,
+            BloodType bloodType,
             Priority priority,
             BloodBagType bloodBagType,
             DateOnly requestDate,
@@ -63,6 +64,7 @@ namespace Domain.Entities
             Guid? serviceId,
             Guid? donorId)
         {
+            BloodType = bloodType;
             Priority = priority;
             BloodBagType = bloodBagType;
             RequestDate = requestDate;

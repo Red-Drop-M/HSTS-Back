@@ -14,6 +14,11 @@ public class Service
         Name = name;
     }
 
+    public void Update(string name)
+    {
+        Name = name;
+    }
+
     // EF Core requires a parameterless constructor for querying
     protected Service() { } 
 }

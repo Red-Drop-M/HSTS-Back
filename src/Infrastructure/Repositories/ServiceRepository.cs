@@ -4,6 +4,7 @@ using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistence;
 
+
 namespace Infrastructure.Repositories
 {
     public class ServiceRepository : IServiceRepository
@@ -55,6 +56,24 @@ namespace Infrastructure.Repositories
                 .Cast<Service?>()
                 .ToListAsync();
         }
+
+        public async Task<(List<Service>, int)> GetAllAsync(int page, int pageSize, ServiceFilter filter)
+        {
+            var query = _context.Services.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            query = query.Where(s => s.Name.Contains(filter.Name));
+
+            var total = await query.CountAsync();
+
+            var services = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (services, total);
+        }
+
         
     }
 }

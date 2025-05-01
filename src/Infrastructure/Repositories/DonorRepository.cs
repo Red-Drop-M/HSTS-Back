@@ -86,5 +86,23 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Donor>> GetAllAsync()
+        {
+            return await _context.Donors
+                .ToListAsync();
+        }
+
+        public async Task<(List<Donor>, int)> GetAllAsync(int page, int pageSize)
+        {
+            var total = await _context.Donors.CountAsync();
+            var donors = await _context.Donors
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (donors, total);
+        }
+
     }
 }

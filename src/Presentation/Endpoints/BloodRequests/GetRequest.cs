@@ -1,9 +1,6 @@
 using FastEndpoints;
 using Application.DTOs;
-using Domain.ValueObjects;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Shared.Exceptions;
 using Application.Features.BloodRequests.Queries;
 
 namespace Presentation.Endpoints.BloodRequests

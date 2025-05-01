@@ -8,6 +8,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Presentation.Controllers;
 using Infrastructure.DependencyInjection;
+using System.Diagnostics;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database

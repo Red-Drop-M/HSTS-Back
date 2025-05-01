@@ -65,3 +65,9 @@ src/Infrastructure/Persistence/Migrations/
 # Other
 .DS_Store
 Thumbs.db
+Directory.Build.props
+Directory.Build.props.bak
+.vs
+Directory.Build.props
+src/.config
+Directory.Build.props

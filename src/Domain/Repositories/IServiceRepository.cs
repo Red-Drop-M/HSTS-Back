@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.ValueObjects;
 namespace Domain.Repositories
 {
     public interface IServiceRepository
@@ -10,5 +11,7 @@ namespace Domain.Repositories
         Task UpdateAsync(Service service);
         Task DeleteAsync(Guid id);
         Task<List<Service?>> GetServicesAsync();
+
+        Task<(List<Service?> Services, int Total)> GetAllAsync(int page, int pageSize, ServiceFilter filter);
     }
 }

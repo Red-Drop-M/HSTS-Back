@@ -107,8 +107,8 @@ namespace Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(filter.BloodBagType))
             query = query.Where(r => r.BloodBagType.Value == filter.BloodBagType);
-            if(!string.IsNullOrEmpty(filter.BloodGroup))
-            query = query.Where(r => r.BloodGroup.Value == filter.BloodGroup);
+            if(!string.IsNullOrEmpty(filter.BloodType))
+            query = query.Where(r => r.BloodType.Value == filter.BloodType);
             if (filter.RequestDate != null)
             query = query.Where(r => r.RequestDate == DateOnly.Parse(filter.RequestDate));
             if (filter.DueDate != null)

@@ -32,7 +32,7 @@ namespace Application.Features.BloodRequests.Handlers
                 {
                     Id = request.Id,
                     Priority = request.Priority,
-                    BloodGroup = request.BloodGroup,
+                    BloodType = request.BloodType,
                     BloodBagType = request.BloodBagType,
                     RequestDate = request.RequestDate,
                     DueDate = request.DueDate,

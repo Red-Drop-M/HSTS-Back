@@ -2,9 +2,6 @@ using MediatR;
 using FastEndpoints;
 using Application.Features.BloodRequests.Commands;
 using Application.DTOs;
-using Microsoft.Extensions.Logging;
-using Shared.Exceptions;
-using System.Reflection.Metadata;
 using Domain.ValueObjects;
 namespace Presentation.Endpoints.BloodRequests
 {

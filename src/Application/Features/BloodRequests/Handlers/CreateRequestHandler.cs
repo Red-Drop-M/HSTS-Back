@@ -22,10 +22,10 @@ namespace Application.Features.BloodRequests.Handlers
 
         public async Task<RequestDto> Handle(CreateRequestCommand request, CancellationToken cancellationToken)
         {
-           try
-           {
-             var newRequest = new Request(
-                request.BloodGroup,
+            try
+            {
+            var newRequest = new Request(
+                request.BloodType,
                 request.Priority,
                 request.BloodBagType,
                 request.RequestDate,
@@ -42,7 +42,7 @@ namespace Application.Features.BloodRequests.Handlers
             {
                 Id = newRequest.Id,
                 Priority = newRequest.Priority,
-                BloodGroup = newRequest.BloodGroup,
+                BloodType = newRequest.BloodType,
                 BloodBagType = newRequest.BloodBagType,
                 RequestDate = newRequest.RequestDate,
                 DueDate = newRequest.DueDate,
