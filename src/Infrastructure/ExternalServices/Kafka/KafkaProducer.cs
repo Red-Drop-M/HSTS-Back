@@ -1,22 +1,54 @@
-/* namespace Infrastructure.ExternalServices.Kafka
+// Infrastructure/MessageBrokers/KafkaEventPublisher.cs
+using System.Text.Json;
+using Application.interfaces;
+using Confluent.Kafka;
+using Infrastructure.ExternalServices.Kafka;
+
+namespace Infrastructure.ExternalServices.Kafka
 {
-    public class KafkaProducer : IDisposable
+    public class KafkaEventPublisher : IEventProducer, IDisposable
     {
         private readonly IProducer<Null, string> _producer;
-    
-        public KafkaProducer(IConfiguration config)
-        {
-            var producerConfig = new ProducerConfig {
-                BootstrapServers = config["Kafka:BootstrapServers"]
-            };
-            _producer = new ProducerBuilder<Null, string>(producerConfig).Build();
-        }   
+        private readonly ILogger<KafkaEventPublisher> _logger;
 
-        public async Task PublishBloodRequestAsync(BloodRequestCreatedEvent @event)
+        public KafkaEventPublisher(
+            ILogger<KafkaEventPublisher> logger,
+            KafkaSettings settings)
         {
-            var message = JsonSerializer.Serialize(@event);
-            await _producer.ProduceAsync("blood-requests", new Message<Null, string> { Value = message });
+            _logger = logger;
+        
+            var config = new ProducerConfig
+            {
+                BootstrapServers = settings.BootstrapServers,
+                EnableIdempotence = true,
+                MessageTimeoutMs = 5000,
+                Acks = Acks.All
+            };
+
+            _producer = new ProducerBuilder<Null, string>(config)
+                .SetErrorHandler((_, e) => _logger.LogError($"Producer error: {e.Reason}"))
+                .Build();
         }
-        public void Dispose() => _producer?.Dispose();
+
+        public async Task PublishAsync<TEvent>(TEvent @event, string topic) where TEvent : class
+        {
+            try
+            {
+                var message = new Message<Null, string>
+                {
+                    Value = JsonSerializer.Serialize(@event)
+                };
+
+                var result = await _producer.ProduceAsync(topic, message);
+                _logger.LogDebug($"Delivered to {result.TopicPartitionOffset}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Message production failed");
+                throw;
+            }
+        }
+
+        public void Dispose() => _producer.Dispose();
     }
-} */
+}
