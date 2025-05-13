@@ -54,7 +54,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(r => r.BloodType)
                 .IsRequired()
                 .HasConversion(
-                    b => b.Value,  // Convert BloodGroup object to string
+                    b => b.Value,  
                     b => BloodType.FromString(b));
 
             builder.Property(r => r.AquiredQty)

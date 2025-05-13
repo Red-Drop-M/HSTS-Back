@@ -5,11 +5,14 @@ services:
     ports:
       - "5000:5000"  # Expose port 5000
     environment:
-      - KAFKA_BROKER=kafka-broker:9092  # Connect via container name
+      - KAFKA_BROKER=kafka-broker:9092
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=HSTS;Username=postgres;Password=hikarosubahiko;
     networks:
-      - shared-kafka-net  # Same network as Kafka
+      - shared-kafka-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Required for Linux Docker hosts
 
 networks:
   shared-kafka-net:
     name: 'kafka-net'
-    external: true  # Reuse Kafka's network
+    external: true
