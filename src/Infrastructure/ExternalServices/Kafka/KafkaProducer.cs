@@ -30,7 +30,7 @@ namespace Infrastructure.ExternalServices.Kafka
                 .Build();
         }
 
-        public async Task PublishAsync<TEvent>(TEvent @event, string topic) where TEvent : class
+        public async Task ProduceAsync<TEvent>(TEvent @event, string topic) where TEvent : class
         {
             try
             {

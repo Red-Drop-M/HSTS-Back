@@ -13,7 +13,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(r => r.Id);
             builder.Property(r => r.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
-                .ValueGeneratedOnAdd(); // Use this for PostgreSQL
+                .ValueGeneratedNever(); // Use this for PostgreSQL
                 
             // Foreign Keys
             builder.HasOne(r => r.Donor)

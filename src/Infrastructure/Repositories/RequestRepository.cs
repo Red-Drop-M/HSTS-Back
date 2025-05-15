@@ -34,11 +34,11 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Request> AddAsync(Request request)
+        public async Task AddAsync(Request request)
         {
             await _context.Requests.AddAsync(request);
             await _context.SaveChangesAsync();
-            return request; // Return the added Request object
+             // Return the added Request object
         }
 
         public async Task UpdateAsync(Request request)

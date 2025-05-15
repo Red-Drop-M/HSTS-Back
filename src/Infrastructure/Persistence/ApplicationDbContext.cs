@@ -9,6 +9,7 @@ namespace Infrastructure.Persistence
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            // No dependencies on KafkaSettings here
         }
 
         // Define DbSets for each entity. These correspond to tables in the database.

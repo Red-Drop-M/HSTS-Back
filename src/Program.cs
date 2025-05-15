@@ -7,17 +7,41 @@ using Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Infrastructure.DependencyInjection;
-
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Kestrel explicitly
+builder.WebHost.ConfigureKestrel(serverOptions => {
+    serverOptions.ListenAnyIP(5000);
+    serverOptions.AllowSynchronousIO = true;
+});
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+          .EnableSensitiveDataLogging()
+          .EnableDetailedErrors());
 Console.WriteLine("Database connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
+// CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? 
+               throw new InvalidOperationException("Connection string 'DefaultConnection' not found."), 
+               name: "postgres");
+
 // FastEndpoints + Swagger
-builder.Services.AddInfrastructureServices();
-builder.Services.AddFastEndpoints(o => o.IncludeAbstractValidators = true);
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument(o =>
 {
     o.DocumentSettings = s =>
@@ -37,15 +61,22 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-
 var app = builder.Build();
 
 // Middleware
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseCors("AllowAll");
+
+// Basic health check endpoint for troubleshooting
+app.MapGet("/ping", () => "pong");
+app.MapHealthChecks("/health");
 
 // Use FastEndpoints + Swagger
-
-app.UseFastEndpoints();
+app.UseFastEndpoints(c => {
+    c.Endpoints.RoutePrefix = "api";
+});
 app.UseSwaggerGen(); // FastEndpoints Swagger
+
+Console.WriteLine("Starting web server on port 5000...");
 
 app.Run();

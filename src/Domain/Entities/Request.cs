@@ -38,6 +38,7 @@ namespace Domain.Entities
             Guid? serviceId = null,
             Guid? donorId = null)
         {
+            Id = Guid.NewGuid();
             BloodType = bloodType;
             Priority = priority;
             BloodBagType = bloodBagType;

@@ -162,7 +162,6 @@ namespace HSTS_Back.Migrations
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
