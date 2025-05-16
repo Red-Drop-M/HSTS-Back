@@ -51,7 +51,7 @@ namespace Application.Features.BloodRequests.Handlers
                     request.AquiredQty,
                     request.ServiceId,
                     request.DonorId);
-
+                _logger.LogInformation("new id: {RequestId}", newRequest.Id);
                 // Save the request to the database
                 await _requestRepository.AddAsync(newRequest);
 
@@ -84,8 +84,8 @@ namespace Application.Features.BloodRequests.Handlers
                     service.Name // Pass the service name to the event
                 );
 
-                var topic = _kafkaSettings.Value.Topics["blood-request-created"];
-                await _eventProducer.ProduceAsync(requestCreatedEvent,topic);
+                var topic = _kafkaSettings.Value.Topics["BloodRequests"];
+                await _eventProducer.ProduceAsync(requestCreatedEvent, topic);
 
                 _logger.LogInformation("Request created successfully");
 
@@ -93,12 +93,12 @@ namespace Application.Features.BloodRequests.Handlers
                 return new RequestDto
                 {
                     Id = newRequest.Id,
-                    Priority = newRequest.Priority,
-                    BloodType = newRequest.BloodType,
-                    BloodBagType = newRequest.BloodBagType,
+                    Priority = newRequest.Priority.Value,
+                    BloodType = newRequest.BloodType.Value,
+                    BloodBagType = newRequest.BloodBagType.Value,
                     RequestDate = newRequest.RequestDate,
                     DueDate = newRequest.DueDate,
-                    Status = newRequest.Status,
+                    Status = newRequest.Status.Value,
                     MoreDetails = newRequest.MoreDetails,
                     RequiredQty = newRequest.RequiredQty,
                     AquiredQty = newRequest.AquiredQty,

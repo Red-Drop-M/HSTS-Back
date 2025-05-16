@@ -3,6 +3,7 @@ using System.Text.Json;
 using Application.interfaces;
 using Confluent.Kafka;
 using Infrastructure.ExternalServices.Kafka;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.ExternalServices.Kafka
 {
@@ -13,14 +14,15 @@ namespace Infrastructure.ExternalServices.Kafka
 
         public KafkaEventPublisher(
             ILogger<KafkaEventPublisher> logger,
-            KafkaSettings settings)
+            IOptions<KafkaSettings> settings)
         {
             _logger = logger;
-        
+            
+            var kafkaSettings = settings.Value;
             var config = new ProducerConfig
             {
-                BootstrapServers = settings.BootstrapServers,
-                EnableIdempotence = true,
+                BootstrapServers = kafkaSettings.BootstrapServers,
+                EnableIdempotence = kafkaSettings.EnableIdempotence,
                 MessageTimeoutMs = 5000,
                 Acks = Acks.All
             };

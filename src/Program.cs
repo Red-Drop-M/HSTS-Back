@@ -7,6 +7,8 @@ using Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Infrastructure.DependencyInjection;
+using Infrastructure.ExternalServices.Kafka;
+using Application.interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel explicitly
@@ -38,6 +40,13 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? 
                throw new InvalidOperationException("Connection string 'DefaultConnection' not found."), 
                name: "postgres");
+
+// Register Kafka configuration
+builder.Services.Configure<KafkaSettings>(
+    builder.Configuration.GetSection("Kafka"));
+
+// Register KafkaEventPublisher as a singleton or scoped service
+builder.Services.AddScoped<IEventProducer, KafkaEventPublisher>();
 
 // FastEndpoints + Swagger
 builder.Services.AddInfrastructureServices(builder.Configuration);

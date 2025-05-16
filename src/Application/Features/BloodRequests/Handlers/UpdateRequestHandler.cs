@@ -33,12 +33,12 @@ namespace Application.Features.BloodRequests.Handlers
                 var requestDto= new RequestDto
                     {
                         Id = request.Id,
-                        Priority = request.Priority,
-                        BloodType = request.BloodType,
-                        BloodBagType = request.BloodBagType,
+                        Priority = request.Priority.Value,
+                        BloodType = request.BloodType.Value,
+                        BloodBagType = request.BloodBagType.Value,
                         RequestDate = request.RequestDate,
                         DueDate = request.DueDate,
-                        Status = request.Status,
+                        Status = request.Status.Value,
                         MoreDetails = request.MoreDetails,
                         RequiredQty = request.RequiredQty,
                         AquiredQty = request.AquiredQty,
