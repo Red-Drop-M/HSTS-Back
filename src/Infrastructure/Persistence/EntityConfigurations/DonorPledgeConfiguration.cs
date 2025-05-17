@@ -4,27 +4,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.EntityConfigurations
-{
+{ 
     public class DonorPledgeConfiguration : IEntityTypeConfiguration<DonorPledge>
     {
         public void Configure(EntityTypeBuilder<DonorPledge> builder)
         {
-            builder.HasKey(dp => new { dp.DonorId, dp.RequestId });
+        // Composite primary key
+            builder.HasKey(dp => new { dp.DonorName, dp.RequestId });
+        
+        // Relationship to Donor using Name as foreign key
+            builder.HasOne(dp => dp.Donor)
+                .WithMany(d => d.Pledges)
+                .HasForeignKey(dp => dp.DonorName)
+                .HasPrincipalKey(d => d.Name)  // Reference Donor's Name
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(dp => dp.DonorId)
-                .IsRequired();
+            builder.HasOne(dp => dp.Request)
+                .WithMany(r => r.Pledges)
+                .HasForeignKey(dp => dp.RequestId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(dp => dp.RequestId)
+                // Property configurations
+            builder.Property(dp => dp.PledgeDate)
+                .HasConversion(
+                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateOnly.FromDateTime(d))
                 .IsRequired();
 
             builder.Property(dp => dp.Status)
-                .IsRequired()
-                .HasConversion(
-                    s => s.Value, 
-                    val => PledgeStatus.FromString(val)
-                );
-
-            builder.Property(dp => dp.PledgeDate)
+                .HasConversion<string>()
                 .IsRequired();
         }
     }

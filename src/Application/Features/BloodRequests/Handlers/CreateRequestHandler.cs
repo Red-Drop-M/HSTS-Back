@@ -2,13 +2,12 @@ using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
 using Application.DTOs;
-using Application.interfaces;
 using Infrastructure.ExternalServices.Kafka;
 using Application.Features.BloodRequests.Commands;
 using Microsoft.Extensions.Options;
 using Domain.Events;
-using Microsoft.Extensions.FileProviders;
 using Shared.Exceptions;
+using Application.Interfaces;
 
 namespace Application.Features.BloodRequests.Handlers
 {

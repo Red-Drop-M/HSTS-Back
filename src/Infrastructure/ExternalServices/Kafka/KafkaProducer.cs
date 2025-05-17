@@ -1,8 +1,7 @@
 // Infrastructure/MessageBrokers/KafkaEventPublisher.cs
 using System.Text.Json;
-using Application.interfaces;
+using Application.Interfaces;
 using Confluent.Kafka;
-using Infrastructure.ExternalServices.Kafka;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.ExternalServices.Kafka

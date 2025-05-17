@@ -1,10 +1,11 @@
-using Application.interfaces;
+using Application.Interfaces;
 using Domain.Repositories;
 using Infrastructure.ExternalServices.Kafka;
 using Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using MediatR;
+using Domain.Events;
+using Application.Features.EventHandling.Handlers;
+
 
 namespace Infrastructure.DependencyInjection
 {
@@ -23,7 +24,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IGlobalStockRepository, GlobalStockRepository>();
             services.AddScoped<IPledgeRepository, PledgeRepository>();
 
-            // Register Kafka Services
+            // Register Kafka Services with MediatR integration
             services.AddKafkaServices(configuration);
 
             return services;
@@ -33,14 +34,31 @@ namespace Infrastructure.DependencyInjection
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            // Bind Kafka configuration from appsettings.json
+            // Bind Kafka configuration
             services.Configure<KafkaSettings>(
                 configuration.GetSection(KafkaSettings.SectionName));
 
+            // Add MediatR (if not already added elsewhere)
+            services.AddMediatR(typeof(Application.Features.EventHandling.Handlers.DonorPledgeEventHandler).Assembly);
+
             // Register Kafka components
+            services.AddSingleton<ITopicDispatcher, TopicDispatcher>();
             services.AddSingleton<KafkaTopicInitializer>();
             services.AddScoped<IEventProducer, KafkaEventPublisher>();
             services.AddHostedService<KafkaConsumerService>();
+
+            // Register topic handlers
+            services.AddTransient(provider => 
+            {
+                var dispatcher = provider.GetRequiredService<ITopicDispatcher>();
+                
+                // Map topics to MediatR commands - use the correct command classes that implement IRequest
+                dispatcher.Register<Application.Features.BloodRequests.Commands.DonorPledgeCommand>(
+                    "donors-pledges");  // Match the topic name in appsettings.json
+          // Match the topic name in appsettings.json
+                
+                return dispatcher;
+            });
 
             return services;
         }

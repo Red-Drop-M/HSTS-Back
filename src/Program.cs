@@ -8,7 +8,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Infrastructure.DependencyInjection;
 using Infrastructure.ExternalServices.Kafka;
-using Application.interfaces;
+using Application.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel explicitly

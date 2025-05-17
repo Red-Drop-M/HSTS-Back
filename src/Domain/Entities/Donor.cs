@@ -20,6 +20,7 @@ namespace Domain.Entities
         // Navigation Property (One-to-Many with BloodBags)
         public ICollection<BloodBag> BloodBags { get; private set; } = new List<BloodBag>();
         public ICollection<Request> Requests { get; private set; } = new List<Request>();
+        public ICollection<DonorPledge> Pledges { get; private set; } = new List<DonorPledge>();
         private Donor() { }
 
         // Optional constructor to create a donor (without setting Id)
