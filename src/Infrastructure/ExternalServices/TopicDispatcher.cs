@@ -1,9 +1,9 @@
-// Application/EventHandling/ITopicDispatcher.cs
-using MediatR;
-using Application.Interfaces;
 
+using Application.Interfaces;
+using MediatR;
 // Infrastructure/ExternalServices/Kafka/TopicDispatcher.cs
-public class TopicDispatcher : ITopicDispatcher
+namespace Infrastructure.ExternalServices
+{public class TopicDispatcher : ITopicDispatcher
 {
     private readonly Dictionary<string, Type> _handlerRegistry = new();
     private readonly Dictionary<string, Type> _messageRegistry = new();
@@ -22,9 +22,9 @@ public class TopicDispatcher : ITopicDispatcher
         _messageRegistry[topic] = messageType;
     }
 
-    public Type GetHandlerType(string topic) => 
+    public Type? GetHandlerType(string topic) => 
         _handlerRegistry.TryGetValue(topic, out var type) ? type : null;
 
-    public Type GetMessageType(string topic) => 
+    public Type? GetMessageType(string topic) => 
         _messageRegistry.TryGetValue(topic, out var type) ? type : null;
-}
+}}

@@ -6,7 +6,7 @@ namespace Domain.Entities
     public class DonorPledge
     {
         // Composite primary key (DonorId + RequestId)
-        public string DonorName { get; set; } = string.Empty;
+        public Guid DonorId { get; set; } 
         public Guid RequestId { get; private set; }
         
         public PledgeStatus Status { get; private set; }
@@ -22,20 +22,22 @@ namespace Domain.Entities
             Status = PledgeStatus.Pledged; 
             PledgeDate = DateOnly.FromDateTime(DateTime.Now);
         }
+      /**
            public static DonorPledge FromEvent(DonorPledgeEvent @event) => new DonorPledge(
-            @event.DonorName,
+            @event.Donor.DonorName,
             @event.RequestId,
             @event.Status,
             @event.PledgedAt
         );
+      */
 
         public DonorPledge(
-            string donorName,
+            Guid donorName,
             Guid requestId,
             PledgeStatus status,
             DateOnly pledgeDate)
         {
-            DonorName = donorName;
+            DonorId = donorName;
             RequestId = requestId;
             Status = status;
             PledgeDate = pledgeDate;

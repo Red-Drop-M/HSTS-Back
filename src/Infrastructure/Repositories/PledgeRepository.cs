@@ -14,16 +14,16 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<DonorPledge?> GetByIdAsync(string donorName, Guid requestId)
+        public async Task<DonorPledge?> GetByIdAsync(Guid donorId, Guid requestId)
         {   
                 return await _context.Pledges
-                .FirstOrDefaultAsync(p => p.DonorName == donorName && p.RequestId == requestId);
+                .FirstOrDefaultAsync(p => p.DonorId == donorId && p.RequestId == requestId);
         }   
     
-        public async Task<IEnumerable<DonorPledge>> GetByDonorNameAsync(string donorName)
+        public async Task<IEnumerable<DonorPledge>> GetByDonorNameAsync(Guid donorId)
         {
             return await _context.Pledges
-                .Where(p => p.DonorName == donorName)
+                .Where(p => p.DonorId == donorId)
                 .ToListAsync();
         }
 
@@ -46,9 +46,9 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string donorName, Guid requestId)
+        public async Task DeleteAsync(Guid donorId, Guid requestId)
         {
-            var pledge = await GetByIdAsync(donorName, requestId);
+            var pledge = await GetByIdAsync(donorId, requestId);
             if (pledge != null)
             {
                 _context.Pledges.Remove(pledge);

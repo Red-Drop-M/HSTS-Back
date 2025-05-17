@@ -10,13 +10,13 @@ namespace Infrastructure.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<DonorPledge> builder)
         {
         // Composite primary key
-            builder.HasKey(dp => new { dp.DonorName, dp.RequestId });
+            builder.HasKey(dp => new { dp.DonorId, dp.RequestId });
         
         // Relationship to Donor using Name as foreign key
             builder.HasOne(dp => dp.Donor)
                 .WithMany(d => d.Pledges)
-                .HasForeignKey(dp => dp.DonorName)
-                .HasPrincipalKey(d => d.Name)  // Reference Donor's Name
+                .HasForeignKey(dp => dp.DonorId)
+                .HasPrincipalKey(d => d.Id)  // Reference Donor's Name
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(dp => dp.Request)

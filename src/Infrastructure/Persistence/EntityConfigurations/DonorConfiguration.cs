@@ -12,7 +12,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(d => d.Id);
             builder.Property(d => d.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
-                .ValueGeneratedOnAdd(); // Use this for PostgreSQL
+                .ValueGeneratedNever(); // Use this for PostgreSQL
 
 
             // Donor -> BloodBags (1:N)

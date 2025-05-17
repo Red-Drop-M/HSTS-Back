@@ -2,6 +2,9 @@
 bin/
 obj/
 
+# Build output folders
+/build/
+
 # User-specific files
 *.user
 *.userosscache

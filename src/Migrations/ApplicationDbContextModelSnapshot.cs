@@ -17,7 +17,7 @@ namespace HSTS_Back.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -65,7 +65,6 @@ namespace HSTS_Back.Migrations
             modelBuilder.Entity("Domain.Entities.Donor", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
@@ -111,8 +110,8 @@ namespace HSTS_Back.Migrations
 
             modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
                 {
-                    b.Property<string>("DonorName")
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("DonorId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("RequestId")
                         .HasColumnType("uuid");
@@ -125,7 +124,7 @@ namespace HSTS_Back.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.HasKey("DonorName", "RequestId");
+                    b.HasKey("DonorId", "RequestId");
 
                     b.HasIndex("RequestId");
 
@@ -302,8 +301,7 @@ namespace HSTS_Back.Migrations
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
                         .WithMany("Pledges")
-                        .HasForeignKey("DonorName")
-                        .HasPrincipalKey("Name")
+                        .HasForeignKey("DonorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

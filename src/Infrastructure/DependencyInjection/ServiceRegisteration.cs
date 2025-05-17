@@ -3,19 +3,20 @@ using Domain.Repositories;
 using Infrastructure.ExternalServices.Kafka;
 using Infrastructure.Repositories;
 using MediatR;
-using Domain.Events;
-using Application.Features.EventHandling.Handlers;
+using Infrastructure.ExternalServices;
+using Application.Features.EventHandling.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Infrastructure.DependencyInjection
 {
-    public static class ServiceRegistration
+        public static class ServiceRegistration
     {
         public static IServiceCollection AddInfrastructureServices(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfiguration configuration)
         {
-            // Register Repositories
+            // Register core repositories
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBloodBagRepository, BloodBagRepository>();
@@ -24,7 +25,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IGlobalStockRepository, GlobalStockRepository>();
             services.AddScoped<IPledgeRepository, PledgeRepository>();
 
-            // Register Kafka Services with MediatR integration
+            // Configure Kafka services
             services.AddKafkaServices(configuration);
 
             return services;
@@ -38,27 +39,22 @@ namespace Infrastructure.DependencyInjection
             services.Configure<KafkaSettings>(
                 configuration.GetSection(KafkaSettings.SectionName));
 
-            // Add MediatR (if not already added elsewhere)
-            services.AddMediatR(typeof(Application.Features.EventHandling.Handlers.DonorPledgeEventHandler).Assembly);
+            // Register MediatR with explicit handler assembly
+            services.AddMediatR(typeof(DonorPledgeCommand).Assembly);
 
-            // Register Kafka components
+            // Kafka infrastructure components
             services.AddSingleton<ITopicDispatcher, TopicDispatcher>();
             services.AddSingleton<KafkaTopicInitializer>();
             services.AddScoped<IEventProducer, KafkaEventPublisher>();
             services.AddHostedService<KafkaConsumerService>();
 
-            // Register topic handlers
-            services.AddTransient(provider => 
-            {
-                var dispatcher = provider.GetRequiredService<ITopicDispatcher>();
-                
-                // Map topics to MediatR commands - use the correct command classes that implement IRequest
-                dispatcher.Register<Application.Features.BloodRequests.Commands.DonorPledgeCommand>(
-                    "donors-pledges");  // Match the topic name in appsettings.json
-          // Match the topic name in appsettings.json
-                
-                return dispatcher;
-            });
+            // Health check registration
+            services.AddHealthChecks()
+                .AddKafka(new Confluent.Kafka.ProducerConfig 
+                { 
+                    BootstrapServers = configuration.GetSection("Kafka:BootstrapServers").Value 
+                })
+                .AddNpgSql(configuration.GetConnectionString("DefaultConnection"));
 
             return services;
         }

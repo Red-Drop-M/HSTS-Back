@@ -34,6 +34,7 @@ namespace Domain.Entities
             string phoneNumber,
             DateOnly dateOfBirth)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             DateOfBirth = dateOfBirth;

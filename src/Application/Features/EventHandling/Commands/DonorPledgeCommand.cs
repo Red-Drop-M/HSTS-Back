@@ -1,8 +1,8 @@
 using MediatR;
 using Domain.Events;
-namespace Application.Features.BloodRequests.Commands
+namespace Application.Features.EventHandling.Commands
 {
-    public class DonorPledgeCommand : IRequest
+    public class DonorPledgeCommand : IRequest<Unit>
     {
         public DonorPledgeEvent Payload { get; }
 
