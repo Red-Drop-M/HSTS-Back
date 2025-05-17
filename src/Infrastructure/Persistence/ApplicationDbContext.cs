@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities; // Ensure this namespace matches the location of your domain entities
+using Domain.Entities;
+ // Ensure this namespace matches the location of your domain entities
 
 namespace Infrastructure.Persistence
 {

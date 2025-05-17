@@ -31,9 +31,12 @@ namespace Infrastructure.Persistence.EntityConfigurations
                     d => DateOnly.FromDateTime(d))
                 .IsRequired();
 
-            builder.Property(dp => dp.Status)
-                .HasConversion<string>()
-                .IsRequired();
+           builder.Property(dp => dp.Status)
+            .HasConversion(
+                v => v.Value,  // Convert to string for storage
+                v => PledgeStatus.FromString(v))  // Convert from string
+            .IsRequired()
+            .HasMaxLength(20); 
         }
     }
 }

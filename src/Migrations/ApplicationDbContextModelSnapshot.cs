@@ -111,20 +111,21 @@ namespace HSTS_Back.Migrations
 
             modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
                 {
-                    b.Property<Guid>("DonorId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("DonorName")
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("RequestId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("PledgeDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("PledgeDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.HasKey("DonorId", "RequestId");
+                    b.HasKey("DonorName", "RequestId");
 
                     b.HasIndex("RequestId");
 
@@ -300,15 +301,16 @@ namespace HSTS_Back.Migrations
             modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
-                        .WithMany()
-                        .HasForeignKey("DonorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Pledges")
+                        .HasForeignKey("DonorName")
+                        .HasPrincipalKey("Name")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Request", "Request")
                         .WithMany("Pledges")
                         .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Donor");
@@ -336,6 +338,8 @@ namespace HSTS_Back.Migrations
             modelBuilder.Entity("Domain.Entities.Donor", b =>
                 {
                     b.Navigation("BloodBags");
+
+                    b.Navigation("Pledges");
 
                     b.Navigation("Requests");
                 });

@@ -30,7 +30,7 @@ namespace Domain.Entities
         );
 
         public DonorPledge(
-            String donorName,
+            string donorName,
             Guid requestId,
             PledgeStatus status,
             DateOnly pledgeDate)
