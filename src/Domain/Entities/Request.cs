@@ -1,4 +1,5 @@
 using Domain.ValueObjects;
+using Newtonsoft.Json;
 
 namespace Domain.Entities
 {
@@ -77,6 +78,15 @@ namespace Domain.Entities
             AquiredQty = aquiredQty;
             ServiceId = serviceId;
             DonorId = donorId;
+        }
+        public void UpdateAquiredQty()
+        {
+            AquiredQty++;
+            RequiredQty--;
+            if (RequiredQty == 0)
+            {
+                Status = RequestStatus.Resolved();
+            }
         }
         public void UpdateDetails(BloodBagType? bloodBagType, Priority? priority, DateOnly? dueDate, string? moreDetails, int? requiredQty)
         {
