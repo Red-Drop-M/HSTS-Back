@@ -2,7 +2,7 @@ using MediatR;
 using Domain.Events;
 namespace Application.Features.EventHandling.Commands
 {
-    public class DonorPledgeCommand : IRequest<Unit>
+    public class DonorPledgeCommand : IRequest
     {
         public DonorPledgeEvent Payload { get; }
 

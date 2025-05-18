@@ -27,7 +27,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
                 // Property configurations
             builder.Property(dp => dp.PledgeDate)
                 .HasConversion(
-                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateTime.SpecifyKind(d.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
                     d => DateOnly.FromDateTime(d))
                 .IsRequired();
 

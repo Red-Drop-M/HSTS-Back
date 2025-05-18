@@ -9,6 +9,7 @@ using FastEndpoints.Swagger;
 using Infrastructure.DependencyInjection;
 using Infrastructure.ExternalServices.Kafka;
 using Application.Interfaces;
+using Application.Features.EventHandling.Commands;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel explicitly
@@ -37,15 +38,19 @@ builder.Services.AddCors(options =>
 
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? 
-               throw new InvalidOperationException("Connection string 'DefaultConnection' not found."), 
-               name: "postgres");
+    .AddNpgSql(
+        builder.Configuration.GetConnectionString("DefaultConnection") ?? 
+        throw new InvalidOperationException("Connection string 'DefaultConnection' not found."), 
+        name: "postgres");
 
 // Register Kafka configuration
 builder.Services.Configure<KafkaSettings>(
     builder.Configuration.GetSection("Kafka"));
 
-// Register KafkaEventPublisher as a singleton or scoped service
+// Register singleton for topic initialization
+builder.Services.AddSingleton<KafkaTopicInitializer>();
+
+// Register scoped services
 builder.Services.AddScoped<IEventProducer, KafkaEventPublisher>();
 
 // FastEndpoints + Swagger
@@ -69,23 +74,54 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHostedService<KafkaConsumerService>();
 
 var app = builder.Build();
 
-// Middleware
-app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseCors("AllowAll");
+// Move logging middleware to be one of the first middleware components
+// Custom request logging middleware
+app.Use(async (context, next) => {
+    var start = DateTime.UtcNow;
+    var requestPath = context.Request.Path;
+    var method = context.Request.Method;
+    
+    app.Logger.LogInformation("Request started: {Method} {Path}", method, requestPath);
+    
+    try {
+        await next();
+        
+        var elapsed = DateTime.UtcNow - start;
+        var statusCode = context.Response.StatusCode;
+        
+        app.Logger.LogInformation(
+            "Request completed: {Method} {Path} - Status: {StatusCode} - Duration: {Duration}ms",
+            method, requestPath, statusCode, elapsed.TotalMilliseconds);
+    }
+    catch (Exception ex) {
+        app.Logger.LogError(ex, "Request failed: {Method} {Path}", method, requestPath);
+        throw; // Re-throw to let the exception handler middleware handle it
+    }
+});
 
 // Basic health check endpoint for troubleshooting
-app.MapGet("/ping", () => "pong");
-app.MapHealthChecks("/health");
-
-// Use FastEndpoints + Swagger
-app.UseFastEndpoints(c => {
-    c.Endpoints.RoutePrefix = "api";
+app.MapGet("/", () => "Hello from HSTS API!");
+app.MapGet("/debug", (HttpContext context) => {
+    return $"Debug info - Remote IP: {context.Connection.RemoteIpAddress}";
 });
-app.UseSwaggerGen(); // FastEndpoints Swagger
+app.MapHealthChecks("/health");
+app.MapGet("/ping", () => Results.Ok("pong"));
+
+// Add all other middleware
+app.UseCors("AllowAll");
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseFastEndpoints();
+app.UseSwaggerGen();
+
+// Register your topic handlers with the dispatcher
+var topicDispatcher = app.Services.GetRequiredService<ITopicDispatcher>();
+topicDispatcher.Register<DonorPledgeCommand>("donors-pledges");
 
 Console.WriteLine("Starting web server on port 5000...");
+app.Logger.LogInformation("Web server is ready to accept requests at http://0.0.0.0:5000");
 
 app.Run();

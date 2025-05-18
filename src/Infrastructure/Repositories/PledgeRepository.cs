@@ -56,5 +56,56 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public async Task<(List<DonorPledge> pledges, int total)> GetAllAsync(
+    int page,
+    int pageSize,
+    string? status = null,
+    Guid? donorId = null,
+    Guid? requestId = null,
+    string? bloodType = null)
+{
+    var query = _context.Pledges
+        .Include(p => p.Donor)
+        .Include(p => p.Request)
+        .AsQueryable();
+
+    // Apply filters
+    if (!string.IsNullOrEmpty(status))
+    {
+        query = query.Where(p => p.Status.Value == status);
+    }
+
+    if (donorId.HasValue && donorId.Value != Guid.Empty)
+    {
+        query = query.Where(p => p.DonorId == donorId.Value);
+    }
+
+    if (requestId.HasValue && requestId.Value != Guid.Empty)
+    {
+        query = query.Where(p => p.RequestId == requestId.Value);
+    }
+
+    if (!string.IsNullOrEmpty(bloodType))
+    {
+        query = query.Where(p => p.Request.BloodType.Value == bloodType);
+    }
+
+    // Get total count
+    var total = await query.CountAsync();
+
+    // Apply pagination
+    var pledges = await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+    return (pledges, total);
+}
+
+public async Task<DonorPledge?> GetByDonorAndRequestIdAsync(Guid donorId, Guid requestId)
+{
+    return await _context.Pledges
+        .FirstOrDefaultAsync(p => p.DonorId == donorId && p.RequestId == requestId);
+}
     }
 }

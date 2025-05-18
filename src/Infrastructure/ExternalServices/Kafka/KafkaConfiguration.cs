@@ -1,14 +1,15 @@
 // Infrastructure/Configuration/KafkaSettings.cs
-namespace Infrastructure.ExternalServices.Kafka;
-
-public class KafkaSettings
+namespace Infrastructure.ExternalServices.Kafka
 {
-    public const string SectionName = "Kafka";
-    
-    public string BootstrapServers { get; set; } = "localhost:9092";
-    public Dictionary<string, string> Topics { get; set; } = new();
-    
-    // Optional: Add producer-specific settings
-    public int MessageTimeoutMs { get; set; } = 5000;
-    public bool EnableIdempotence { get; set; } = true;
+    public class KafkaSettings
+    {
+        public const string SectionName = "Kafka";
+        
+        public required string BootstrapServers { get; set; }
+        public required Dictionary<string, string> Topics { get; set; }
+        public List<string> ConsumerTopics { get; set; } = new();
+        public bool EnableIdempotence { get; set; }
+        public required string GroupId { get; set; }
+        public required string AutoOffsetReset { get; set; }
+    }
 }
