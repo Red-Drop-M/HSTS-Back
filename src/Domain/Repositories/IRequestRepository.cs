@@ -11,7 +11,8 @@ namespace Domain.Repositories
         Task  AddAsync(Request request);
         Task UpdateAsync(Request request);
         Task DeleteAsync(Guid id);
-        Task <List<Request>> GetByBloodBagTypeAsync(BloodBagType bloodBagType);
+        Task UpdateWithoutNavigationAsync(Request request);
+        Task<List<Request>> GetByBloodBagTypeAsync(BloodBagType bloodBagType);
         Task<List<Request>> GetByPriorityAsync(Priority priority);
         Task<List<Request>> GetByRequestDateAsync(DateOnly requestDate);
         Task<List<Request>> GetByDueDateAsync(DateOnly dueDate);

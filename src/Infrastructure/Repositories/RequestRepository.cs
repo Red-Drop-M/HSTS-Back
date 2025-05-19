@@ -130,5 +130,23 @@ namespace Infrastructure.Repositories
             return (requests, total);
         }
 
+        public async Task UpdateWithoutNavigationAsync(Request request)
+        {
+            // Attach the entity but only mark specific properties as modified
+            _context.Attach(request);
+            
+            // Mark only the scalar properties you want to update as Modified
+            _context.Entry(request).Property(x => x.Status).IsModified = true;
+            _context.Entry(request).Property(x => x.AquiredQty).IsModified = true;
+            _context.Entry(request).Property(x => x.RequiredQty).IsModified = true;
+            
+            // Explicitly ignore navigation properties
+            _context.Entry(request).Reference(r => r.Service).IsModified = false;
+            _context.Entry(request).Reference(r => r.Donor).IsModified = false;
+            _context.Entry(request).Collection(r => r.BloodSacs).IsModified = false;
+            _context.Entry(request).Collection(r => r.Pledges).IsModified = false;
+            
+            await _context.SaveChangesAsync();
+        }
     }
 }

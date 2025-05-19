@@ -68,7 +68,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                             null,
                             request.AquiredQty,
                             request.RequiredQty,null);
-                        await _eventProducer.ProduceAsync(topic, JsonSerializer.Serialize(updateRequestEvent));
+                        await _eventProducer.ProduceAsync( JsonSerializer.Serialize(updateRequestEvent),topic);
                         _logger.LogInformation("Produced event: {Event}", updateRequestEvent);          
                     }
                 }

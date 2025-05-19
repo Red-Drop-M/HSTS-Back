@@ -31,7 +31,7 @@ namespace Infrastructure.ExternalServices.Kafka
                 .Build();
         }
 
-        public async Task ProduceAsync<TEvent>(TEvent @event, string topic) where TEvent : class
+        public async Task ProduceAsync<TEvent>(string topic, TEvent @event) where TEvent : class
         {
             try
             {
@@ -48,6 +48,12 @@ namespace Infrastructure.ExternalServices.Kafka
                 _logger.LogError(ex, "Message production failed");
                 throw;
             }
+        }
+
+        public Task FlushAsync(TimeSpan timeout)
+        {
+            _producer.Flush(timeout);
+            return Task.CompletedTask;
         }
 
         public void Dispose() => _producer.Dispose();
