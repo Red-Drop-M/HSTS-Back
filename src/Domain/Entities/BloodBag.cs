@@ -54,7 +54,11 @@ namespace Domain.Entities
             if (donorId is not null) DonorId = donorId;
             if (requestId is not null) RequestId = requestId;
         }
-
+        public void UseBloodBag(Guid requestId)
+        {
+            RequestId = requestId;
+            Status = BloodBagStatus.Used();
+        }
         public void UpdateStatus(BloodBagStatus status)
         {
             Status = status;
