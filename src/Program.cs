@@ -81,6 +81,9 @@ builder.Services.AddHostedService<KafkaConsumerService>();
 builder.Services.AddHostedService<BackgroundEventProcessor>();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
+// Register the DailySchedulerService
+builder.Services.AddHostedService<HSTS_Back.Infrastructure.BackgroundServices.DailySchedulerService>();
+
 var app = builder.Build();
 
 // Move logging middleware to be one of the first middleware components
@@ -115,6 +118,11 @@ app.MapGet("/debug", (HttpContext context) => {
 });
 app.MapHealthChecks("/health");
 app.MapGet("/ping", () => Results.Ok("pong"));
+app.MapGet("/api/system/status", () => new { 
+    Status = "Running", 
+    SchedulerActive = true,
+    CurrentTime = DateTime.Now 
+});
 
 // Add all other middleware
 app.UseCors("AllowAll");

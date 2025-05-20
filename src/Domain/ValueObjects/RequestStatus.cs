@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.RateLimiting;
+
 namespace Domain.ValueObjects
 {
     public class RequestStatus
@@ -13,12 +15,13 @@ namespace Domain.ValueObjects
         public static RequestStatus Resolved() => new RequestStatus("resolved");
         public static RequestStatus Partial() => new RequestStatus("partial");
         public static RequestStatus Cancled() => new RequestStatus("cancled");
-
+        public static RequestStatus Rejected() => new RequestStatus("rejected");
         public static RequestStatus Convert(string value) => value.ToLowerInvariant() switch
         {
             "pending" => Pending(),
             "resolved" => Resolved(),
             "partial" => Partial(),
+            "Rejected" => Rejected(),
             "cancled" => Cancled(),
             _ => throw new ArgumentException("Invalid RequestStatus", nameof(value))
         };

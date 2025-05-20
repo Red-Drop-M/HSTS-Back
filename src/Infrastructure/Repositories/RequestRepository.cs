@@ -148,5 +148,28 @@ namespace Infrastructure.Repositories
             
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateRangeAsync(IEnumerable<Request> requests)
+        {
+            // First clear the change tracker to avoid entity tracking conflicts
+            _context.ChangeTracker.Clear();
+            
+            foreach (var request in requests)
+            {
+                // Attach each entity but only update specific properties
+                _context.Attach(request);
+                
+                // Mark properties for update
+                _context.Entry(request).Property(x => x.Status).IsModified = true;
+                
+                // Explicitly ignore navigation properties to avoid tracking conflicts
+                _context.Entry(request).Reference(r => r.Service).IsModified = false;
+                _context.Entry(request).Reference(r => r.Donor).IsModified = false;
+                _context.Entry(request).Collection(r => r.BloodSacs).IsModified = false;
+                _context.Entry(request).Collection(r => r.Pledges).IsModified = false;
+            }
+            
+            await _context.SaveChangesAsync();
+        }
     }
 }

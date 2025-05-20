@@ -68,5 +68,9 @@ namespace Domain.Entities
             Status = status;
             ExpirationDate = expirationDate;
         }
+        public void UpdateExpirationDate(DateTime expirationDate)
+        {
+            ExpirationDate = DateOnly.FromDateTime(expirationDate);
+        }
     }
 }

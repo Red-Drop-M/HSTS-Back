@@ -92,6 +92,10 @@ namespace Domain.Entities
         {
             Status = RequestStatus.Resolved();
         }
+        public void Reject()
+        {
+            Status = RequestStatus.Rejected();
+        }
         public void UpdateDetails(BloodBagType? bloodBagType, Priority? priority, DateOnly? dueDate, string? moreDetails, int? requiredQty)
         {
             if (bloodBagType is not null) BloodBagType = bloodBagType;
