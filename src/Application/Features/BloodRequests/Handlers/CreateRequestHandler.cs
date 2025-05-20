@@ -7,6 +7,7 @@ using Application.Features.BloodRequests.Commands;
 using Microsoft.Extensions.Options;
 using Domain.Events;
 using Shared.Exceptions;
+using FastEndpoints;
 using Application.Interfaces;
 
 namespace Application.Features.BloodRequests.Handlers
@@ -68,24 +69,7 @@ namespace Application.Features.BloodRequests.Handlers
                     throw new NotFoundException("Service not found", "CreateRequestHandler");
                 }
 
-                // Create and publish the event
-                var requestCreatedEvent = new RequestCreatedEvent(
-                    newRequest.Id,
-                    newRequest.BloodType,
-                    newRequest.Priority,
-                    newRequest.BloodBagType,
-                    newRequest.RequestDate,
-                    newRequest.DueDate,
-                    newRequest.Status,
-                    newRequest.MoreDetails,
-                    newRequest.RequiredQty,
-                    newRequest.AquiredQty,
-                    service.Name // Pass the service name to the event
-                );
-
-                var topic = _kafkaSettings.Value.Topics["BloodRequests"];
-                await _eventProducer.ProduceAsync(requestCreatedEvent, topic);
-
+                await new AutoReuqestResolverEvent(newRequest).PublishAsync(Mode.WaitForNone); // Create and publish the event
                 _logger.LogInformation("Request created successfully");
 
                 // Return the DTO

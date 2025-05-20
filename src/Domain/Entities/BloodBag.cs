@@ -54,7 +54,11 @@ namespace Domain.Entities
             if (donorId is not null) DonorId = donorId;
             if (requestId is not null) RequestId = requestId;
         }
-
+        public void UseBloodBag(Guid requestId)
+        {
+            RequestId = requestId;
+            Status = BloodBagStatus.Used();
+        }
         public void UpdateStatus(BloodBagStatus status)
         {
             Status = status;
@@ -63,6 +67,10 @@ namespace Domain.Entities
         {
             Status = status;
             ExpirationDate = expirationDate;
+        }
+        public void UpdateExpirationDate(DateTime expirationDate)
+        {
+            ExpirationDate = DateOnly.FromDateTime(expirationDate);
         }
     }
 }

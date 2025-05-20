@@ -121,7 +121,7 @@ namespace Infrastructure.Repositories
 
             if (filter.RequestId != null)
             query = query.Where(b => b.RequestId == filter.RequestId);
-
+            query = query.OrderBy(b => b.Id);
             var total = await query.CountAsync();
 
             var bloodBags = await query

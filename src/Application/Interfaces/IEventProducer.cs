@@ -2,7 +2,8 @@ namespace Application.Interfaces
 {
     public interface IEventProducer
     {
-        Task ProduceAsync<TEvent>(TEvent @event, string topic) where TEvent : class;
+        Task ProduceAsync<TEvent>(string topic, TEvent @event) where TEvent : class;
+        Task FlushAsync(TimeSpan timeout);
     }
 
 }

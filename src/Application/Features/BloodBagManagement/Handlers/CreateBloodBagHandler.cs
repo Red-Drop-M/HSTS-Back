@@ -68,9 +68,32 @@ namespace Application.Features.BloodBagManagement.Handlers
                             null,
                             request.AquiredQty,
                             request.RequiredQty,null);
-                        await _eventProducer.ProduceAsync(topic, JsonSerializer.Serialize(updateRequestEvent));
+                        await _eventProducer.ProduceAsync( JsonSerializer.Serialize(updateRequestEvent),topic);
                         _logger.LogInformation("Produced event: {Event}", updateRequestEvent);          
                     }
+                }
+
+                // Set expiration date based on blood bag type if not provided
+                if (newBloodBag.ExpirationDate == null)
+                {
+                    // Use the value comparison instead of direct reference comparison
+                    if (newBloodBag.BloodBagType.Value == BloodBagType.Blood().Value)
+                    {
+                        newBloodBag.UpdateExpirationDate(DateTime.Now.AddDays(30)); // Blood expires after 30 days
+                    }
+                    else if (newBloodBag.BloodBagType.Value == BloodBagType.Plaquette().Value)
+                    {
+                        newBloodBag.UpdateExpirationDate(DateTime.Now.AddDays(5)); // Plaquette expires after 5 days
+                    }
+                    else if (newBloodBag.BloodBagType.Value == BloodBagType.Plasma().Value)
+                    {
+                        newBloodBag.UpdateExpirationDate(DateTime.Now.AddDays(5)); // Plasma expires after 5 days
+                    }
+                    else
+                    {
+                        newBloodBag.UpdateExpirationDate(DateTime.Now.AddDays(30)); // Default to 30 days
+                    }
+                    await _bloodBagRepository.UpdateAsync(newBloodBag);
                 }
                 return (new BloodBagDTO
                     {

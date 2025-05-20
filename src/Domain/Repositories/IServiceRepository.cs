@@ -11,6 +11,7 @@ namespace Domain.Repositories
         Task UpdateAsync(Service service);
         Task DeleteAsync(Guid id);
         Task<List<Service?>> GetServicesAsync();
+     
 
         Task<(List<Service?> Services, int Total)> GetAllAsync(int page, int pageSize, ServiceFilter filter);
     }

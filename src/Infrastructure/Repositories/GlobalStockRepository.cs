@@ -16,10 +16,10 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<GlobalStock?> GetByKeyAsync(BloodType bloodGroup, BloodBagType bloodBagType)
-    {
-        return await _context.GlobalStocks
-            .FirstOrDefaultAsync(gs => gs.BloodType == bloodGroup && gs.BloodBagType == bloodBagType);
-    }
+        {
+            return await _context.GlobalStocks
+                .FirstOrDefaultAsync(gs => gs.BloodType == bloodGroup && gs.BloodBagType == bloodBagType);
+        }
 
         public async Task<GlobalStock?> GetByBloodBagTypeAsync(BloodBagType bloodBagType)
         {
@@ -47,12 +47,29 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteAsync(BloodType BT, BloodBagType BBT)
         {
-            var globalStock = await GetByKeyAsync(BT,BBT);
+            var globalStock = await GetByKeyAsync(BT, BBT);
             if (globalStock != null)
             {
                 _context.GlobalStocks.Remove(globalStock);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<GlobalStock>> GetAllAsync(BloodType? bloodType = null, BloodBagType? bloodBagType = null)
+        {
+            var query = _context.GlobalStocks.AsQueryable();
+
+            if (bloodType != null)
+            {
+                query = query.Where(gs => gs.BloodType == bloodType);
+            }
+
+            if (bloodBagType != null)
+            {
+                query = query.Where(gs => gs.BloodBagType == bloodBagType);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

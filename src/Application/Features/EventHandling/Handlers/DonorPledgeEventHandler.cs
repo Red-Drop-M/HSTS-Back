@@ -10,6 +10,7 @@ using System.Text.Json;
 using Application.Features.EventHandling.Commands;
 using Infrastructure.Configuration;
 using Shared.Exceptions;
+using Infrastructure.ExternalServices.Kafka;
 
 namespace Application.Features.EventHandling.Handlers
 {
@@ -22,6 +23,7 @@ namespace Application.Features.EventHandling.Handlers
         private readonly ILogger<DonorPledgeEventHandler> _logger;
         private readonly IEventProducer _eventProducer;
         private readonly RetryPolicySettings _retrySettings;
+        private readonly IOptions<KafkaSettings> _kafkaSettings;
 
         public DonorPledgeEventHandler(
             IDonorRepository donorRepository,
@@ -29,7 +31,8 @@ namespace Application.Features.EventHandling.Handlers
             IPledgeRepository pledgeRepository,
             ILogger<DonorPledgeEventHandler> logger,
             IEventProducer eventProducer,
-            IOptions<RetryPolicySettings> retrySettings)
+            IOptions<RetryPolicySettings> retrySettings,
+            IOptions<KafkaSettings> kafkaSettings)
         {   
             _donorRepository = donorRepository;
             _requestRepository = requestRepository;
@@ -37,6 +40,7 @@ namespace Application.Features.EventHandling.Handlers
             _logger = logger;
             _eventProducer = eventProducer;
             _retrySettings = retrySettings.Value;
+            _kafkaSettings = kafkaSettings;
         }
 
         public async Task<Unit> Handle(
@@ -68,13 +72,8 @@ namespace Application.Features.EventHandling.Handlers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Pledge processing failed after retries");
-                await _eventProducer.ProduceAsync(
-                    new PledgeFailedEvent(
-                        command.Payload,
-                        ex.Message,
-                        DateTime.UtcNow,
-                        Guid.NewGuid()),
-                    "pledge-failed-events");
+                var topic = _kafkaSettings.Value.Topics["PledgeFailed"];
+                await _eventProducer.ProduceAsync(topic, JsonSerializer.Serialize(new PledgeFailedEvent(command.Payload, ex.Message, DateTime.UtcNow, Guid.NewGuid())));
                 throw;
             }
         }

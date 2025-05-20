@@ -10,6 +10,7 @@ using Infrastructure.DependencyInjection;
 using Infrastructure.ExternalServices.Kafka;
 using Application.Interfaces;
 using Application.Features.EventHandling.Commands;
+using Infrastructure.BackgroundServices;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel explicitly
@@ -76,6 +77,13 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHostedService<KafkaConsumerService>();
 
+// Add background processing service
+builder.Services.AddHostedService<BackgroundEventProcessor>();
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+
+// Register the DailySchedulerService
+builder.Services.AddHostedService<HSTS_Back.Infrastructure.BackgroundServices.DailySchedulerService>();
+
 var app = builder.Build();
 
 // Move logging middleware to be one of the first middleware components
@@ -110,6 +118,11 @@ app.MapGet("/debug", (HttpContext context) => {
 });
 app.MapHealthChecks("/health");
 app.MapGet("/ping", () => Results.Ok("pong"));
+app.MapGet("/api/system/status", () => new { 
+    Status = "Running", 
+    SchedulerActive = true,
+    CurrentTime = DateTime.Now 
+});
 
 // Add all other middleware
 app.UseCors("AllowAll");
@@ -123,5 +136,15 @@ topicDispatcher.Register<DonorPledgeCommand>("donors-pledges");
 
 Console.WriteLine("Starting web server on port 5000...");
 app.Logger.LogInformation("Web server is ready to accept requests at http://0.0.0.0:5000");
+
+// In Program.cs after service registration
+var serviceProvider = app.Services;
+var topicInitializer = serviceProvider.GetRequiredService<KafkaTopicInitializer>();
+await topicInitializer.InitializeAsync();
+
+// Add a delay to ensure topics are ready
+await Task.Delay(2000); 
+
+app.Logger.LogInformation("Kafka topics initialized, starting application");
 
 app.Run();
