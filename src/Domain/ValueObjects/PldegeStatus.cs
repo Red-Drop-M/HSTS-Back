@@ -11,7 +11,8 @@ namespace Domain.ValueObjects
         {
             ["Pledged"] = new PledgeStatus("Pledged"),
             ["Fulfilled"] = new PledgeStatus("Fulfilled"),
-            ["Canceled"] = new PledgeStatus("Canceled")
+            ["Canceled"] = new PledgeStatus("Canceled"),
+            ["expired"] = new PledgeStatus("expired"),
         };
 
         public static PledgeStatus Pledged => _statuses["Pledged"];

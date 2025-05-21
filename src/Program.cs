@@ -11,6 +11,11 @@ using Infrastructure.ExternalServices.Kafka;
 using Application.Interfaces;
 using Application.Features.EventHandling.Commands;
 using Infrastructure.BackgroundServices;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Presentation.Middlewares;
+using Infrastructure.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel explicitly
@@ -84,6 +89,32 @@ builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 // Register the DailySchedulerService
 builder.Services.AddHostedService<HSTS_Back.Infrastructure.BackgroundServices.DailySchedulerService>();
 
+// Add JWT configuration
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key")))
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
+});
+
+// Register JWT service
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 var app = builder.Build();
 
 // Move logging middleware to be one of the first middleware components
@@ -129,6 +160,9 @@ app.UseCors("AllowAll");
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseFastEndpoints();
 app.UseSwaggerGen();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseMiddleware<JwtMiddleware>();
 
 // Register your topic handlers with the dispatcher
 var topicDispatcher = app.Services.GetRequiredService<ITopicDispatcher>();
@@ -146,5 +180,8 @@ await topicInitializer.InitializeAsync();
 await Task.Delay(2000); 
 
 app.Logger.LogInformation("Kafka topics initialized, starting application");
+
+// Call database seeder
+await DatabaseSeeder.SeedDatabase(app.Services);
 
 app.Run();

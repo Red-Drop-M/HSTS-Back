@@ -25,6 +25,7 @@ namespace Domain.Entities
             string phoneNumber,
             string address)
         {
+            Id = Guid.NewGuid(); // Generate new ID
             Name = name;
             Email = email;
             Password = password;
@@ -32,6 +33,39 @@ namespace Domain.Entities
             DateOfBirth = dateOfBirth;
             PhoneNumber = phoneNumber;
             Address = address;
+        }
+
+        // Update user details
+        public void UpdateDetails(
+            string? name = null,
+            string? email = null,
+            string? phoneNumber = null,
+            string? address = null,
+            DateTime? dateOfBirth = null)
+        {
+            if (name != null) Name = name;
+            if (email != null) Email = email;
+            if (phoneNumber != null) PhoneNumber = phoneNumber;
+            if (address != null) Address = address;
+            if (dateOfBirth.HasValue) DateOfBirth = dateOfBirth.Value;
+        }
+
+        // Update user role (admin only operation)
+        public void UpdateRole(UserRole newRole)
+        {
+            Role = newRole;
+        }
+
+        // Change password
+        public void ChangePassword(string newPassword)
+        {
+            Password = newPassword;
+        }
+
+        // Verify password (for authentication)
+        public bool VerifyPassword(string providedPassword)
+        {
+            return Password == providedPassword;
         }
     }
 }
