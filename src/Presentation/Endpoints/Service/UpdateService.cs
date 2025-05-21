@@ -20,11 +20,15 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Put("/services/{id}");
-            AllowAnonymous();
+            Policies("RequireAdminRole"); // Restrict to admin role
             Description(x => x
-                .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
-                .Produces<ErrorResponse>(StatusCodes.Status404NotFound)
-                .Produces(StatusCodes.Status200OK));
+                .WithName("UpdateService")
+                .WithTags("Admin", "Services") // Add Admin tag
+                .Produces<UpdateServiceResponse>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status403Forbidden) // Add forbidden response
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status500InternalServerError));
         }
         public override async Task HandleAsync(UpdateServiceRequest req, CancellationToken ct)
         {

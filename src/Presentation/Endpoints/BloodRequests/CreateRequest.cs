@@ -20,8 +20,10 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Post("/bloodrequests");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("CreateBloodRequest")
+                .WithTags("BloodRequests")
                 .Produces<CreateRequestResponse>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

@@ -46,9 +46,10 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Get("/bloodrequests");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("GetBloodRequests")
+                .WithTags("BloodRequests")
                 .Produces<GetRequestsResponse>(200)
                 .Produces<NotFoundException>(404)
                 .Produces<BadRequestException>(400));

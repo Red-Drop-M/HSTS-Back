@@ -19,8 +19,10 @@ namespace Presentation.Endpoints.Donor
         public override void Configure()
         {
             Delete("/donors/{id}");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("DeleteDonor")
+                .WithTags("Donors")
                 .Produces<DeleteDonorResponse>(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

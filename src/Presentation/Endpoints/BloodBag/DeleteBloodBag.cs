@@ -18,9 +18,11 @@ namespace Presentation.Endpoints.BloodBag
 
         public override void Configure()
         {
-            Delete("/bloodbags/{id}");
-            AllowAnonymous();
+            Delete("/blood-bags/{id}");
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("DeleteBloodBag")
+                .WithTags("BloodBags")
                 .Produces<DeleteBloodBagResponse>(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

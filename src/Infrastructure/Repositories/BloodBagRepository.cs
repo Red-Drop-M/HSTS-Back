@@ -101,26 +101,31 @@ namespace Infrastructure.Repositories
         {
             var query = _context.BloodBags.AsQueryable();
 
+            // Handle single blood type filtering
             if (filter.BloodType != null)
-            query = query.Where(b => b.BloodType == filter.BloodType);
+                query = query.Where(b => b.BloodType == filter.BloodType);
+
+            // Handle multiple blood types filtering
+            if (filter.BloodTypes != null && filter.BloodTypes.Any())
+                query = query.Where(b => filter.BloodTypes.Contains(b.BloodType.Value));
 
             if (filter.BloodBagType != null)
-            query = query.Where(b => b.BloodBagType == filter.BloodBagType);
+                query = query.Where(b => b.BloodBagType == filter.BloodBagType);
 
             if (filter.ExpirationDate != null)
-            query = query.Where(b => filter.ExpirationDate.HasValue && b.ExpirationDate == filter.ExpirationDate.Value);
+                query = query.Where(b => filter.ExpirationDate.HasValue && b.ExpirationDate == filter.ExpirationDate.Value);
 
             if (filter.AcquiredDate != null)
-            query = query.Where(b => b.AcquiredDate == filter.AcquiredDate);
+                query = query.Where(b => b.AcquiredDate == filter.AcquiredDate);
 
             if (filter.Status != null)
-            query = query.Where(b => b.Status == filter.Status);
+                query = query.Where(b => b.Status == filter.Status);
 
             if (filter.DonorId != null)
-            query = query.Where(b => b.DonorId == filter.DonorId);
+                query = query.Where(b => b.DonorId == filter.DonorId);
 
             if (filter.RequestId != null)
-            query = query.Where(b => b.RequestId == filter.RequestId);
+                query = query.Where(b => b.RequestId == filter.RequestId);
             query = query.OrderBy(b => b.Id);
             var total = await query.CountAsync();
 

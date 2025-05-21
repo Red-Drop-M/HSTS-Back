@@ -40,8 +40,7 @@ namespace Presentation.Endpoints.Admin.Users
                 if (error != null)
                 {
                     _logger.LogWarning("Failed to retrieve users: {Message}", error.Message);
-                    ThrowError(error);
-                    return;
+                    throw error;
                 }
 
                 _logger.LogInformation("Retrieved {Count} users", users.Count);

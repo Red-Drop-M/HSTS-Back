@@ -55,8 +55,7 @@ namespace Presentation.Endpoints.Admin.Users
                 if (error != null)
                 {
                     _logger.LogWarning("Failed to update user {Id}: {Message}", req.Id, error.Message);
-                    ThrowError(error);
-                    return;
+                    throw error;
                 }
 
                 if (user == null)

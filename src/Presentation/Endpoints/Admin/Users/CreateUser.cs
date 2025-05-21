@@ -51,8 +51,7 @@ namespace Presentation.Endpoints.Admin.Users
                 if (error != null)
                 {
                     _logger.LogWarning("Failed to create user: {Message}", error.Message);
-                    ThrowError(error);
-                    return;
+                    throw error;
                 }
 
                 if (user == null)

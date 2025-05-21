@@ -15,6 +15,7 @@ namespace Presentation.Endpoints.Auth
         public override void Configure()
         {
             Post("/auth/logout");
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("Logout")
                 .WithTags("Authentication")

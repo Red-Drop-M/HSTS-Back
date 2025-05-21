@@ -61,9 +61,28 @@ namespace Application.Features.EventHandling.Handlers
                         logger.LogError("not enough stock available checking for critical stock");
                         if ((stock.ReadyCount - request.Request.RequiredQty >= stock.CriticalStock) && request.Request.Priority.Value == Priority.Critical().Value)
                         {
+                            // Define blood type compatibility mapping
+                            Dictionary<string, List<string>> compatibleTypes = new Dictionary<string, List<string>>
+                            {
+                                // Recipient can receive from these blood types
+                                { "O+", new List<string> { "O+", "O-" } },
+                                { "O-", new List<string> { "O-" } },
+                                { "A+", new List<string> { "A+", "A-", "O+", "O-" } },
+                                { "A-", new List<string> { "A-", "O-" } },
+                                { "B+", new List<string> { "B+", "B-", "O+", "O-" } },
+                                { "B-", new List<string> { "B-", "O-" } },
+                                { "AB+", new List<string> { "AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-" } },
+                                { "AB-", new List<string> { "AB-", "A-", "B-", "O-" } }
+                            };
+
+                            // Get compatible blood types for the requested blood type
+                            List<string> allowedBloodTypes = compatibleTypes.ContainsKey(request.Request.BloodType.Value)
+                                ? compatibleTypes[request.Request.BloodType.Value]
+                                : new List<string> { request.Request.BloodType.Value };
+
                             var filters = new BloodBagFilter
                             {
-                                BloodType = request.Request.BloodType,
+                                BloodTypes = allowedBloodTypes,  // Using list of compatible types instead of just one
                                 BloodBagType = request.Request.BloodBagType,
                                 Status = BloodBagStatus.Ready(),
                                 RequestId = null,

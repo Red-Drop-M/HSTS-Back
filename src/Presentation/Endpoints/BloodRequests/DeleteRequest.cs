@@ -18,8 +18,10 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Delete("/bloodrequests/{id}");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("DeleteBloodRequest")
+                .WithTags("BloodRequests")
                 .Produces<DeleteRequestResponse>(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

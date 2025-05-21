@@ -19,8 +19,10 @@ namespace Presentation.Endpoints.Donor
         public override void Configure()
         {
             Get("/donors/{id}");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("GetDonor")
+                .WithTags("Donors")
                 .Produces<GetDonorResponse>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

@@ -33,12 +33,13 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Get("/services");
-            AllowAnonymous();
+            Policies("RequireAdminRole"); // Restrict to admin role
             Description(x => x
                 .WithName("GetAllServices")
-                .Produces<GetAllServicesResponse>(200)
-                .Produces<NotFoundException>(404)
-                .Produces<BadRequestException>(400));
+                .WithTags("Admin", "Services") // Add Admin tag
+                .Produces<GetAllServicesResponse>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status403Forbidden) // Add forbidden response
+                .Produces(StatusCodes.Status500InternalServerError));
         }
         public override async Task HandleAsync(GetAllServicesRequest req, CancellationToken ct)
         {

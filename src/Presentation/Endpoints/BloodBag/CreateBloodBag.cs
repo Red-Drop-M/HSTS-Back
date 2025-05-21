@@ -20,9 +20,11 @@ namespace Presentation.Endpoints.BloodBag
 
         public override void Configure()
         {
-            Post("/bloodbags");
-            AllowAnonymous();
+            Post("/blood-bags");
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
+                .WithName("CreateBloodBag")
+                .WithTags("BloodBags")
                 .Produces<CreateBloodBagResponse>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

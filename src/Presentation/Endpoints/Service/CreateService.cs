@@ -20,11 +20,13 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Post("/services");
-            AllowAnonymous();
+            Policies("RequireAdminRole"); // Restrict to admin role
             Description(x => x
+                .WithName("CreateService")
+                .WithTags("Admin", "Services") // Add Admin tag
                 .Produces<CreateServiceResponse>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
-                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status403Forbidden) // Add forbidden response
                 .Produces(StatusCodes.Status500InternalServerError));
         }
 

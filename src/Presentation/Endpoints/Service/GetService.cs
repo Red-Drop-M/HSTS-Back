@@ -19,10 +19,12 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Get("/services/{id}");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Correct method in FastEndpoints v5.35.0
             Description(x => x
+                .WithName("GetService")
+                .WithTags("Services") // Remove "Admin" tag since all users can access
                 .Produces<GetServiceResponse>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status401Unauthorized) // Changed from 403 to 401
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError));
         }

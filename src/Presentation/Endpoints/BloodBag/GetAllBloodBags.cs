@@ -44,10 +44,11 @@ namespace Presentation.Endpoints.BloodBag
 
         public override void Configure()
         {
-            Get("/bloodbags");
-            AllowAnonymous();
+            Get("/blood-bags");
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("GetAllBloodBags")
+                .WithTags("BloodBags")
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

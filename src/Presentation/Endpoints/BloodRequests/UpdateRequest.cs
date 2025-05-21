@@ -17,9 +17,10 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Put("/bloodrequests/{id}");
-            AllowAnonymous();
+            Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
-                .WithName("Update Blood Request")
+                .WithName("UpdateBloodRequest")
+                .WithTags("BloodRequests")
                 .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
                 .Produces<ErrorResponse>(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status200OK));

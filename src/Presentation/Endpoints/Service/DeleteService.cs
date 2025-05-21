@@ -19,10 +19,13 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Delete("/services/{id}");
-            AllowAnonymous();
+            Policies("RequireAdminRole"); // Restrict to admin role
             Description(x => x
+                .WithName("DeleteService")
+                .WithTags("Admin", "Services") // Add Admin tag
                 .Produces<DeleteServiceResponse>(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status403Forbidden) // Add forbidden response
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError));
         }
