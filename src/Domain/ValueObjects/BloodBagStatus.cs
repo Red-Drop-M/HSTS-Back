@@ -8,7 +8,7 @@ namespace Domain.ValueObjects
         {
             Value = value;
         }
-
+        public static BloodBagStatus Aquired() => new BloodBagStatus("aquired");
         public static BloodBagStatus Ready() => new BloodBagStatus("ready");
         public static BloodBagStatus Expired() => new BloodBagStatus("expired");
         public static BloodBagStatus Used() => new BloodBagStatus("used");
@@ -16,7 +16,8 @@ namespace Domain.ValueObjects
         public static BloodBagStatus OutForOther() => new BloodBagStatus("out for other");
 
         public static BloodBagStatus Convert(string value) => value.ToLowerInvariant() switch
-        {
+        {   
+            "aquired" => Aquired(),
             "ready" => Ready(),
             "expired" => Expired(),
             "used" => Used(),

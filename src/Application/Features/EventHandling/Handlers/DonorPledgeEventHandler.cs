@@ -96,6 +96,7 @@ namespace Application.Features.EventHandling.Handlers
         donor = new Donor(
             donorName,  // Use name with null check
             payload.Donor.Email,
+            payload.Donor.NotesBTC,
             request.BloodType,
             payload.Donor.LastDonationDate,
             payload.Donor.Address,
@@ -149,6 +150,7 @@ namespace Application.Features.EventHandling.Handlers
     var pledge = new DonorPledge(
         donor.Id,
         request.Id,
+         null,
         payload.Status,
         pledgeDateOnly);
         

@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string NIN { get; private set; } = string.Empty; // National ID Number
         public string PhoneNumber { get; private set; } = string.Empty;
         public string Address { get; private set; } = string.Empty;
+        public string? NotesBTC { get; private set; } = string.Empty; // Notes from Blood Transfusion Center
         // Navigation Property (One-to-Many with BloodBags)
         public ICollection<BloodBag> BloodBags { get; private set; } = new List<BloodBag>();
         public ICollection<Request> Requests { get; private set; } = new List<Request>();
@@ -27,16 +28,18 @@ namespace Domain.Entities
         public Donor(
             string name,
             string email,
+            string? notesBTC,  // Add this parameter
             BloodType bloodType,
             DateOnly? lastDonationDate,
             string address,
             string nin,
             string phoneNumber,
-            DateOnly dateOfBirth)
+            DateOnly? dateOfBirth)
         {
             Id = Guid.NewGuid();
             Name = name;
             Email = email;
+            NotesBTC = notesBTC;
             DateOfBirth = dateOfBirth;
             BloodType = bloodType;
             NIN = nin;
@@ -48,6 +51,7 @@ namespace Domain.Entities
         public void UpdateDetails(
             string? name,
             string? email,
+            string? notesBTC,
             BloodType? bloodType,
             DateOnly? lastDonationDate,
             string? address,
@@ -57,6 +61,7 @@ namespace Domain.Entities
         {
             Name = (name ==null )? Name : name;
             Email =(email==null )? Email : email;
+            NotesBTC = (notesBTC == null) ? NotesBTC : notesBTC;
             BloodType = (bloodType == null) ? BloodType : bloodType;
             LastDonationDate = ( lastDonationDate == null) ? LastDonationDate : lastDonationDate;
             Address = (address==null )? Address : address;

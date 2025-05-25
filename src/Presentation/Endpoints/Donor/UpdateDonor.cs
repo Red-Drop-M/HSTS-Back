@@ -35,6 +35,7 @@ namespace Presentation.Endpoints.Donor
                 req.Id, 
                 req.Name, 
                 req.Email, 
+                req.NotesBTC,
                 req.PhoneNumber,
                 req.Address,   
                 BloodType.FromString(req.BloodType),
@@ -58,6 +59,7 @@ namespace Presentation.Endpoints.Donor
         public  Guid Id { get; set; }
         public string? Name { get; set; }
         public string? Email { get; set; }
+        public string? NotesBTC { get; set; }
         public string? BloodType { get; set; }
         public string? PhoneNumber { get; set; }
         public string? NIN { get; set; }

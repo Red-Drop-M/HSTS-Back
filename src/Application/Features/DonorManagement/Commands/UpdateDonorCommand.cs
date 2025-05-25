@@ -10,6 +10,7 @@ namespace Application.Features.DonorManagement.Commands
         public Guid Id { get; set; }
         public string? Name { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;
+        public string? NotesBTC { get; set; }
         public BloodType? BloodType { get; set; } = BloodType.APositive();
         public DateOnly? LastDonationDate { get; set; } 
         public string? Address { get; set; } = string.Empty;
@@ -21,6 +22,7 @@ namespace Application.Features.DonorManagement.Commands
             Guid id,
             string? name,
             string? email,
+            string? notesBTC,
             string? phoneNumber,
             string? address ,
             BloodType? bloodType ,
@@ -31,6 +33,7 @@ namespace Application.Features.DonorManagement.Commands
             Id = id;
             Name = name;
             Email = email;
+            NotesBTC = notesBTC;
             PhoneNumber = phoneNumber;
             Address = address ;
             BloodType = bloodType ;

@@ -12,19 +12,20 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 namespace Application.Features.EventHandling.Handlers
 {
+    // I need to change stuff here later
     public class AutoRequestResolverHandler : IEventHandler<AutoReuqestResolverEvent>
     {
         private readonly IRequestRepository _requestRepository;
-     
+
         private readonly IEventProducer _eventProducer;
         private readonly IBloodBagRepository _bloodBagRepository;
         private readonly IOptions<KafkaSettings> _kafkaSettings;
         private readonly ILogger<AutoRequestResolverHandler> _logger;
         private readonly IGlobalStockRepository _globalStockRepository;
         private readonly IBackgroundTaskQueue _backgroundTaskQueue;
-        public AutoRequestResolverHandler(IRequestRepository requestRepository, IEventProducer eventProducer, IOptions<KafkaSettings> kafkaSettings, ILogger<AutoRequestResolverHandler> logger, IGlobalStockRepository globalStockRepository, IBloodBagRepository bloodBagRepository,  IBackgroundTaskQueue backgroundTaskQueue)
+        public AutoRequestResolverHandler(IRequestRepository requestRepository, IEventProducer eventProducer, IOptions<KafkaSettings> kafkaSettings, ILogger<AutoRequestResolverHandler> logger, IGlobalStockRepository globalStockRepository, IBloodBagRepository bloodBagRepository, IBackgroundTaskQueue backgroundTaskQueue)
         {
-           
+
             _bloodBagRepository = bloodBagRepository;
             _eventProducer = eventProducer;
             _kafkaSettings = kafkaSettings;
@@ -36,17 +37,17 @@ namespace Application.Features.EventHandling.Handlers
         public async Task HandleAsync(AutoReuqestResolverEvent request, CancellationToken ct)
         {
             // Queue the work to be done in a background thread with its own scope
-            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async (scope, token) => 
+            await _backgroundTaskQueue.QueueBackgroundWorkItemAsync(async (scope, token) =>
             {
                 // Get new instances of dependencies from the scope
                 var requestRepository = scope.ServiceProvider.GetRequiredService<IRequestRepository>();
                 var globalStockRepository = scope.ServiceProvider.GetRequiredService<IGlobalStockRepository>();
                 var bloodBagRepository = scope.ServiceProvider.GetRequiredService<IBloodBagRepository>();
-              
+
                 var eventProducer = scope.ServiceProvider.GetRequiredService<IEventProducer>();
                 var kafkaSettings = scope.ServiceProvider.GetRequiredService<IOptions<KafkaSettings>>();
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<AutoRequestResolverHandler>>();
-                
+
                 // Process with fresh dependencies
                 try
                 {
@@ -109,17 +110,18 @@ namespace Application.Features.EventHandling.Handlers
                         else
                         {
                             logger.LogInformation("not enough stock available for the request");
-                            try {
+                            try
+                            {
                                 // Get topic value from settings using the correct key
                                 var topic = kafkaSettings.Value.Topics["BloodRequests"];  // This should match a key in your appsettings.json
                                 logger.LogInformation("Using Kafka topic: '{Topic}'", topic);
-                                
+
                                 if (string.IsNullOrEmpty(topic))
                                 {
                                     logger.LogError("Topic name is empty for key 'BloodRequests'");
                                     return;
                                 }
-                                
+
                                 if (request.Request.ServiceId == null)
                                 {
                                     logger.LogError("ServiceId is null");
@@ -144,11 +146,13 @@ namespace Application.Features.EventHandling.Handlers
                                     request.Request.AquiredQty,
                                     Service.Name);
                                 await eventProducer.ProduceAsync(topic, JsonSerializer.Serialize(@event));
-                            } 
-                            catch (KeyNotFoundException ex) {
+                            }
+                            catch (KeyNotFoundException ex)
+                            {
                                 logger.LogError(ex, "Topic key 'BloodRequests' not found in configuration");
                             }
-                            catch (Exception ex) {
+                            catch (Exception ex)
+                            {
                                 logger.LogError(ex, "Error publishing to Kafka");
                             }
                         }

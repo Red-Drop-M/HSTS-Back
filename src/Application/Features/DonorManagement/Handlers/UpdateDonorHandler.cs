@@ -34,6 +34,7 @@ namespace Application.Features.DonorManagement.Handlers
                 donor.UpdateDetails(
                     Donor.Name,
                     Donor.Email,
+                    Donor.NotesBTC,
                     Donor.BloodType,
                     Donor.LastDonationDate,
                     Donor.Address,
@@ -49,6 +50,7 @@ namespace Application.Features.DonorManagement.Handlers
                     Id = donor.Id,
                     Name = donor.Name,
                     Email = donor.Email,
+                    NotesBTC= donor.NotesBTC,
                     LastDonationDate = donor.LastDonationDate,
                     BloodType = donor.BloodType,
                     Address = donor.Address,

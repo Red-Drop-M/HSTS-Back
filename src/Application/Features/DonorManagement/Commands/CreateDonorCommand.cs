@@ -10,7 +10,8 @@ namespace Application.Features.DonorManagement.Commands
         //public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get;  }
         public string Email { get;  }
-        public BloodType BloodType { get;  } 
+        public string? NotesBTC  { get; }
+        public BloodType BloodType { get; } 
         public DateOnly? LastDonationDate { get;  } 
         public string Address { get;  }
         public string NIN { get;  } 
@@ -20,6 +21,7 @@ namespace Application.Features.DonorManagement.Commands
         public CreateDonorCommand(
             string name,
             string email,
+            string? notesBTC,
             DateOnly dateOfBirth,
             BloodType bloodType,
             string address ,
@@ -29,6 +31,7 @@ namespace Application.Features.DonorManagement.Commands
         {
             Name = name;
             Email = email;
+            NotesBTC = NotesBTC;
             BloodType = bloodType ; // Default to A+ if not provided
             LastDonationDate = lastDonationDate ; // Default to current date
             Address = address;

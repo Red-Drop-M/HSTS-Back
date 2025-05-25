@@ -21,17 +21,21 @@ namespace Application.Features.BloodBagManagement.Handlers
         private readonly IDonorRepository _donorRepository;
         private readonly IRequestRepository _requestRepository;
         private readonly IPledgeRepository _pledgeRepository;
+        private readonly IGlobalStockRepository _globalStockRepository;
+        private readonly IBloodTransferCenterRepository _centerRepository;
 
         public CreateBloodBagHandler(IBloodBagRepository bloodBagRepository, ILogger<CreateBloodBagHandler> logger, IEventProducer eventProducer,
-            IRequestRepository requestRepository, IDonorRepository donorRepository, IPledgeRepository pledgeRepository, IOptions<KafkaSettings> kafkaSettings)
+            IRequestRepository requestRepository, IDonorRepository donorRepository, IPledgeRepository pledgeRepository, IOptions<KafkaSettings> kafkaSettings, IGlobalStockRepository globalStockRepository, IBloodTransferCenterRepository centerRepository)
         {
             _eventProducer = eventProducer;
             _requestRepository = requestRepository;
             _pledgeRepository = pledgeRepository;
             _bloodBagRepository = bloodBagRepository;
+            _centerRepository = centerRepository;
             _donorRepository = donorRepository;
             _kafkaSettings = kafkaSettings;
             _logger = logger;
+            _globalStockRepository = globalStockRepository;
         }
 
         public async Task<(BloodBagDTO? bloodBag , BaseException? err)> Handle(CreateBloodBagCommand bloodBag, CancellationToken cancellationToken)
@@ -63,13 +67,27 @@ namespace Application.Features.BloodBagManagement.Handlers
                         request.UpdateAquiredQty();
                         await _requestRepository.UpdateAsync(request);
                         var topic = _kafkaSettings.Value.Topics["UpdateRequest"];
-                        var updateRequestEvent = new UpdateRequestEvent(
-                            request.Id,
-                            null,
-                            request.AquiredQty,
-                            request.RequiredQty,null);
-                        await _eventProducer.ProduceAsync( JsonSerializer.Serialize(updateRequestEvent),topic);
-                        _logger.LogInformation("Produced event: {Event}", updateRequestEvent);          
+                        if (request.RequiredQty == 0)
+                        {
+                            var message = new UpdateRequestEvent(
+                                request.Id,
+                                null,
+                                RequestStatus.Resolved().Value,
+                                request.AquiredQty,
+                                request.RequiredQty, null);
+                            await _eventProducer.ProduceAsync(topic,JsonSerializer.Serialize(message));
+                        }
+                        else
+                        {
+                            var updateRequestEvent = new UpdateRequestEvent(
+                                request.Id,
+                                null,
+                                null,
+                                request.AquiredQty,
+                                request.RequiredQty, null);
+                            await _eventProducer.ProduceAsync(topic,JsonSerializer.Serialize(updateRequestEvent));
+
+                        }       
                     }
                 }
 
@@ -94,6 +112,28 @@ namespace Application.Features.BloodBagManagement.Handlers
                         newBloodBag.UpdateExpirationDate(DateTime.Now.AddDays(30)); // Default to 30 days
                     }
                     await _bloodBagRepository.UpdateAsync(newBloodBag);
+                    _logger.LogInformation("Blood bag expiration date updated to {ExpirationDate}", newBloodBag.ExpirationDate);
+                    var stock = await _globalStockRepository.GetByKeyAsync(newBloodBag.BloodType, newBloodBag.BloodBagType);
+                    if (stock != null)
+                    {
+                        throw new NotFoundException("Global stock not found", "updating global stock");
+                    }
+                    stock?.IncrementAvailableCount(1);
+                    await _globalStockRepository.UpdateAsync(stock);
+                    var topic = _kafkaSettings.Value.Topics["GlobalStock"];
+                    var subMessage = new GlobalStockData(
+                        newBloodBag.BloodType,
+                        newBloodBag.BloodBagType,
+                        stock?.ReadyCount + stock?.CountExpiring + stock?.CountExpired ?? 0,
+                        stock?.ReadyCount ?? 0,
+                        stock?.MinStock ?? 0,
+                        stock?.CountExpired ?? 0);
+                    var hospital = await _centerRepository.GetPrimaryAsync();
+                    var message = new GlobalStockEvent(
+                        hospital.Id, 
+                        subMessage
+                    );
+                    await _eventProducer.ProduceAsync(topic, JsonSerializer.Serialize(message));
                 }
                 return (new BloodBagDTO
                     {

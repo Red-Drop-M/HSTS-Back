@@ -38,6 +38,7 @@ namespace Presentation.Endpoints.Donor
                 var command = new CreateDonorCommand(
                     req.Name,
                     req.Email,
+                    req.NotesBTC,
                     req.DateOfBirth,
                     BloodType.FromString(req.BloodType),
                     req.Address,
@@ -65,7 +66,7 @@ namespace Presentation.Endpoints.Donor
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating donor: {Message}", ex.Message);
-                throw ex;
+                throw;
             }
         }
         }
@@ -77,6 +78,7 @@ namespace Presentation.Endpoints.Donor
         public DateOnly? LastDonationDate { get; set; } 
         public required string Address { get; set; }
         public required string NIN { get; set; }
+        public required string? NotesBTC { get; set; }
         public required string PhoneNumber { get; set; }
         public required DateOnly DateOfBirth { get; set; } // DateOfBirth as string for input
     }

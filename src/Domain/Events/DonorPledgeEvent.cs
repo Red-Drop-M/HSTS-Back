@@ -11,6 +11,7 @@ namespace Domain.Events
     public sealed record DonorData(
         string DonorName,
         string Email,
+        string? NotesBTC,
         string PhoneNumber,
         string Address,
         string NIN,

@@ -41,9 +41,10 @@ namespace Application.Features.BloodRequests.Handlers
                     var topic = _kafkaSettings.Value.Topics["UpdateRequest"];
                     var updateRequestEvent = new UpdateRequestEvent(
                         command.Id,
-                        command.Priority,
+                        command.Priority.Value,
                         null,
-                        null,
+                        request.AquiredQty,
+                        request.RequiredQty,
                         command.DueDate
                     );
                     var message = JsonSerializer.Serialize(updateRequestEvent);

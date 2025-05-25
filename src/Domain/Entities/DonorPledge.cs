@@ -8,10 +8,10 @@ namespace Domain.Entities
         // Composite primary key (DonorId + RequestId)
         public Guid DonorId { get; set; } 
         public Guid RequestId { get; private set; }
-        
+        public DateOnly? FulfillmentDate { get; private set; } = null;
         public PledgeStatus Status { get; private set; }
         public DateOnly PledgeDate { get; private set; }
-
+        
         // Navigation properties
         public Donor Donor { get; private set; } = null!;
         public Request Request { get; private set; } = null!;
@@ -34,11 +34,13 @@ namespace Domain.Entities
         public DonorPledge(
             Guid donorName,
             Guid requestId,
+            DateOnly? fulfillmentDate,
             PledgeStatus status,
             DateOnly pledgeDate)
         {
             DonorId = donorName;
             RequestId = requestId;
+            FulfillmentDate = fulfillmentDate;
             Status = status;
             PledgeDate = pledgeDate;
         }

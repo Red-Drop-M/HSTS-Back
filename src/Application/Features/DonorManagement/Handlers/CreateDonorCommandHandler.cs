@@ -26,6 +26,7 @@ namespace Application.Features.DonorManagement.Handlers
                 var newDonor = new Donor(
                     Donor.Name,
                     Donor.Email,
+                    Donor.NotesBTC,
                     Donor.BloodType,
                     Donor.LastDonationDate,
                     Donor.Address,
@@ -39,6 +40,7 @@ namespace Application.Features.DonorManagement.Handlers
                     Id = newDonor.Id,
                     Name = newDonor.Name,
                     Email = newDonor.Email,
+                    NotesBTC = newDonor.NotesBTC,
                     LastDonationDate = newDonor.LastDonationDate,
                     BloodType = newDonor.BloodType,
                     Address = newDonor.Address,

@@ -62,6 +62,77 @@ namespace HSTS_Back.Migrations
                     b.ToTable("BloodBags");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BloodTransferCenter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsPrimary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("WilayaId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("IsPrimary")
+                        .IsUnique()
+                        .HasFilter("\"IsPrimary\" = true");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("WilayaId");
+
+                    b.ToTable("BloodTransferCenters");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Commune", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("WilayaId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WilayaId");
+
+                    b.ToTable("Communes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Donor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -98,6 +169,9 @@ namespace HSTS_Back.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("NotesBTC")
+                        .HasColumnType("text");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -115,6 +189,9 @@ namespace HSTS_Back.Migrations
 
                     b.Property<Guid>("RequestId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateOnly?>("FulfillmentDate")
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("PledgeDate")
                         .HasColumnType("timestamp with time zone");
@@ -280,6 +357,22 @@ namespace HSTS_Back.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Wilaya", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Wilayas");
+                });
+
             modelBuilder.Entity("Domain.Entities.BloodBag", b =>
                 {
                     b.HasOne("Domain.Entities.Donor", "Donor")
@@ -295,6 +388,28 @@ namespace HSTS_Back.Migrations
                     b.Navigation("Donor");
 
                     b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("Domain.Entities.BloodTransferCenter", b =>
+                {
+                    b.HasOne("Domain.Entities.Wilaya", "Wilaya")
+                        .WithMany("BloodTransferCenters")
+                        .HasForeignKey("WilayaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Wilaya");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Commune", b =>
+                {
+                    b.HasOne("Domain.Entities.Wilaya", "Wilaya")
+                        .WithMany("Communes")
+                        .HasForeignKey("WilayaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Wilaya");
                 });
 
             modelBuilder.Entity("Domain.Entities.DonorPledge", b =>
@@ -352,6 +467,13 @@ namespace HSTS_Back.Migrations
             modelBuilder.Entity("Domain.Entities.Service", b =>
                 {
                     b.Navigation("Requests");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wilaya", b =>
+                {
+                    b.Navigation("BloodTransferCenters");
+
+                    b.Navigation("Communes");
                 });
 #pragma warning restore 612, 618
         }

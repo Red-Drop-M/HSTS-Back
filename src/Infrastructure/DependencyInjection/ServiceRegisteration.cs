@@ -6,6 +6,8 @@ using MediatR;
 using Infrastructure.ExternalServices;
 using Application.Features.EventHandling.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.Services;
+using Infrastructure.Configuration;
 
 
 namespace Infrastructure.DependencyInjection
@@ -24,9 +26,21 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IDonorRepository, DonorRepository>();
             services.AddScoped<IGlobalStockRepository, GlobalStockRepository>();
             services.AddScoped<IPledgeRepository, PledgeRepository>();
-
+            // Add to your service registration section
+            services.AddScoped<IBloodTransferCenterRepository, BloodTransferCenterRepository>();
+            services.AddScoped<ICommuneRepository, CommuneRepository>();
+            services.AddScoped<IWilayaRepository, WilayaRepository>();
             // Configure Kafka services
             services.AddKafkaServices(configuration);
+
+            // Add these in your ConfigureServices method
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IPushSubscriptionRepository, PushSubscriptionRepository>();
+            services.AddScoped<IWebPushService, WebPushService>();
+            services.AddScoped<INotificationService, NotificationService>();
+
+            // Configure WebPush options
+            services.Configure<WebPushOptions>(configuration.GetSection("WebPush"));
 
             return services;
         }

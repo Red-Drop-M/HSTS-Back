@@ -20,7 +20,12 @@ namespace Infrastructure.Persistence
         public DbSet<GlobalStock> GlobalStocks { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Request> Requests { get; set; }
-        public DbSet<DonorPledge> Pledges {get ; set ;} // Renamed to reflect entity name
+        public DbSet<Commune> Communes { get; set; }
+        public DbSet<Wilaya> Wilayas { get; set; }
+        public DbSet<DonorPledge> Pledges { get; set; } // Renamed to reflect entity name
+        public DbSet<BloodTransferCenter> BloodTransferCenters { get; set; } // Added DbSet for BloodTransferCenter
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<PushSubscription> PushSubscriptions { get; set; }
 
         // Override OnModelCreating to configure your entity mappings using the Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
