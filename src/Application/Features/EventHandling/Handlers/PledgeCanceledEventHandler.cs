@@ -97,7 +97,7 @@ namespace Application.Features.EventHandling.Handlers
             await _pledgeRepository.UpdateAsync(pledge);
             
             _logger.LogInformation(
-                "Pledge for donor {DonorId} and request {RequestId} canceled by {CanceledBy}: {Reason}",
+                "Pledge for donor {DonorId} and request {RequestId}}",
                 payload.DonorId,
                 payload.RequestId);
         }

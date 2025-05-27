@@ -19,7 +19,10 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Get("/bloodrequests/{id}");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            // This endpoint retrieves a specific blood request by its ID
+            //Roles("Admin"); // Only admins can access this endpoint
+            AllowAnonymous(); // For simplicity, allowing anonymous access
+            //Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("GetBloodRequest")
                 .WithTags("BloodRequests")

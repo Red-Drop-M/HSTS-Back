@@ -15,9 +15,10 @@ namespace Domain.Entities
         public string? MoreDetails { get; private set; }
         public int RequiredQty { get; private set; } = 1;
         public int AquiredQty { get; private set; } = 0;
+        public Boolean autoResolve { get; private set; } = false;
 
         // Foreign keys
-        public Guid? ServiceId { get; private set;}
+        public Guid? ServiceId { get; private set; }
         public Guid? DonorId { get; private set; }
 
         // Navigation properties
@@ -25,6 +26,10 @@ namespace Domain.Entities
         public Donor? Donor { get; private set; }
         public ICollection<BloodBag> BloodSacs { get; private set; } = new List<BloodBag>();
         public ICollection<DonorPledge> Pledges { get; private set; } = new List<DonorPledge>();
+
+
+        // Add to Request entity
+        public bool IsDeleted { get; private set; }
 
         private Request() { }
 
@@ -88,6 +93,14 @@ namespace Domain.Entities
                 Status = RequestStatus.Resolved();
             }
         }
+        public void MarkAsAutoResolvable()
+        {
+            autoResolve = true;
+        }
+        public void MarkAsDeleted()
+        {
+            IsDeleted = true;
+        }
         public void Resolve()
         {
             Status = RequestStatus.Resolved();
@@ -103,6 +116,23 @@ namespace Domain.Entities
             if (dueDate is not null) DueDate = dueDate;
             if (moreDetails is not null) MoreDetails = moreDetails;
             if (requiredQty is not null) RequiredQty = requiredQty.Value;
+        }
+        public void UpdateAcquiredQuantity(int newQuantity)
+        {
+            AquiredQty = newQuantity;
+            if (AquiredQty == RequiredQty)
+            {
+                Status = RequestStatus.Resolved();
+            }
+            else if (AquiredQty > 0 && AquiredQty < RequiredQty)
+            {
+                MarkAsPartial();
+            }
+        }
+
+        public void MarkAsPartial()
+        {
+            Status = RequestStatus.Partial();
         }
     }
 }

@@ -21,7 +21,8 @@ namespace Presentation.Endpoints.Donor
         public override void Configure()
         {
             Post("/donors");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            AllowAnonymous(); // For simplicity, allowing anonymous access
+            //Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("CreateDonor")
                 .WithTags("Donors")

@@ -35,6 +35,29 @@ namespace Domain.Entities
             Icon = icon;
         }
         
+        // Add this constructor for initialization with all properties including Id
+        public Notification(
+            Guid id,
+            string title,
+            string message,
+            string type,
+            DateTime createdAt,
+            bool isRead,
+            Guid? userId = null,
+            string? link = null,
+            string? icon = null)
+        {
+            Id = id;
+            Title = title;
+            Message = message;
+            Type = type;
+            CreatedAt = createdAt;
+            IsRead = isRead;
+            UserId = userId;
+            Link = link;
+            Icon = icon;
+        }
+        
         public void MarkAsRead()
         {
             IsRead = true;

@@ -33,7 +33,8 @@ namespace Presentation.Endpoints.Service
         public override void Configure()
         {
             Get("/services");
-            Policies("RequireAdminRole"); // Restrict to admin role
+            AllowAnonymous(); // Or apply proper authentication
+            //Policies("RequireAdminRole"); // Restrict to admin role
             Description(x => x
                 .WithName("GetAllServices")
                 .WithTags("Admin", "Services") // Add Admin tag

@@ -11,6 +11,7 @@ public class CreateBloodRequestValidator:Validator<CreateRequestRequest>
             .WithMessage("Blood Type is required.")
             .Must(bloodType => BloodType.FromString(bloodType) != null)
             .WithMessage("Invalid blood group.");
+        
         RuleFor(x => x.BloodBagType)
             .NotEmpty()
             .WithMessage("Blood bag type is required.")
@@ -41,7 +42,7 @@ public class CreateBloodRequestValidator:Validator<CreateRequestRequest>
         RuleFor(x => x)
             .Must(r => r.ServiceId.HasValue || r.DonorId.HasValue)
             .WithMessage("Either ServiceId or DonorId must be provided.");
-        RuleFor(x => x.RequestStatus)
+        RuleFor(x => x.status)
             .Must(requestStatus => {
                 if (string.IsNullOrEmpty(requestStatus))
                     return true; // Allow null or empty

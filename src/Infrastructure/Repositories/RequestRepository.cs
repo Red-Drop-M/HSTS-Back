@@ -18,7 +18,8 @@ namespace Infrastructure.Repositories
         public async Task<Request?> GetByIdAsync(Guid id)
         {
             return await _context.Requests
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .Where(r => r.Id == id && !r.IsDeleted)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Request?> GetByServiceIdAsync(Guid serviceId)
@@ -49,10 +50,10 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var request = await GetByIdAsync(id);
+            var request = await _context.Requests.FindAsync(id);
             if (request != null)
             {
-                _context.Requests.Remove(request);
+                request.MarkAsDeleted();
                 await _context.SaveChangesAsync();
             }
         }
@@ -87,8 +88,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Request>> GetAllAsync()
         {
-            return await _context.Requests
-                .ToListAsync();
+            return await _context.Requests.Where(r => !r.IsDeleted).ToListAsync();
         }
 
         public async Task<List<Request>> GetByDonorIdAsync(Guid donorId)
@@ -99,7 +99,8 @@ namespace Infrastructure.Repositories
         }
         public async Task<(List<Request>, int)> GetAllAsync(int page, int pageSize, RequestFilter filter)
         {
-            var query = _context.Requests.AsQueryable();
+            var query = _context.Requests
+                .Where(r => !r.IsDeleted); // Filter out deleted items
 
             if (!string.IsNullOrEmpty(filter.Priority))
 

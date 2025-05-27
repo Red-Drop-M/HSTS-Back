@@ -72,5 +72,10 @@ namespace Domain.Entities
         {
             ExpirationDate = DateOnly.FromDateTime(expirationDate);
         }
+        public void AssignToRequest(Guid requestId)
+        {
+            RequestId = requestId;
+            Status = BloodBagStatus.Used(); // Or use a different status if appropriate
+        }
     }
 }

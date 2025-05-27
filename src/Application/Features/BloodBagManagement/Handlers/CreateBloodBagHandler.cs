@@ -114,8 +114,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                     await _bloodBagRepository.UpdateAsync(newBloodBag);
                     _logger.LogInformation("Blood bag expiration date updated to {ExpirationDate}", newBloodBag.ExpirationDate);
                     var stock = await _globalStockRepository.GetByKeyAsync(newBloodBag.BloodType, newBloodBag.BloodBagType);
-                    if (stock != null)
-                    {
+                    if (stock == null) {
                         throw new NotFoundException("Global stock not found", "updating global stock");
                     }
                     stock?.IncrementAvailableCount(1);

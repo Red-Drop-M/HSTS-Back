@@ -17,7 +17,8 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Put("/bloodrequests/{id}");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            AllowAnonymous(); // For simplicity, allowing anonymous access
+            // Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("UpdateBloodRequest")
                 .WithTags("BloodRequests")
@@ -27,7 +28,7 @@ namespace Presentation.Endpoints.BloodRequests
         }
         public override async Task HandleAsync(UpdateRequestRequest req, CancellationToken ct)
         {
-            var Command = new UpdateRequestCommand(req.Id,req.BloodBagType ==null?BloodBagType.Convert(req.BloodBagType):null,req.Priority==null?Priority.Convert(req.Priority):null,req.DueDate,req.MoreDetails,req.RequiredQty);
+            var Command = new UpdateRequestCommand(req.id,req.BloodBagType ==null?BloodBagType.Convert(req.BloodBagType):null,req.Priority==null?Priority.Convert(req.Priority):null,req.DueDate,req.MoreDetails,req.RequiredQty);
             var (result,err) = await _mediator.Send(Command,ct);
             if(err != null)
             {
@@ -40,7 +41,7 @@ namespace Presentation.Endpoints.BloodRequests
         }  
     }
     public class UpdateRequestRequest{
-        public required Guid Id {get;set;}
+        public required Guid id {get;set;}
         public  string? BloodBagType { get; set; }
         public  DateOnly? DueDate { get; set; }
         public string? Priority {get;set;}

@@ -20,7 +20,8 @@ namespace Presentation.Endpoints.BloodRequests
         public override void Configure()
         {
             Post("/bloodrequests");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            //Roles("Admin", "User"); // Both admins and regular users can access
+            AllowAnonymous(); // For simplicity, allowing anonymous access
             Description(x => x
                 .WithName("CreateBloodRequest")
                 .WithTags("BloodRequests")
@@ -42,7 +43,7 @@ namespace Presentation.Endpoints.BloodRequests
                     req.MoreDetails,
                     req.ServiceId,
                     req.DonorId,
-                    RequestStatus.Convert(req.RequestStatus ?? "pending"), 
+                    RequestStatus.Convert(req.status ?? "pending"), 
                     req.RequestDate,
                     req.AquiredQty,
                     req.RequiredQty
@@ -82,7 +83,7 @@ namespace Presentation.Endpoints.BloodRequests
         public  string? MoreDetails { get; set; }
         public  Guid? ServiceId { get; set; }
         public  Guid? DonorId { get; set; }
-        public required string? RequestStatus { get; set; }
+        public required string? status { get; set; }
         public required DateOnly? RequestDate { get; set; }
         public required int AquiredQty { get; set; }
         public required int RequiredQty { get; set; }

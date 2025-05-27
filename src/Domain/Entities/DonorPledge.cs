@@ -44,7 +44,7 @@ namespace Domain.Entities
             Status = status;
             PledgeDate = pledgeDate;
         }
-
+    
         public void UpdateStatus(PledgeStatus newStatus)
         {
             Status = newStatus;

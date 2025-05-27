@@ -1,11 +1,12 @@
 using Application.DTOs;
 using Application.Features.BloodRequests.Commands;
-using Domain.Entities;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +15,16 @@ namespace Application.Features.BloodRequests.Handlers
     public class DeleteRequestHandler : IRequestHandler<DeleteRequestCommand, (RequestDto? request, BaseException? err)>
     {
         private readonly IRequestRepository _requestRepository;
+        private readonly IPledgeRepository _pledgeRepository;
         private readonly ILogger<DeleteRequestHandler> _logger;
 
-        public DeleteRequestHandler(IRequestRepository requestRepository, ILogger<DeleteRequestHandler> logger)
+        public DeleteRequestHandler(
+            IRequestRepository requestRepository,
+            IPledgeRepository pledgeRepository,
+            ILogger<DeleteRequestHandler> logger)
         {
             _requestRepository = requestRepository;
+            _pledgeRepository = pledgeRepository;
             _logger = logger;
         }
 
@@ -35,7 +41,29 @@ namespace Application.Features.BloodRequests.Handlers
                     return (null, new NotFoundException($"Request {command.Id} not found", "delete request"));
                 }
 
-                await _requestRepository.DeleteAsync(request.Id);
+                // Cancel all related pledges
+                var pledges = await _pledgeRepository.GetByRequestIdAsync(command.Id);
+                if (pledges.Any())
+                {
+                    _logger.LogInformation("Canceling {Count} pledges related to deleted request {RequestId}", 
+                        pledges.Count(), command.Id);
+                    
+                    foreach (var pledge in pledges)
+                    {
+                        // Mark the pledge as canceled
+                        pledge.UpdateStatus(PledgeStatus.Canceled);
+                        await _pledgeRepository.UpdateAsync(pledge);
+                        
+                        _logger.LogDebug("Canceled pledge from donor {DonorId} for request {RequestId}", 
+                            pledge.DonorId, pledge.RequestId);
+                    }
+                }
+
+                // Mark the request as deleted
+                request.MarkAsDeleted();
+                await _requestRepository.UpdateAsync(request);
+
+                _logger.LogInformation("Request {RequestId} marked as deleted", request.Id);
 
                 var requestDto = new RequestDto
                 {
