@@ -19,6 +19,8 @@ namespace Domain.Entities
         public Donor? Donor { get; private set; }
         public Request? Request { get; private set; }
 
+        public bool IsDeleted { get; private set; } = false;
+
         private BloodBag() { }
 
         public BloodBag(
@@ -76,6 +78,12 @@ namespace Domain.Entities
         {
             RequestId = requestId;
             Status = BloodBagStatus.Used(); // Or use a different status if appropriate
+        }
+        // Add a method to mark as deleted
+        public void MarkAsDeleted()
+        {
+            IsDeleted = true;
+            Status = BloodBagStatus.OutForOther(); // Assuming you have a Discarded status
         }
     }
 }

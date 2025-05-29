@@ -80,20 +80,24 @@ namespace Presentation.Endpoints.BloodRequests
                 _logger.LogError("GetRequestsHandler returned error: {Error}", err.Message);
                 throw err;
             }
-            if (requests is null || requests.Count == 0)
+            
+            // Handle empty results with 200 OK instead of throwing 404
+            if (requests is null)
             {
-                _logger.LogWarning("No blood requests found");
-                throw new NotFoundException("No blood requests found", "Fetching blood requests");
+                requests = new List<RequestDto>();
             }
+            
             _logger.LogInformation("Fetched {Count} blood requests", requests.Count);
 
             // 6) Shape your response
             var response = new GetRequestsResponse
             {
                 Requests   = requests,
-                Total      = total,
+                Total      = total ?? 0,
                 StatusCode = 200,
-                Message    = "Blood requests fetched successfully"
+                Message    = requests.Count > 0 
+                    ? "Blood requests fetched successfully" 
+                    : "No blood requests found matching the criteria"
             };
 
             await SendAsync(response, cancellation: ct);

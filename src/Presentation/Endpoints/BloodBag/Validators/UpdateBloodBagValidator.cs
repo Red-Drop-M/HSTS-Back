@@ -27,11 +27,13 @@ namespace Presentation.Endpoints.BloodBag.Validators
                 .NotEmpty().WithMessage("AquieredDate is required.")
                 .Must(x => DateOnly.TryParse(x.ToString(), out _))
                 .WithMessage("Invalid AquieredDate.");
-
-            RuleFor(x => x.RequestId)
-                .NotEmpty().WithMessage("RequestId is required.")
-                .Must(id => Guid.TryParse(id.ToString(), out _))
-                .WithMessage("Invalid RequestId.");
+                
+            // Add this new validation rule for RequestId
+            When(x => x.RequestId.HasValue, () => {
+                RuleFor(x => x.RequestId)
+                    .Must(id => id != null && Guid.TryParse(id.ToString(), out _))
+                    .WithMessage("Invalid RequestId.");
+            });
         }
     }
 }

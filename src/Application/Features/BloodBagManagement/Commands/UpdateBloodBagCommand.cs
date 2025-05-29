@@ -8,8 +8,9 @@ namespace Application.Features.BloodBagManagement.Commands
     public class UpdateBloodBagCommand : IRequest<(BloodBagDTO? bloodBag, BaseException? err)>
     {
         public Guid Id { get; }
-        public BloodBagType? BloodBagType { get; } 
         public BloodType? BloodType { get; } 
+        public BloodBagType? BloodBagType { get; } 
+       
         public BloodBagStatus? Status { get; }
         public DateOnly? ExpirationDate { get; } 
         public DateOnly? AcquiredDate { get; } = DateOnly.FromDateTime(DateTime.Now);
@@ -17,6 +18,7 @@ namespace Application.Features.BloodBagManagement.Commands
 
         public UpdateBloodBagCommand(
             Guid id,
+            BloodType? bloodType = null,
             BloodBagType? bloodBagType = null,
             BloodBagStatus? status = null,
             DateOnly? expirationDate = null,

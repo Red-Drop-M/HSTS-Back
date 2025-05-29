@@ -31,14 +31,15 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
                 ExpirationDate = BloodBag.ExpirationDate,
                 AcquiredDate = BloodBag.AcquiredDate,
                 DonorId = BloodBag.DonorId,
-                RequestId = BloodBag.RequestId
+                RequestId = BloodBag.RequestId,
+                IsDeleted = false // Only return non-deleted blood bags
             };
 
             var (bloodBags, total) = await _bloodBagRepository.GetAllAsync(BloodBag.PageNumber, BloodBag.PageSize, filter);
             if (bloodBags == null || !bloodBags.Any())
             {
                 _logger.LogWarning("No blood bags found");
-                return (null, 0, new NotFoundException("No blood bags found", "Fetching blood bags"));
+                return (new List<BloodBagDTO>(), total, null); // Return empty list instead of exception
             }
 
             var bloodBagDtos = bloodBags.Select(b => new BloodBagDTO
@@ -47,9 +48,11 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
                 BloodType = b.BloodType,
                 BloodBagType = b.BloodBagType,
                 ExpirationDate = b.ExpirationDate,
+                Status = b.Status,
                 AcquiredDate = b.AcquiredDate,
                 DonorId = b.DonorId ?? Guid.Empty,
-                RequestId = b.RequestId
+                RequestId = b.RequestId,
+                IsDeleted = b.IsDeleted // Include IsDeleted flag in the DTO
             }).ToList();
 
             return (bloodBagDtos, total, null);
@@ -60,7 +63,6 @@ public class GetAllBloodBagsHandler : IRequestHandler<GetAllBloodBagsQuery, (Lis
             return (null, 0, ex);
         }
     }
-}
-
+    }
 }
 

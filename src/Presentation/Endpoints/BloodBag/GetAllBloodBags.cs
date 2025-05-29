@@ -9,9 +9,9 @@ namespace Presentation.Endpoints.BloodBag
 {
         public class GetAllBloodBagsRequest
         {
-            public BloodBagType? BloodBagType { get; set; }
-            public BloodType? BloodType { get; set; }
-            public BloodBagStatus? Status { get; set; }
+            public string? BloodBagType { get; set; }
+            public string? BloodType { get; set; }
+            public string? Status { get; set; }
             public DateOnly? ExpirationDate { get; set; }
             public DateOnly? AcquiredDate { get; set; }
             public Guid? DonorId { get; set; }
@@ -45,7 +45,7 @@ namespace Presentation.Endpoints.BloodBag
         public override void Configure()
         {
             Get("/blood-bags");
-            Roles("Admin", "User"); // Both admins and regular users can access
+             AllowAnonymous();//Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("GetAllBloodBags")
                 .WithTags("BloodBags")
@@ -57,41 +57,106 @@ namespace Presentation.Endpoints.BloodBag
 
         public override async Task HandleAsync(GetAllBloodBagsRequest req, CancellationToken ct)
         {
+            // Convert string values to domain value objects
+            BloodBagType? bloodBagType = null;
+            BloodType? bloodType = null;
+            BloodBagStatus? status = null;
+            
+            if (!string.IsNullOrEmpty(req.BloodBagType))
+            {
+                try {
+                    bloodBagType = Domain.ValueObjects.BloodBagType.Convert(req.BloodBagType);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.BloodBagType), "Invalid blood bag type");
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(req.BloodType))
+            {
+                try {
+                    bloodType = Domain.ValueObjects.BloodType.FromString(req.BloodType);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.BloodType), "Invalid blood type");
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(req.Status))
+            {
+                try {
+                    status = Domain.ValueObjects.BloodBagStatus.Convert(req.Status);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.Status), "Invalid status");
+                }
+            }
+            
+            if (ValidationFailed)
+            {
+                await SendErrorsAsync(400, ct);
+                return;
+            }
+
             var query = new GetAllBloodBagsQuery(
                 req.PageNumber,
                 req.PageSize, 
-                req.BloodBagType,
-                req.BloodType, 
-                req.Status, 
+                bloodBagType,
+                bloodType, 
+                status, 
                 req.ExpirationDate, 
                 req.AcquiredDate, 
                 req.DonorId, 
                 req.ServiceId);
+                
             var (request, total, err) = await _mediator.Send(query, ct);
 
             if (err != null)
             {
+                // Check if this is a "No blood bags found" NotFoundException
+                if (err is NotFoundException notFoundEx && notFoundEx.Message.Contains("No blood bags found"))
+                {
+                    _logger.LogWarning("No blood bags found.");
+                    await SendAsync(new GetAllBloodBagsResponse
+                    {
+                        BloodBags = new List<BloodBagDTO>(),
+                        Total = 0,
+                        StatusCode = 200,
+                        Message = "No blood bags found matching the criteria"
+                    }, cancellation: ct);
+                    return;
+                }
+                
+                // Otherwise, it's a different error that should be thrown
                 _logger.LogError("GetAllBloodBagsHandler returned error: {Error}", err);
                 throw err;
             }
 
+            // Return empty list with 200 instead of throwing 404
             if (request == null || request.Count == 0)
             {
                 _logger.LogWarning("No blood bags found.");
-                throw new NotFoundException("No blood bags found.","Fetch Blood Bags");
+                await SendAsync(new GetAllBloodBagsResponse
+                {
+                    BloodBags = new List<BloodBagDTO>(),
+                    Total = 0,
+                    StatusCode = 200,
+                    Message = "No blood bags found matching the criteria"
+                }, cancellation: ct);
+                return;
             }
+
             _logger.LogInformation("Fetched {Count} blood bags successfully.", request.Count);
 
             var response = new GetAllBloodBagsResponse
             {
                 BloodBags = request,
-                Total     = total,
+                Total = total,
                 StatusCode = 200,
-                Message    = "Blood bags fetched successfully"
+                Message = "Blood bags fetched successfully"
             };
 
             await SendAsync(response, cancellation: ct);
-
         }
 
     }

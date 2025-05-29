@@ -12,6 +12,7 @@ namespace Application.Features.GlobalStockManagement.Commands
         public int? CountExpired { get; }
         public int? CountExpiring { get; }
         public int? ReadyCount { get; }
+        public int? AcquiredCount { get; } // New property
         public int? MinStock { get; }
         public int? CriticalStock { get; }
 
@@ -21,6 +22,7 @@ namespace Application.Features.GlobalStockManagement.Commands
             int? countExpired = null,
             int? countExpiring = null,
             int? readyCount = null,
+            int? acquiredCount = null,
             int? minStock = null,
             int? criticalStock = null)
         {
@@ -29,6 +31,7 @@ namespace Application.Features.GlobalStockManagement.Commands
             CountExpired = countExpired;
             CountExpiring = countExpiring;
             ReadyCount = readyCount;
+            AcquiredCount = acquiredCount;
             MinStock = minStock;
             CriticalStock = criticalStock;
         }

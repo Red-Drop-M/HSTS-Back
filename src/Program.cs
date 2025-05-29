@@ -142,6 +142,9 @@ app.Use(async (context, next) => {
     }
 });
 
+// Configure CORS first to handle preflight requests properly
+app.UseCors("AllowAll");
+
 // Basic health check endpoint for troubleshooting
 app.MapGet("/", () => "Hello from HSTS API!");
 app.MapGet("/debug", (HttpContext context) => {
@@ -155,9 +158,7 @@ app.MapGet("/api/system/status", () => new {
     CurrentTime = DateTime.Now 
 });
 
-// Add all other middleware
-app.UseCors("AllowAll");
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+// Add all other middlewareapp.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseFastEndpoints();
 app.UseSwaggerGen();
 app.UseAuthentication();

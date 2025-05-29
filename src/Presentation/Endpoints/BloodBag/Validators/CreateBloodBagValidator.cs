@@ -6,12 +6,10 @@ public class CreateBloodBagValidator : Validator<CreateBloodBagRequest>
 {
     public CreateBloodBagValidator()
     {
-        RuleFor(x => x.BloodGroup)
+        RuleFor(x => x.BloodType)   // Change from BloodGroup to BloodType
             .NotEmpty()
-            .WithMessage("Blood group is required.")
-            .Must(bloodGroup => BloodType.FromString(bloodGroup) != null)
-            .WithMessage("Invalid blood group.");
-
+            .WithMessage("Blood type is required.");
+            
         RuleFor(x => x.BloodBagType)
             .NotEmpty()
             .WithMessage("Blood bag type is required.")
@@ -24,7 +22,7 @@ public class CreateBloodBagValidator : Validator<CreateBloodBagRequest>
             .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
             .WithMessage("Expiration date must be today or in the future.");
 
-        RuleFor(x => x.AquieredDate)
+        RuleFor(x => x.AcquiredDate)
             .NotEmpty()
             .WithMessage("Aquired date is required.")
             .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))

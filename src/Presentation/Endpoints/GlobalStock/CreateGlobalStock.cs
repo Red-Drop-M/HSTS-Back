@@ -37,9 +37,6 @@ namespace Presentation.Endpoints.GlobalStock
                 var command = new CreateGlobalStockCommand(
                     BloodType.FromString(req.BloodType),
                     BloodBagType.Convert(req.BloodBagType),
-                    req.CountExpired,
-                    req.CountExpiring,
-                    req.ReadyCount,
                     req.MinStock,
                     req.CriticalStock);
 
@@ -80,9 +77,6 @@ namespace Presentation.Endpoints.GlobalStock
     {
         public required string BloodType { get; set; }
         public required string BloodBagType { get; set; }
-        public required int CountExpired { get; set; }
-        public required int CountExpiring { get; set; }
-        public required int ReadyCount { get; set; }
         public required int MinStock { get; set; }
         public required int CriticalStock { get; set; }
     }

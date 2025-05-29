@@ -12,5 +12,6 @@ namespace Application.DTOs
         public DateOnly? AcquiredDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public Guid? DonorId { get; set; }
         public Guid? RequestId { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

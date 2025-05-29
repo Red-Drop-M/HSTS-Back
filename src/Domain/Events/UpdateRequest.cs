@@ -20,9 +20,14 @@ namespace Domain.Events
 
         public Guid RequestId { get; }
         public string? Priority { get; }
-        public int? AcquiredQty { get; }
+        public int? AcquiredQty { get; private set; }
         public string? Status { get; }
         public int? RequiredQty { get; }
         public DateOnly? DueDate { get; }
+
+        public void UpdateAcquiredQuantity(int qty)
+        {
+            AcquiredQty = qty;
+        }
     }
 }

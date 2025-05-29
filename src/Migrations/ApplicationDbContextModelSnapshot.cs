@@ -46,6 +46,9 @@ namespace HSTS_Back.Migrations
                     b.Property<DateOnly>("ExpirationDate")
                         .HasColumnType("date");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid?>("RequestId")
                         .HasColumnType("uuid");
 
@@ -215,6 +218,9 @@ namespace HSTS_Back.Migrations
 
                     b.Property<string>("BloodBagType")
                         .HasColumnType("text");
+
+                    b.Property<int>("AcquiredCount")
+                        .HasColumnType("integer");
 
                     b.Property<int>("CountExpired")
                         .HasColumnType("integer");

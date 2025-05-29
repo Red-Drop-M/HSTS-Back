@@ -19,7 +19,7 @@ namespace Presentation.Endpoints.BloodBag
         public override void Configure()
         {
             Get("/blood-bags/{id}");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            //Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("GetBloodBag")
                 .WithTags("BloodBags")

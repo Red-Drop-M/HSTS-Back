@@ -21,7 +21,8 @@ namespace Presentation.Endpoints.BloodBag
         public override void Configure()
         {
             Put("/blood-bags/{id}");
-            Roles("Admin", "User"); // Both admins and regular users can access
+            AllowAnonymous(); // Uncomment this line to allow anonymous access
+            //Roles("Admin", "User"); // Both admins and regular users can access
             Description(x => x
                 .WithName("UpdateBloodBag")
                 .WithTags("BloodBags")
@@ -31,13 +32,52 @@ namespace Presentation.Endpoints.BloodBag
         }
         public override async Task HandleAsync(UpdateBloodBagRequest req, CancellationToken ct)
         {
+            // Convert string values to domain value objects
+            BloodBagType? bloodBagType = null;
+            BloodType? bloodType = null;
+            BloodBagStatus? status = null;
+            
+            if (!string.IsNullOrEmpty(req.BloodBagType))
+            {
+                try {
+                    bloodBagType = Domain.ValueObjects.BloodBagType.Convert(req.BloodBagType);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.BloodBagType), "Invalid blood bag type");
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(req.BloodType))
+            {
+                try {
+                    bloodType = Domain.ValueObjects.BloodType.FromString(req.BloodType);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.BloodType), "Invalid blood type");
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(req.Status))
+            {
+                try {
+                    status = Domain.ValueObjects.BloodBagStatus.Convert(req.Status);
+                }
+                catch (ArgumentException) {
+                    AddError(nameof(req.Status), "Invalid status");
+                }
+            }
+            
+            ThrowIfAnyErrors();
+
             var command = new UpdateBloodBagCommand(
                 req.Id, 
-                req.BloodBagType, 
-                req.Status, 
+                bloodType,
+                bloodBagType, 
+                status, 
                 req.ExpirationDate, 
                 req.AcquiredDate,
                 req.RequestId);
+                
             var (result, err) = await _mediator.Send(command, ct);
             if (err != null)
             {
@@ -46,16 +86,17 @@ namespace Presentation.Endpoints.BloodBag
             }
             _logger.LogInformation("Blood bag updated successfully");
             var response = new UpdateBloodBagResponse(result, 200, "Blood bag updated successfully");
-            await SendAsync(response, cancellation: ct); 
+            await SendAsync(response, cancellation: ct);
         }
     }
     public class UpdateBloodBagRequest
     {
         public required Guid Id { get; set; }
-        public BloodBagType? BloodBagType { get; set; }
+        public string? BloodBagType { get; set; }  
+        public string? BloodType { get; set; }     
+        public string? Status { get; set; }        
         public DateOnly? ExpirationDate { get; set; }
-        public DateOnly? AcquiredDate { get; set; }
-        public BloodBagStatus? Status { get; set; }
+        public DateOnly? AcquiredDate { get; set; } // Use standard spelling, not "AquieredDate"
         public Guid? RequestId { get; set; }
     }
     public class UpdateBloodBagResponse

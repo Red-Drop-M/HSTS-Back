@@ -83,6 +83,7 @@ namespace Presentation.Endpoints.GlobalStock
         public int? CountExpired { get; set; }
         public int? CountExpiring { get; set; }
         public int? ReadyCount { get; set; }
+        public int? AcquiredCount { get; set; } // New property
         public int? MinStock { get; set; }
         public int? CriticalStock { get; set; }
     }

@@ -13,7 +13,8 @@ namespace Domain.Repositories
         Task<List<BloodBag?>> GetByAcquiredDateAsync(DateOnly acquiredDate);
         Task<List<BloodBag?>> GetByStatusAsync(BloodBagStatus status);
         Task <List<BloodBag?>> GetByDonorIdAsync(Guid DonorId);
-        Task<BloodBag?> GetByRequestIdAsync(Guid requestId);
+        Task<List<BloodBag>> GetByRequestIdAsync(Guid requestId);
+        Task<List<BloodBag>> GetByRequestIdsAsync(List<Guid> requestIds);
         Task AddAsync(BloodBag bloodBag);
         Task UpdateAsync(BloodBag bloodBag);
         Task DeleteAsync(Guid id);

@@ -1,70 +1,80 @@
-using Application.DTOs;
-using Application.Features.BloodRequests.Queries;
-using Domain.Entities;
-using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Application.DTOs;
 using Domain.Repositories;
 using Shared.Exceptions;
+using Application.Features.BloodRequests.Queries;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Domain.ValueObjects;
+
 namespace Application.Features.BloodRequests.Handlers
 {
-    public class GetRequestsHandler : IRequestHandler<GetRequestsQuery,(List<RequestDto>? requests, int? total,BaseException? err)>
+    public class GetRequestsHandler : IRequestHandler<GetRequestsQuery, (List<RequestDto>? requests, int? total, BaseException? err)>
     {
-        private readonly IRequestRepository _bloodRequestRepository;
+        private readonly IRequestRepository _requestRepository;
+        private readonly IBloodBagRepository _bloodBagRepository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly ILogger<GetRequestsHandler> _logger;
 
-        public GetRequestsHandler(IRequestRepository bloodRequestRepository, ILogger<GetRequestsHandler> logger)
+        public GetRequestsHandler(
+            IRequestRepository requestRepository,
+            IBloodBagRepository bloodBagRepository,
+            IServiceRepository serviceRepository,
+            ILogger<GetRequestsHandler> logger)
         {
-            _bloodRequestRepository = bloodRequestRepository;
+            _requestRepository = requestRepository;
+            _bloodBagRepository = bloodBagRepository;
+            _serviceRepository = serviceRepository;
             _logger = logger;
         }
 
-        public async Task<(List<RequestDto>? requests,int? total, BaseException? err)> Handle(GetRequestsQuery request, CancellationToken cancellationToken)
+        public async Task<(List<RequestDto>? requests, int? total, BaseException? err)> Handle(
+            GetRequestsQuery query, 
+            CancellationToken cancellationToken)
         {
             try
             {
-                var filter = new RequestFilter
-                {   
-                  
-                    Priority = request.Priority,
-                    BloodBagType = request.BloodBagType,
+                // Create an empty filter - this will only filter on !IsDeleted in the repository
+                var filter = new RequestFilter();
+                
+                // Get all non-deleted requests
+                var (requests, total) = await _requestRepository.GetAllAsync(query.Page, query.PageSize, filter);
+                
+                if (requests is null || requests.Count == 0)
+                {
+                    _logger.LogInformation("No blood requests found");
+                    return (new List<RequestDto>(), total, null);
+                }
+
+                // Map to DTOs without fetching related entities
+                var requestDtos = requests.Select(request => new RequestDto
+                {
+                    Id = request.Id,
+                    Priority = request.Priority.Value,
+                    BloodType = request.BloodType.Value,
+                    BloodBagType = request.BloodBagType.Value,
                     RequestDate = request.RequestDate,
                     DueDate = request.DueDate,
-                    DonorId = request.DonorId,
+                    Status = request.Status.Value,
+                    MoreDetails = request.MoreDetails,
+                    RequiredQty = request.RequiredQty,
+                    AquiredQty = request.AquiredQty,
                     ServiceId = request.ServiceId,
-                    Status = request.Status,
-                    BloodType = request.BloodType
-                };
-
-                var (requests,total) = await _bloodRequestRepository.GetAllAsync(request.Page,request.PageSize,filter);
-                if (requests == null || requests.Count == 0)
-                {
-                    _logger.LogWarning("No blood requests found");
-                    return (null, null, new NotFoundException("No blood requests found", "Fetching blood requests"));
-                }
-                var requestDtos = requests.Select(r => new RequestDto
-{
-                    Id = r.Id,
-                    DonorId = r.DonorId,
-                    ServiceId = r.ServiceId,
-                    Priority = r.Priority.Value,
-                    Status = r.Status.Value,
-                    BloodType = r.BloodType.Value,
-                    BloodBagType = r.BloodBagType.Value,
-                    RequestDate = r.RequestDate,
-                    DueDate = r.DueDate,
-                    RequiredQty = r.RequiredQty,
-                    AquiredQty = r.AquiredQty,
-                    MoreDetails = r.MoreDetails
-    // Add other properties as needed
+                    DonorId = request.DonorId,
+                    Service = request.Service?.Name,
+                    BloodBags = new List<BloodBagDTO>() // Empty list, not fetching blood bags
                 }).ToList();
-                return (requestDtos,total, null);
+
+                return (requestDtos, total, null);
             }
-            catch (BaseException ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching blood requests");
-                return (null,null, ex);
+                _logger.LogError(ex, "Unexpected error retrieving blood requests");
+                return (null, null, new InternalServerException("Failed to retrieve blood requests", "get-all-requests"));
             }
         }
     }

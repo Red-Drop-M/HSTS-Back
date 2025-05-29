@@ -9,6 +9,7 @@ namespace Application.DTOs
         public int CountExpired { get; set; }
         public int CountExpiring { get; set; }
         public int ReadyCount { get; set; }
+        public int AcquiredCount { get; set; }
         public int MinStock { get; set; }
         public int CriticalStock { get; set; }
     }

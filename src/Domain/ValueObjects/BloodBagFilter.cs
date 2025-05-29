@@ -9,6 +9,7 @@ namespace Domain.ValueObjects
         public DateOnly? ExpirationDate { get; set; }
         public DateOnly? AcquiredDate { get; set; }
         public BloodBagStatus? Status { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public Guid? DonorId { get; set; }
         public Guid? RequestId { get; set; }
         public DateTime? CreatedAt { get; set; }

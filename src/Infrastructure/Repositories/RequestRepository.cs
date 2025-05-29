@@ -99,36 +99,88 @@ namespace Infrastructure.Repositories
         }
         public async Task<(List<Request>, int)> GetAllAsync(int page, int pageSize, RequestFilter filter)
         {
+            // Start with a base query that only filters by IsDeleted
             var query = _context.Requests
-                .Where(r => !r.IsDeleted); // Filter out deleted items
+                .Where(r => !r.IsDeleted)
+                .AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter.Priority))
+            // Apply filters for scalar properties - ServiceId filter
+            if (filter.ServiceId.HasValue)
+            {
+                query = query.Where(r => r.ServiceId == filter.ServiceId);
+            }
 
-            query = query.Where(r => r.Priority.Value == filter.Priority);
+            // DonorId filter
+            if (filter.DonorId.HasValue)
+            {
+                query = query.Where(r => r.DonorId == filter.DonorId);
+            }
 
-            if (!string.IsNullOrEmpty(filter.BloodBagType))
-            query = query.Where(r => r.BloodBagType.Value == filter.BloodBagType);
-            if(!string.IsNullOrEmpty(filter.BloodType))
-            query = query.Where(r => r.BloodType.Value == filter.BloodType);
-            if (filter.RequestDate != null)
-            query = query.Where(r => r.RequestDate == DateOnly.Parse(filter.RequestDate));
-            if (filter.DueDate != null)
-            query = query.Where(r => r.DueDate == DateOnly.Parse(filter.DueDate));
-            if (filter.DonorId != null)
-            query = query.Where(r => r.DonorId == Guid.Parse(filter.DonorId));
-            if (filter.ServiceId != null)
-            query = query.Where(r => r.ServiceId == Guid.Parse(filter.ServiceId));
-            if (!string.IsNullOrEmpty(filter.Status))
-            query = query.Where(r => r.Status.Value == filter.Status);
+            // Order by Id to ensure consistent ordering
+            query = query.OrderBy(r => r.Id);
 
-            var total = await query.CountAsync();
-
+            // Get all requests from the database that match the basic filters
             var requests = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (requests, total);
+            // Apply value object filters in memory
+            var filteredRequests = requests;
+
+            if (!string.IsNullOrEmpty(filter.Status))
+            {
+                filteredRequests = filteredRequests.Where(r => r.Status.Value == filter.Status).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.Priority))
+            {
+                filteredRequests = filteredRequests.Where(r => r.Priority.Value == filter.Priority).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.BloodType))
+            {
+                filteredRequests = filteredRequests.Where(r => r.BloodType.Value == filter.BloodType).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.BloodBagType))
+            {
+                filteredRequests = filteredRequests.Where(r => r.BloodBagType.Value == filter.BloodBagType).ToList();
+            }
+
+            // Calculate the total count for all matching records (including those beyond the current page)
+            var totalFiltered = await ApplyFilterCountAsync(query, filter);
+
+            return (filteredRequests, totalFiltered);
+        }
+
+        private async Task<int> ApplyFilterCountAsync(IQueryable<Request> baseQuery, RequestFilter filter)
+        {
+            // Get all requests that match the database-level filters
+            var allMatchingRequests = await baseQuery.ToListAsync();
+            
+            // Apply the same in-memory filters used in GetAllAsync to get an accurate count
+            if (!string.IsNullOrEmpty(filter.Status))
+            {
+                allMatchingRequests = allMatchingRequests.Where(r => r.Status.Value == filter.Status).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.Priority))
+            {
+                allMatchingRequests = allMatchingRequests.Where(r => r.Priority.Value == filter.Priority).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.BloodType))
+            {
+                allMatchingRequests = allMatchingRequests.Where(r => r.BloodType.Value == filter.BloodType).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.BloodBagType))
+            {
+                allMatchingRequests = allMatchingRequests.Where(r => r.BloodBagType.Value == filter.BloodBagType).ToList();
+            }
+
+            return allMatchingRequests.Count;
         }
 
         public async Task UpdateWithoutNavigationAsync(Request request)

@@ -45,7 +45,7 @@ namespace Application.Features.BloodBagManagement.Handlers
                 var newBloodBag = new BloodBag(
                     bloodBag.BloodBagType,
                     bloodBag.BloodType,
-                    bloodBag.Status,
+                    bloodBag.Status, // Use the status from the command!
                     bloodBag.ExpirationDate,
                     bloodBag.AcquiredDate,
                     bloodBag.DonorId,

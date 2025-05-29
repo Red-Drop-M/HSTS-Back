@@ -74,6 +74,16 @@ namespace Infrastructure.Repositories
             return (services, total);
         }
 
-        
+        public async Task<List<Service>> GetByIdsAsync(List<Guid> ids)
+        {
+            if (ids == null || !ids.Any())
+            {
+                return new List<Service>();
+            }
+
+            return await _context.Services
+                .Where(s => ids.Contains(s.Id))
+                .ToListAsync();
+        }
     }
 }
